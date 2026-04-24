@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { usuariosService } from '../services/usuariosService';
 import './Modal.css';
@@ -13,11 +13,74 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
   const [formData, setFormData] = useState({
     username: '',
     nombre: '',
+    email: '',
+    telefono: '',
     password: '',
     rol: 'operador',
+    region: '',
+    provincia: '',
+    comuna: '',
   });
+
+  const [regiones, setRegiones] = useState<string[]>([]);
+  const [provincias, setProvincias] = useState<string[]>([]);
+  const [comunas, setComunas] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    obtenerRegiones();
+  }, []);
+
+  useEffect(() => {
+    if (formData.region) {
+      obtenerProvincias();
+      setFormData((prev) => ({ ...prev, provincia: '', comuna: '' }));
+    }
+  }, [formData.region]);
+
+  useEffect(() => {
+    if (formData.region && formData.provincia) {
+      obtenerComunas();
+      setFormData((prev) => ({ ...prev, comuna: '' }));
+    }
+  }, [formData.provincia]);
+
+  const obtenerRegiones = async () => {
+    try {
+      const response = await fetch('https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/regiones', {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      const data = await response.json();
+      setRegiones(data);
+    } catch (err) {
+      console.error('Error al obtener regiones:', err);
+    }
+  };
+
+  const obtenerProvincias = async () => {
+    try {
+      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/provincias?region=${formData.region}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      const data = await response.json();
+      setProvincias(data);
+    } catch (err) {
+      console.error('Error al obtener provincias:', err);
+    }
+  };
+
+  const obtenerComunas = async () => {
+    try {
+      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/comunas?region=${formData.region}&provincia=${formData.provincia}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      const data = await response.json();
+      setComunas(data);
+    } catch (err) {
+      console.error('Error al obtener comunas:', err);
+    }
+  };
 
   if (!token) return null;
 
@@ -28,7 +91,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
 
   const handleConfirm = async () => {
     if (!formData.username || !formData.nombre || !formData.password) {
-      setError('Todos los campos son requeridos');
+      setError('Usuario, nombre y contraseña son requeridos');
       return;
     }
 
@@ -58,7 +121,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
 
   return (
     <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '90vh', overflowY: 'auto' }}>
         <div className="modal-header">
           <h3>➕ Crear Usuario</h3>
           <button className="modal-close" onClick={onCancel}>✕</button>
@@ -73,7 +136,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="Nombre de usuario único"
+              placeholder="Nombre de usuario"
               disabled={loading}
               autoFocus
             />
@@ -92,6 +155,90 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
               disabled={loading}
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="correo@ejemplo.com"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="telefono">Teléfono:</label>
+            <input
+              id="telefono"
+              type="tel"
+              name="telefono"
+              value={formData.telefono}
+              onChange={handleChange}
+              placeholder="+56912345678"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="region">Región:</label>
+            <select
+              id="region"
+              name="region"
+              value={formData.region}
+              onChange={handleChange}
+              disabled={loading}
+            >
+              <option value="">Selecciona una región</option>
+              {regiones.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {formData.region && (
+            <div className="form-group">
+              <label htmlFor="provincia">Provincia:</label>
+              <select
+                id="provincia"
+                name="provincia"
+                value={formData.provincia}
+                onChange={handleChange}
+                disabled={loading || provincias.length === 0}
+              >
+                <option value="">Selecciona una provincia</option>
+                {provincias.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {formData.provincia && (
+            <div className="form-group">
+              <label htmlFor="comuna">Comuna:</label>
+              <select
+                id="comuna"
+                name="comuna"
+                value={formData.comuna}
+                onChange={handleChange}
+                disabled={loading || comunas.length === 0}
+              >
+                <option value="">Selecciona una comuna</option>
+                {comunas.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="password">Contraseña:</label>
