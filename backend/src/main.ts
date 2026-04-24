@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { TokenRevocadoInterceptor } from './auth/interceptors/token-revocado.interceptor';
+import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,10 +17,12 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
-  // Nota: El interceptor no se aplica globalmente aquí porque requiere inyectar AuthService
-  // Se agregará a nivel de módulo en auth.module.ts si es necesario
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  console.log(`Servidor ejecutándose en http://localhost:${port}`);
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`Servidor ejecutándose en http://localhost:${process.env.PORT ?? 3000}`);
+  // Auto-initialize admin user on startup
+  const seeder = app.get(CrearAdminSeeder);
+  await seeder.seed().catch((err) => console.error('Seed error:', err));
 }
 bootstrap();

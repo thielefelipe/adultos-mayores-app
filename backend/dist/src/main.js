@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
 const common_1 = require("@nestjs/common");
 const app_module_1 = require("./app.module");
+const crear_admin_seeder_1 = require("./seeders/crear-admin.seeder");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
@@ -13,8 +14,11 @@ async function bootstrap() {
         whitelist: true,
         forbidNonWhitelisted: true,
     }));
-    await app.listen(process.env.PORT ?? 3000);
-    console.log(`Servidor ejecutándose en http://localhost:${process.env.PORT ?? 3000}`);
+    const port = process.env.PORT ?? 3000;
+    await app.listen(port);
+    console.log(`Servidor ejecutándose en http://localhost:${port}`);
+    const seeder = app.get(crear_admin_seeder_1.CrearAdminSeeder);
+    await seeder.seed().catch((err) => console.error('Seed error:', err));
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
