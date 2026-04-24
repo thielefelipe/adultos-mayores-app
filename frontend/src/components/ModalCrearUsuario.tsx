@@ -51,34 +51,55 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
       const response = await fetch('https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/regiones', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
+      if (!response.ok) throw new Error('Error al obtener regiones');
       const data = await response.json();
-      setRegiones(data);
+      if (Array.isArray(data)) {
+        setRegiones(data);
+      } else {
+        console.error('Respuesta no es un array:', data);
+        setRegiones([]);
+      }
     } catch (err) {
       console.error('Error al obtener regiones:', err);
+      setRegiones([]);
     }
   };
 
   const obtenerProvincias = async () => {
     try {
-      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/provincias?region=${formData.region}`, {
+      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/provincias?region=${encodeURIComponent(formData.region)}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
+      if (!response.ok) throw new Error('Error al obtener provincias');
       const data = await response.json();
-      setProvincias(data);
+      if (Array.isArray(data)) {
+        setProvincias(data);
+      } else {
+        console.error('Respuesta no es un array:', data);
+        setProvincias([]);
+      }
     } catch (err) {
       console.error('Error al obtener provincias:', err);
+      setProvincias([]);
     }
   };
 
   const obtenerComunas = async () => {
     try {
-      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/comunas?region=${formData.region}&provincia=${formData.provincia}`, {
+      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/comunas?region=${encodeURIComponent(formData.region)}&provincia=${encodeURIComponent(formData.provincia)}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
+      if (!response.ok) throw new Error('Error al obtener comunas');
       const data = await response.json();
-      setComunas(data);
+      if (Array.isArray(data)) {
+        setComunas(data);
+      } else {
+        console.error('Respuesta no es un array:', data);
+        setComunas([]);
+      }
     } catch (err) {
       console.error('Error al obtener comunas:', err);
+      setComunas([]);
     }
   };
 
