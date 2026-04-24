@@ -68,10 +68,6 @@ export function Login({ onLoginSuccess }: LoginProps) {
             {loading ? '⏳ Iniciando sesión...' : '🚀 Iniciar sesión'}
           </button>
         </form>
-
-        <p className="hint">
-          📝 Credenciales de prueba: admin / admin123
-        </p>
       </div>
     </div>
   );
