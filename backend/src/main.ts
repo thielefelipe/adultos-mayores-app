@@ -17,12 +17,17 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
+  // Auto-initialize admin user BEFORE starting server
+  try {
+    const seeder = app.get(CrearAdminSeeder);
+    await seeder.seed();
+    console.log('✅ Admin user initialized');
+  } catch (err) {
+    console.error('❌ Seed error:', err);
+  }
+
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`Servidor ejecutándose en http://localhost:${port}`);
-
-  // Auto-initialize admin user on startup
-  const seeder = app.get(CrearAdminSeeder);
-  await seeder.seed().catch((err) => console.error('Seed error:', err));
 }
 bootstrap();

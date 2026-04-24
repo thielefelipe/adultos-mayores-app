@@ -14,11 +14,17 @@ async function bootstrap() {
         whitelist: true,
         forbidNonWhitelisted: true,
     }));
+    try {
+        const seeder = app.get(crear_admin_seeder_1.CrearAdminSeeder);
+        await seeder.seed();
+        console.log('✅ Admin user initialized');
+    }
+    catch (err) {
+        console.error('❌ Seed error:', err);
+    }
     const port = process.env.PORT ?? 3000;
     await app.listen(port);
     console.log(`Servidor ejecutándose en http://localhost:${port}`);
-    const seeder = app.get(crear_admin_seeder_1.CrearAdminSeeder);
-    await seeder.seed().catch((err) => console.error('Seed error:', err));
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
