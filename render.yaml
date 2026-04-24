@@ -4,7 +4,8 @@ services:
     env: node
     region: ohio
     plan: free
-    buildCommand: cd backend && npm install --legacy-peer-deps && npm run build
+    rootDir: backend
+    buildCommand: npm install --legacy-peer-deps && npm run build
     startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
