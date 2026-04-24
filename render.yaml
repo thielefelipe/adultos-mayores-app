@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: adultos-mayores-backend
+    env: node
+    region: ohio
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: JWT_SECRET
+        value: your_super_secret_jwt_key_change_in_production
+      - key: JWT_EXPIRE
+        value: 24h
+      - key: ENCRYPTION_KEY
+        value: your_32_character_encryption_key_here
+      - key: CORS_ORIGIN
+        scope: backend
+        value: https://adultos-mayores-frontend.onrender.com
+
+  - type: static_site
+    name: adultos-mayores-frontend
+    env: static
+    region: ohio
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://adultos-mayores-backend.onrender.com
