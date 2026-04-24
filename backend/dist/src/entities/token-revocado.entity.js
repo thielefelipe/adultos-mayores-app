@@ -41,7 +41,7 @@ __decorate([
     __metadata("design:type", Date)
 ], TokenRevocadoEntity.prototype, "revocado", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'datetime' }),
+    (0, typeorm_1.Column)({ type: 'timestamp' }),
     __metadata("design:type", Date)
 ], TokenRevocadoEntity.prototype, "expiresAt", void 0);
 exports.TokenRevocadoEntity = TokenRevocadoEntity = __decorate([
