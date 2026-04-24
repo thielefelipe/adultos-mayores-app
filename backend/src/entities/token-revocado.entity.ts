@@ -19,6 +19,6 @@ export class TokenRevocadoEntity {
   @CreateDateColumn()
   revocado: Date;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   expiresAt: Date;
 }

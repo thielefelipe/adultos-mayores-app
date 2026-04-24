@@ -186,6 +186,6 @@ export class PacienteEntity {
   @Column({ type: 'boolean', default: false })
   eliminado: boolean;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   fechaEliminacion?: Date;
 }
