@@ -12,13 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
+const crear_admin_seeder_1 = require("./seeders/crear-admin.seeder");
 let AppController = class AppController {
     appService;
-    constructor(appService) {
+    seeder;
+    constructor(appService, seeder) {
         this.appService = appService;
+        this.seeder = seeder;
     }
     getHello() {
         return this.appService.getHello();
+    }
+    async initSeed() {
+        await this.seeder.seed();
+        return { message: 'Usuario admin inicializado' };
     }
 };
 exports.AppController = AppController;
@@ -28,8 +35,15 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
+__decorate([
+    (0, common_1.Get)('init-seed'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "initSeed", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [app_service_1.AppService])
+    __metadata("design:paramtypes", [app_service_1.AppService,
+        crear_admin_seeder_1.CrearAdminSeeder])
 ], AppController);
 //# sourceMappingURL=app.controller.js.map
