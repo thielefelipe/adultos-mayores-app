@@ -13,21 +13,21 @@ services:
       - key: PORT
         value: 3000
       - key: DB_HOST
-        sync: false
+        value: dpg-d7ltnllckfvc739crllg-a
       - key: DB_PORT
-        sync: false
+        value: 5432
       - key: DB_USERNAME
-        sync: false
+        value: postgres
       - key: DB_PASSWORD
-        sync: false
+        value: 5ZR21MkYYQN1ad8gqtqPJvVmpQAHydLa
       - key: DB_NAME
         value: centros_diurnos_db
       - key: JWT_SECRET
-        sync: false
+        value: demo-secret-key-change-in-production
       - key: JWT_EXPIRE
         value: 24h
       - key: ENCRYPTION_KEY
-        sync: false
+        value: your_32_character_encryption_key_here
       - key: CORS_ORIGIN
         value: https://adultos-mayores-frontend.onrender.com
 
