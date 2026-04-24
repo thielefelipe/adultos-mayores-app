@@ -17,6 +17,11 @@ let UsuarioEntity = class UsuarioEntity {
     nombre;
     password;
     rol;
+    email;
+    telefono;
+    region;
+    provincia;
+    comuna;
     activo;
     creado;
     ultimoAcceso;
@@ -43,6 +48,26 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 20 }),
     __metadata("design:type", String)
 ], UsuarioEntity.prototype, "rol", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
+    __metadata("design:type", String)
+], UsuarioEntity.prototype, "email", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 20, nullable: true }),
+    __metadata("design:type", String)
+], UsuarioEntity.prototype, "telefono", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    __metadata("design:type", String)
+], UsuarioEntity.prototype, "region", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    __metadata("design:type", String)
+], UsuarioEntity.prototype, "provincia", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    __metadata("design:type", String)
+], UsuarioEntity.prototype, "comuna", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'boolean', default: true }),
     __metadata("design:type", Boolean)

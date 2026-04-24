@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, MaxLength, IsEnum } from 'class-validator';
+import { IsString, IsEmail, MinLength, MaxLength, IsEnum, IsOptional, Matches } from 'class-validator';
 
 export class CrearUsuarioDto {
   @IsString()
@@ -17,4 +17,25 @@ export class CrearUsuarioDto {
 
   @IsEnum(['admin', 'operador', 'analista'])
   rol: 'admin' | 'operador' | 'analista';
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(/^\+?[0-9\s\-\(\)]{9,}$/, { message: 'Teléfono inválido' })
+  telefono?: string;
+
+  @IsOptional()
+  @IsString()
+  region?: string;
+
+  @IsOptional()
+  @IsString()
+  provincia?: string;
+
+  @IsOptional()
+  @IsString()
+  comuna?: string;
 }

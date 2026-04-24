@@ -4,13 +4,14 @@ import { UsuarioEntity } from '../entities';
 import { AuditModule } from '../audit/audit.module';
 import { UsuariosService } from './usuarios.service';
 import { UsuariosController } from './usuarios.controller';
+import { UbicacionService } from '../services/ubicacion.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UsuarioEntity]),
     AuditModule,
   ],
-  providers: [UsuariosService],
+  providers: [UsuariosService, UbicacionService],
   controllers: [UsuariosController],
   exports: [UsuariosService],
 })

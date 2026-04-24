@@ -8,15 +8,35 @@ import {
   Param,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { UsuariosService } from './usuarios.service';
+import { UbicacionService } from '../services/ubicacion.service';
 import { CrearUsuarioDto, ActualizarUsuarioDto, CambiarContrasenaDto, EliminarUsuarioDto, RestablecerContrasenaDto } from './dtos';
 
 @Controller('usuarios')
 @UseGuards(JwtGuard)
 export class UsuariosController {
-  constructor(private usuariosService: UsuariosService) {}
+  constructor(
+    private usuariosService: UsuariosService,
+    private ubicacionService: UbicacionService,
+  ) {}
+
+  @Get('ubicacion/regiones')
+  getRegiones() {
+    return this.ubicacionService.getRegiones();
+  }
+
+  @Get('ubicacion/provincias')
+  getProvincias(@Query('region') region: string) {
+    return this.ubicacionService.getProvincias(region);
+  }
+
+  @Get('ubicacion/comunas')
+  getComunas(@Query('region') region: string, @Query('provincia') provincia: string) {
+    return this.ubicacionService.getComunas(region, provincia);
+  }
 
   @Post('cambiar-contrasena')
   async cambiarContrasena(@Body() cambiarDto: CambiarContrasenaDto, @Request() req) {

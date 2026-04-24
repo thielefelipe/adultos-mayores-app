@@ -16,6 +16,11 @@ class CrearUsuarioDto {
     nombre;
     password;
     rol;
+    email;
+    telefono;
+    region;
+    provincia;
+    comuna;
 }
 exports.CrearUsuarioDto = CrearUsuarioDto;
 __decorate([
@@ -39,4 +44,30 @@ __decorate([
     (0, class_validator_1.IsEnum)(['admin', 'operador', 'analista']),
     __metadata("design:type", String)
 ], CrearUsuarioDto.prototype, "rol", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEmail)(),
+    __metadata("design:type", String)
+], CrearUsuarioDto.prototype, "email", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Matches)(/^\+?[0-9\s\-\(\)]{9,}$/, { message: 'Teléfono inválido' }),
+    __metadata("design:type", String)
+], CrearUsuarioDto.prototype, "telefono", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CrearUsuarioDto.prototype, "region", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CrearUsuarioDto.prototype, "provincia", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CrearUsuarioDto.prototype, "comuna", void 0);
 //# sourceMappingURL=crear-usuario.dto.js.map

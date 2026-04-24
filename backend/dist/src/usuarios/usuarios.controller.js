@@ -16,11 +16,23 @@ exports.UsuariosController = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
 const usuarios_service_1 = require("./usuarios.service");
+const ubicacion_service_1 = require("../services/ubicacion.service");
 const dtos_1 = require("./dtos");
 let UsuariosController = class UsuariosController {
     usuariosService;
-    constructor(usuariosService) {
+    ubicacionService;
+    constructor(usuariosService, ubicacionService) {
         this.usuariosService = usuariosService;
+        this.ubicacionService = ubicacionService;
+    }
+    getRegiones() {
+        return this.ubicacionService.getRegiones();
+    }
+    getProvincias(region) {
+        return this.ubicacionService.getProvincias(region);
+    }
+    getComunas(region, provincia) {
+        return this.ubicacionService.getComunas(region, provincia);
     }
     async cambiarContrasena(cambiarDto, req) {
         return this.usuariosService.cambiarContrasena(req.user.sub, cambiarDto, req.user.username);
@@ -46,6 +58,27 @@ let UsuariosController = class UsuariosController {
     }
 };
 exports.UsuariosController = UsuariosController;
+__decorate([
+    (0, common_1.Get)('ubicacion/regiones'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsuariosController.prototype, "getRegiones", null);
+__decorate([
+    (0, common_1.Get)('ubicacion/provincias'),
+    __param(0, (0, common_1.Query)('region')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsuariosController.prototype, "getProvincias", null);
+__decorate([
+    (0, common_1.Get)('ubicacion/comunas'),
+    __param(0, (0, common_1.Query)('region')),
+    __param(1, (0, common_1.Query)('provincia')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], UsuariosController.prototype, "getComunas", null);
 __decorate([
     (0, common_1.Post)('cambiar-contrasena'),
     __param(0, (0, common_1.Body)()),
@@ -105,6 +138,7 @@ __decorate([
 exports.UsuariosController = UsuariosController = __decorate([
     (0, common_1.Controller)('usuarios'),
     (0, common_1.UseGuards)(jwt_guard_1.JwtGuard),
-    __metadata("design:paramtypes", [usuarios_service_1.UsuariosService])
+    __metadata("design:paramtypes", [usuarios_service_1.UsuariosService,
+        ubicacion_service_1.UbicacionService])
 ], UsuariosController);
 //# sourceMappingURL=usuarios.controller.js.map

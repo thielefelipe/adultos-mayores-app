@@ -62,7 +62,7 @@ let UsuariosService = class UsuariosService {
     async obtenerTodos() {
         return this.usuarioRepository.find({
             where: { activo: true },
-            select: ['id', 'username', 'nombre', 'rol', 'creado', 'ultimoAcceso'],
+            select: ['id', 'username', 'nombre', 'rol', 'email', 'telefono', 'region', 'provincia', 'comuna', 'creado', 'ultimoAcceso'],
         });
     }
     async obtenerPorId(id) {
@@ -91,6 +91,11 @@ let UsuariosService = class UsuariosService {
             username: usuarioCreado.username,
             nombre: usuarioCreado.nombre,
             rol: usuarioCreado.rol,
+            email: usuarioCreado.email,
+            telefono: usuarioCreado.telefono,
+            region: usuarioCreado.region,
+            provincia: usuarioCreado.provincia,
+            comuna: usuarioCreado.comuna,
         };
     }
     async actualizar(id, actualizarDto, usuarioAdmin) {
@@ -103,6 +108,26 @@ let UsuariosService = class UsuariosService {
         if (actualizarDto.rol) {
             cambios['rol'] = actualizarDto.rol;
             usuario.rol = actualizarDto.rol;
+        }
+        if (actualizarDto.email) {
+            cambios['email'] = actualizarDto.email;
+            usuario.email = actualizarDto.email;
+        }
+        if (actualizarDto.telefono) {
+            cambios['telefono'] = actualizarDto.telefono;
+            usuario.telefono = actualizarDto.telefono;
+        }
+        if (actualizarDto.region) {
+            cambios['region'] = actualizarDto.region;
+            usuario.region = actualizarDto.region;
+        }
+        if (actualizarDto.provincia) {
+            cambios['provincia'] = actualizarDto.provincia;
+            usuario.provincia = actualizarDto.provincia;
+        }
+        if (actualizarDto.comuna) {
+            cambios['comuna'] = actualizarDto.comuna;
+            usuario.comuna = actualizarDto.comuna;
         }
         await this.usuarioRepository.save(usuario);
         await this.auditService.registrar(usuarioAdmin, 'ACTUALIZAR_USUARIO', 'usuario', id, cambios);

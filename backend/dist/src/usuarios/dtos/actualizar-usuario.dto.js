@@ -14,6 +14,11 @@ const class_validator_1 = require("class-validator");
 class ActualizarUsuarioDto {
     nombre;
     rol;
+    email;
+    telefono;
+    region;
+    provincia;
+    comuna;
 }
 exports.ActualizarUsuarioDto = ActualizarUsuarioDto;
 __decorate([
@@ -28,4 +33,30 @@ __decorate([
     (0, class_validator_1.IsEnum)(['admin', 'operador', 'analista']),
     __metadata("design:type", String)
 ], ActualizarUsuarioDto.prototype, "rol", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEmail)(),
+    __metadata("design:type", String)
+], ActualizarUsuarioDto.prototype, "email", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Matches)(/^\+?[0-9\s\-\(\)]{9,}$/, { message: 'Teléfono inválido' }),
+    __metadata("design:type", String)
+], ActualizarUsuarioDto.prototype, "telefono", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ActualizarUsuarioDto.prototype, "region", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ActualizarUsuarioDto.prototype, "provincia", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ActualizarUsuarioDto.prototype, "comuna", void 0);
 //# sourceMappingURL=actualizar-usuario.dto.js.map

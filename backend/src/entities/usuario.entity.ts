@@ -17,6 +17,21 @@ export class UsuarioEntity {
   @Column({ type: 'varchar', length: 20 })
   rol: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  email?: string;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  telefono?: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  region?: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  provincia?: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  comuna?: string;
+
   @Column({ type: 'boolean', default: true })
   activo: boolean;
 

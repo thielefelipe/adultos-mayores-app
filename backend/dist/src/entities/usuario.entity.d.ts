@@ -4,6 +4,11 @@ export declare class UsuarioEntity {
     nombre: string;
     password: string;
     rol: string;
+    email?: string;
+    telefono?: string;
+    region?: string;
+    provincia?: string;
+    comuna?: string;
     activo: boolean;
     creado: Date;
     ultimoAcceso?: Date;

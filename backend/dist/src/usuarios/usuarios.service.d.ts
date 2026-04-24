@@ -13,6 +13,11 @@ export declare class UsuariosService {
         username: string;
         nombre: string;
         rol: string;
+        email: string | undefined;
+        telefono: string | undefined;
+        region: string | undefined;
+        provincia: string | undefined;
+        comuna: string | undefined;
     }>;
     actualizar(id: string, actualizarDto: ActualizarUsuarioDto, usuarioAdmin: string): Promise<{
         id: string;

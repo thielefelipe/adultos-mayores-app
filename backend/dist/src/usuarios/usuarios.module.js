@@ -13,6 +13,7 @@ const entities_1 = require("../entities");
 const audit_module_1 = require("../audit/audit.module");
 const usuarios_service_1 = require("./usuarios.service");
 const usuarios_controller_1 = require("./usuarios.controller");
+const ubicacion_service_1 = require("../services/ubicacion.service");
 let UsuariosModule = class UsuariosModule {
 };
 exports.UsuariosModule = UsuariosModule;
@@ -22,7 +23,7 @@ exports.UsuariosModule = UsuariosModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([entities_1.UsuarioEntity]),
             audit_module_1.AuditModule,
         ],
-        providers: [usuarios_service_1.UsuariosService],
+        providers: [usuarios_service_1.UsuariosService, ubicacion_service_1.UbicacionService],
         controllers: [usuarios_controller_1.UsuariosController],
         exports: [usuarios_service_1.UsuariosService],
     })
