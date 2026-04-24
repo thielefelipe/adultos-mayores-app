@@ -73,7 +73,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             Centro de Gestión — Adultos Mayores
           </div>
           <div style={{ color: 'rgba(255,255,255,.7)', fontSize: 11, marginTop: 2 }}>
-            Centros Diurnos 2025
+            Centros Diurnos 2026
           </div>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12 }}>
