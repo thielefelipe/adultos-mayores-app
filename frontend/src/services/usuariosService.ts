@@ -1,4 +1,12 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const getApiUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+    return 'https://adultos-mayores-backend.onrender.com/api';
+  }
+  return 'http://localhost:3000/api';
+};
+
+const API_URL = getApiUrl();
 
 export interface Usuario {
   id: string;
