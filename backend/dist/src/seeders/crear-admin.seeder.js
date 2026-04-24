@@ -57,6 +57,9 @@ let CrearAdminSeeder = class CrearAdminSeeder {
     constructor(usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
+    async onModuleInit() {
+        await this.seed();
+    }
     async seed() {
         const adminExistente = await this.usuarioRepository.findOne({
             where: { username: 'admin' },
