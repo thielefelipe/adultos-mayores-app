@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { UbicacionService } from '../services/ubicacion.service';
 
-@Controller('api/ubicacion')
+@Controller('ubicacion')
 export class UbicacionController {
   constructor(private ubicacionService: UbicacionService) {}
 
