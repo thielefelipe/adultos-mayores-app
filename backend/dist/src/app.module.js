@@ -40,7 +40,7 @@ exports.AppModule = AppModule = __decorate([
                     password: configService.get('DB_PASSWORD', 'admin'),
                     database: configService.get('DB_NAME', 'centros_diurnos_db'),
                     entities: [entities_1.PacienteEntity, entities_1.UsuarioEntity, entities_1.AuditLogEntity, entities_1.TokenRevocadoEntity],
-                    synchronize: configService.get('NODE_ENV') === 'development',
+                    synchronize: true,
                     logging: configService.get('NODE_ENV') === 'development',
                     ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
                 }),

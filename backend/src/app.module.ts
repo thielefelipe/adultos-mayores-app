@@ -28,7 +28,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
         password: configService.get('DB_PASSWORD', 'admin'),
         database: configService.get('DB_NAME', 'centros_diurnos_db'),
         entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: true,
         logging: configService.get('NODE_ENV') === 'development',
         ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
       }),
