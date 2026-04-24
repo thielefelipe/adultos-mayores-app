@@ -1,20 +1,22 @@
-# Build stage
-FROM node:24-alpine as builder
-
-WORKDIR /app/backend
-COPY backend/package*.json ./
-RUN npm install --legacy-peer-deps
-
-COPY backend .
-RUN npm run build
-
-# Runtime stage
 FROM node:24-alpine
 
+WORKDIR /app
+
+# Copy backend files
+COPY backend/package*.json ./backend/
+COPY backend/src ./backend/src
+COPY backend/tsconfig*.json ./backend/
+COPY backend/nest-cli.json ./backend/
+
+# Install dependencies
 WORKDIR /app/backend
-COPY --from=builder /app/backend/dist ./dist
-COPY backend/package*.json ./
+RUN npm install --legacy-peer-deps
+
+# Build
+RUN npm run build
+
+# Remove dev dependencies
 RUN npm install --legacy-peer-deps --only=production
 
 EXPOSE 3000
-CMD ["node", "dist/main"]
+CMD ["node", "./dist/main"]
