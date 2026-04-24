@@ -36,8 +36,5 @@ services:
     env: static
     region: ohio
     plan: free
-    buildCommand: cd frontend && npm install && npm run build
-    envVars:
-      - key: VITE_API_URL
-        value: https://adultos-mayores-backend.onrender.com/api
+    buildCommand: cd frontend && npm install && VITE_API_URL='https://adultos-mayores-backend.onrender.com/api' npm run build
     staticPublishPath: frontend/dist
