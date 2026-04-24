@@ -3,8 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { usuariosService } from '../services/usuariosService';
 import './Modal.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://adultos-mayores-backend.onrender.com/api';
-console.log('API_URL configurado:', API_URL);
+const API_URL = 'https://adultos-mayores-backend.onrender.com/api';
 
 interface ModalProps {
   onConfirm: () => void;
