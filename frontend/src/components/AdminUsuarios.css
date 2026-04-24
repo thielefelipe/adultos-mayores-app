@@ -1,0 +1,170 @@
+.admin-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.btn-crear {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.btn-crear:hover {
+  background-color: #218838;
+}
+
+.error-banner {
+  background-color: #fee;
+  color: #c33;
+  padding: 12px 16px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c33;
+}
+
+.usuarios-table-wrapper {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.usuarios-table thead {
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.usuarios-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.usuarios-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s;
+}
+
+.usuarios-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.usuarios-table td {
+  padding: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.username {
+  font-weight: 600;
+  color: #333;
+}
+
+.rol-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rol-admin {
+  background-color: #e7d4f5;
+  color: #764ba2;
+}
+
+.rol-operador {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.rol-analista {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn-restablecer:hover {
+  background-color: #e3f2fd;
+}
+
+.btn-eliminar:hover {
+  background-color: #ffebee;
+}
+
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 40px !important;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .usuarios-table {
+    font-size: 12px;
+  }
+
+  .usuarios-table th,
+  .usuarios-table td {
+    padding: 10px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

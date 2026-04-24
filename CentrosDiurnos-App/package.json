@@ -1,0 +1,66 @@
+{
+  "name": "centros-diurnos-linea-base",
+  "version": "1.0.0",
+  "description": "Sistema de registro y seguimiento de adultos mayores — SENAMA",
+  "main": "main.js",
+  "author": "SENAMA",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64"
+  },
+  "build": {
+    "appId": "cl.senama.centrosdiurnos.lineabase",
+    "productName": "Centros Diurnos SENAMA",
+    "copyright": "SENAMA © 2025",
+    "asar": false,
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!scripts/**",
+      "!*.bat",
+      "!*.md",
+      "!.git/**"
+    ],
+    "extraResources": [
+      {
+        "from": "assets/",
+        "to": "assets/",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "Instalar-CentrosDiurnos-SENAMA.exe"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Centros Diurnos SENAMA",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    },
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  }
+}

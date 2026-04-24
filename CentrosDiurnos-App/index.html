@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Línea Base — Centros Diurnos 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:    #FAF7F2;
+    --warm:     #F2EDE4;
+    --sand:     #E8DDD0;
+    --clay:     #C4A882;
+    --terra:    #8B6F47;
+    --deep:     #2C2016;
+    --ink:      #1A1208;
+
+    --verde:    #2D7A4F;
+    --verde-bg: #EAF5EE;
+    --verde-bd: #A8D5B8;
+
+    --ambar:    #9A6C00;
+    --ambar-bg: #FFF8E6;
+    --ambar-bd: #F5D27A;
+
+    --rojo:     #B83232;
+    --rojo-bg:  #FDEAEA;
+    --rojo-bd:  #F0A0A0;
+
+    --azul:     #2B5BA8;
+    --azul-bg:  #EEF3FF;
+
+    --radius:   14px;
+    --shadow:   0 2px 20px rgba(44,32,22,.08);
+    --shadow-lg: 0 8px 40px rgba(44,32,22,.14);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--deep);
+    padding: 0 2rem;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 16px rgba(0,0,0,.3);
+  }
+  .logo {
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--clay) 0%, var(--terra) 100%);
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(196,168,130,.35);
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    color: var(--cream);
+    font-size: 1.15rem;
+    line-height: 1.1;
+  }
+  .logo-text span { display: block; font-family: 'DM Sans', sans-serif; font-size: .7rem; color: var(--clay); font-weight: 300; letter-spacing: .08em; text-transform: uppercase; }
+  .header-actions { display: flex; gap: .75rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .5rem 1.1rem; border-radius: 8px; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 500;
+    cursor: pointer; transition: all .18s;
+  }
+  .btn-primary { background: var(--clay); color: var(--deep); }
+  .btn-primary:hover { background: #d4b894; transform: translateY(-1px); }
+  .btn-ghost { background: rgba(255,255,255,.08); color: var(--cream); border: 1px solid rgba(255,255,255,.15); }
+  .btn-ghost:hover { background: rgba(255,255,255,.15); }
+  .btn-sm { padding: .35rem .8rem; font-size: .8rem; }
+  .btn-verde { background: var(--verde-bg); color: var(--verde); border: 1px solid var(--verde-bd); }
+  .btn-verde:hover { background: var(--verde); color: white; }
+  .btn-danger { background: var(--rojo-bg); color: var(--rojo); border: 1px solid var(--rojo-bd); }
+  .btn-danger:hover { background: var(--rojo); color: white; }
+
+  /* ── LAYOUT ── */
+  .app { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 64px); }
+
+  /* ── SIDEBAR ── */
+  aside {
+    background: var(--warm);
+    border-right: 1px solid var(--sand);
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 64px);
+    position: sticky; top: 64px;
+  }
+  .aside-title {
+    font-size: .7rem; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--terra);
+    margin-bottom: 1rem; padding: 0 .5rem;
+  }
+  .patient-list { display: flex; flex-direction: column; gap: .4rem; }
+  .patient-card {
+    padding: .65rem .85rem; border-radius: 10px;
+    cursor: pointer; transition: all .15s;
+    border: 1.5px solid transparent;
+    background: white;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  .patient-card:hover { border-color: var(--clay); box-shadow: var(--shadow); }
+  .patient-card.active { border-color: var(--terra); background: var(--warm); box-shadow: var(--shadow); }
+  .patient-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; font-weight: 600; flex-shrink: 0;
+    color: white;
+  }
+  .patient-info { flex: 1; min-width: 0; }
+  .patient-name { font-size: .85rem; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .patient-meta { font-size: .72rem; color: var(--terra); margin-top: 1px; }
+  .sem-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .sem-verde { background: var(--verde); }
+  .sem-ambar { background: var(--ambar); }
+  .sem-rojo  { background: var(--rojo); }
+  .sem-gray  { background: #ccc; }
+  .empty-list {
+    text-align: center; padding: 2rem 1rem;
+    color: var(--terra); font-size: .85rem; line-height: 1.6;
+  }
+
+  /* ── MAIN ── */
+  main { padding: 2rem; overflow-y: auto; }
+
+  /* ── DASHBOARD ── */
+  .dashboard-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: white; border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--sand);
+    box-shadow: var(--shadow);
+  }
+  .stat-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--terra); font-weight: 600; }
+  .stat-value { font-family: 'DM Serif Display', serif; font-size: 2.2rem; color: var(--deep); margin-top: .25rem; line-height: 1; }
+  .stat-sub { font-size: .75rem; color: #888; margin-top: .3rem; }
+  .stat-verde .stat-value { color: var(--verde); }
+  .stat-ambar .stat-value { color: var(--ambar); }
+  .stat-rojo  .stat-value { color: var(--rojo); }
+
+  /* ── SECTION TITLES ── */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--deep);
+  }
+  .section-title span { font-family: 'DM Sans', sans-serif; font-size: .8rem; color: var(--terra); font-weight: 400; margin-left: .5rem; }
+
+  /* ── FORM PANEL ── */
+  .form-panel {
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--sand); box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .form-tabs {
+    display: flex; border-bottom: 1px solid var(--sand);
+    background: var(--warm);
+    overflow-x: auto;
+  }
+  .form-tab {
+    padding: .85rem 1.25rem; font-size: .82rem; font-weight: 500;
+    color: var(--terra); cursor: pointer; white-space: nowrap;
+    border-bottom: 2px solid transparent; transition: all .15s;
+    background: none; border-left: none; border-right: none; border-top: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .form-tab.active { color: var(--terra); border-bottom-color: var(--terra); background: white; }
+  .form-tab:hover:not(.active) { color: var(--deep); }
+  .form-body { padding: 1.75rem 2rem; }
+
+  /* ── FIELDS ── */
+  .field-grid { display: grid; gap: 1.25rem; }
+  .field-grid-2 { grid-template-columns: 1fr 1fr; }
+  .field-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: .35rem; }
+  label { font-size: .78rem; font-weight: 600; color: var(--terra); letter-spacing: .03em; }
+  label .req { color: var(--rojo); margin-left: 2px; }
+  input, select, textarea {
+    width: 100%; padding: .6rem .85rem;
+    border: 1.5px solid var(--sand); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--ink);
+    background: white; transition: border-color .15s, box-shadow .15s;
+    appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--terra);
+    box-shadow: 0 0 0 3px rgba(139,111,71,.12);
+  }
+  textarea { resize: vertical; min-height: 72px; }
+  .field-hint { font-size: .72rem; color: #999; margin-top: 2px; }
+
+  /* ── INSTRUMENT SECTION ── */
+  .instrument-block {
+    background: var(--warm); border-radius: 10px;
+    padding: 1.25rem 1.5rem; margin-bottom: 1rem;
+    border: 1px solid var(--sand);
+  }
+  .instrument-header {
+    display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem;
+  }
+  .instrument-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--deep); flex-shrink: 0;
+  }
+  .instrument-name { font-weight: 600; font-size: .92rem; color: var(--deep); }
+  .instrument-desc { font-size: .75rem; color: var(--terra); }
+  .vgi-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* ── SCORE PILL ── */
+  .score-display {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .3rem .75rem; border-radius: 20px;
+    font-weight: 700; font-size: .85rem;
+  }
+  .score-verde { background: var(--verde-bg); color: var(--verde); border: 1px solid var(--verde-bd); }
+  .score-ambar { background: var(--ambar-bg); color: var(--ambar); border: 1px solid var(--ambar-bd); }
+  .score-rojo  { background: var(--rojo-bg); color: var(--rojo); border: 1px solid var(--rojo-bd); }
+  .score-gray  { background: var(--warm); color: #999; border: 1px solid var(--sand); }
+
+  /* ── SEMAPHORE WIDGET ── */
+  .semaforo-widget {
+    background: var(--deep); border-radius: var(--radius);
+    padding: 1.75rem 2rem; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 2rem;
+    box-shadow: var(--shadow-lg);
+  }
+  .sem-lights { display: flex; flex-direction: column; gap: .55rem; }
+  .sem-light {
+    width: 22px; height: 22px; border-radius: 50%;
+    transition: all .3s; opacity: .25;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.1);
+  }
+  .sem-light.on { opacity: 1; box-shadow: 0 0 14px 3px currentColor; }
+  .sem-light-verde { background: #4ade80; color: #4ade80; }
+  .sem-light-ambar { background: #fbbf24; color: #fbbf24; }
+  .sem-light-rojo  { background: #f87171; color: #f87171; }
+  .sem-info { flex: 1; }
+  .sem-name  { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: white; margin-bottom: .2rem; }
+  .sem-status-text { font-size: 1.75rem; font-weight: 700; }
+  .sem-score-big {
+    text-align: right;
+  }
+  .sem-score-num { font-family: 'DM Serif Display', serif; font-size: 3.5rem; color: white; line-height: 1; }
+  .sem-score-label { font-size: .75rem; color: var(--clay); text-transform: uppercase; letter-spacing: .08em; }
+  .sem-bars { flex: 1.5; }
+  .bar-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .45rem; }
+  .bar-label { font-size: .72rem; color: var(--clay); width: 110px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { flex: 1; height: 6px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
+  .bar-val { font-size: .72rem; color: var(--clay); width: 30px; text-align: right; flex-shrink: 0; }
+
+  /* ── PATIENT TABLE ── */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--sand); }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: var(--deep); }
+  thead th { padding: .75rem 1rem; font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--clay); text-align: left; white-space: nowrap; }
+  tbody tr { background: white; border-bottom: 1px solid var(--sand); transition: background .12s; cursor: pointer; }
+  tbody tr:hover { background: var(--warm); }
+  tbody td { padding: .75rem 1rem; font-size: .83rem; color: var(--ink); }
+  .td-name { font-weight: 500; }
+  .badge {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .25rem .65rem; border-radius: 20px; font-size: .75rem; font-weight: 600;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(26,18,8,.6);
+    z-index: 200; display: none; align-items: center; justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: 18px; width: 100%; max-width: 900px;
+    max-height: 90vh; display: flex; flex-direction: column;
+    box-shadow: 0 20px 80px rgba(0,0,0,.4);
+    animation: modal-in .2s ease;
+  }
+  @keyframes modal-in {
+    from { opacity:0; transform: scale(.95) translateY(12px); }
+    to   { opacity:1; transform: scale(1) translateY(0); }
+  }
+  .modal-header {
+    padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--sand);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--deep); }
+  .modal-close { background: none; border: none; font-size: 1.4rem; color: var(--terra); cursor: pointer; padding: .2rem; line-height: 1; }
+  .modal-body { padding: 1.5rem 1.75rem; overflow-y: auto; flex: 1; }
+  .modal-footer { padding: 1rem 1.75rem; border-top: 1px solid var(--sand); display: flex; gap: .75rem; justify-content: flex-end; flex-shrink: 0; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--terra); padding: .5rem 0 .75rem; margin-top: .5rem;
+    border-top: 1px solid var(--sand); display: flex; align-items: center; gap: .5rem;
+  }
+  .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+  /* ── EMPTY STATE ── */
+  .empty-main {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 5rem 2rem; text-align: center; gap: 1rem;
+  }
+  .empty-icon { font-size: 4rem; opacity: .3; }
+  .empty-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--terra); }
+  .empty-desc { font-size: .9rem; color: #aaa; max-width: 320px; line-height: 1.6; }
+
+  /* ── SEARCH ── */
+  .search-wrap { position: relative; margin-bottom: 1rem; }
+  .search-wrap input { padding-left: 2.25rem; }
+  .search-icon { position: absolute; left: .75rem; top: 50%; transform: translateY(-50%); color: var(--terra); font-size: .9rem; pointer-events: none; }
+
+  /* ── SEGUIMIENTO ── */
+  .seg-period-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .seg-period-card {
+    background: white; border-radius: var(--radius); border: 2px solid var(--sand);
+    padding: 1.25rem; box-shadow: var(--shadow); transition: all .2s;
+  }
+  .seg-period-card.active-period { border-color: var(--terra); }
+  .seg-period-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;
+  }
+  .seg-period-label { font-weight: 700; font-size: .85rem; color: var(--deep); }
+  .seg-period-date { font-size: .75rem; color: #999; }
+  .seg-score-chip {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .2rem .65rem; border-radius: 20px;
+    font-size: .8rem; font-weight: 700;
+  }
+  .trend-arrow { font-size: 1.4rem; }
+  .trend-up    { color: var(--verde); }
+  .trend-same  { color: #aaa; }
+  .trend-down  { color: var(--rojo); }
+
+  .evolution-chart {
+    background: white; border-radius: var(--radius); border: 1px solid var(--sand);
+    padding: 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem;
+  }
+  .chart-title { font-family: 'DM Serif Display', serif; font-size: 1rem; color: var(--deep); margin-bottom: 1rem; }
+  .sparkline-wrap { position: relative; height: 120px; }
+  canvas.sparkline { width: 100%; height: 120px; }
+
+  .seg-table-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--sand); margin-bottom: 1.5rem; }
+  .diff-positive { color: var(--verde); font-weight: 700; }
+  .diff-negative { color: var(--rojo); font-weight: 700; }
+  .diff-zero     { color: #aaa; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+    background: var(--deep); color: white; padding: .85rem 1.25rem;
+    border-radius: 10px; font-size: .85rem; box-shadow: var(--shadow-lg);
+    transform: translateY(100px); opacity: 0; transition: all .3s;
+    display: flex; align-items: center; gap: .5rem;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    aside { display: none; }
+    .dashboard-grid { grid-template-columns: 1fr 1fr; }
+    .field-grid-3, .field-grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .field-grid-2 { grid-template-columns: 1fr; }
+    .vgi-pair { grid-template-columns: 1fr; }
+    .semaforo-widget { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     AUTH OVERLAY
+  ═══════════════════════════════════════════════════════ */
+  .auth-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: var(--deep);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .35s;
+  }
+  .auth-overlay.hidden { opacity: 0; pointer-events: none; }
+  .auth-bg-pattern {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(circle at 20% 80%, rgba(196,168,130,.12) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(139,111,71,.1) 0%, transparent 50%);
+  }
+  .auth-card {
+    position: relative; z-index: 1;
+    background: var(--cream); border-radius: 24px;
+    padding: 2.75rem 2.5rem 2.25rem; width: 390px;
+    box-shadow: 0 40px 100px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
+  }
+  .auth-brand { display: flex; align-items: center; gap: .9rem; margin-bottom: 2.25rem; }
+  .auth-brand-icon {
+    width: 54px; height: 54px; flex-shrink: 0;
+    background: linear-gradient(145deg, var(--clay), var(--terra));
+    border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 20px rgba(139,111,71,.38);
+  }
+  .auth-brand-name { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--deep); line-height: 1.1; }
+  .auth-brand-sub { font-size: .68rem; color: var(--terra); text-transform: uppercase; letter-spacing: .1em; margin-top: .2rem; font-weight: 500; }
+  .auth-divider { height: 1px; background: var(--sand); margin-bottom: 1.75rem; }
+  .auth-field { margin-bottom: 1.1rem; }
+  .auth-field label { display: block; font-size: .7rem; font-weight: 700; color: var(--terra); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .45rem; }
+  .auth-field input { width: 100%; padding: .72rem 1rem; border: 1.5px solid var(--sand); border-radius: 11px; font-family: 'DM Sans', sans-serif; font-size: .9rem; background: white; color: var(--ink); transition: border-color .15s, box-shadow .15s; }
+  .auth-field input:focus { outline: none; border-color: var(--terra); box-shadow: 0 0 0 3px rgba(139,111,71,.13); }
+  .auth-error { background: var(--rojo-bg); border: 1px solid var(--rojo-bd); color: var(--rojo); padding: .65rem 1rem; border-radius: 10px; font-size: .82rem; margin-bottom: 1.1rem; display: none; text-align: center; }
+  .auth-error.show { display: block; }
+  .auth-submit { width: 100%; padding: .82rem 1rem; border-radius: 11px; border: none; background: var(--deep); color: white; font-family: 'DM Sans', sans-serif; font-size: .93rem; font-weight: 600; cursor: pointer; transition: all .2s; margin-top: .25rem; display: flex; align-items: center; justify-content: center; gap: .5rem; letter-spacing: .02em; }
+  .auth-submit:hover { background: var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.25); transform: translateY(-1px); }
+  .auth-submit:disabled { opacity: .65; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+  .auth-foot { text-align: center; color: var(--clay); font-size: .7rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--sand); line-height: 1.5; }
+
+  /* HEADER USER CHIP */
+  .header-sep { width: 1px; height: 22px; background: rgba(255,255,255,.18); }
+  .user-chip { display: flex; align-items: center; gap: .5rem; padding: .3rem .6rem .3rem .35rem; border-radius: 9px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13); cursor: default; user-select: none; }
+  .chip-av { width: 27px; height: 27px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .64rem; font-weight: 800; color: white; }
+  .chip-av.rol-admin    { background: linear-gradient(135deg,#5C3D2E,#1A1208); }
+  .chip-av.rol-operador { background: linear-gradient(135deg,var(--clay),var(--terra)); }
+  .chip-av.rol-analista { background: linear-gradient(135deg,#4A8FC4,#2B5BA8); }
+  .chip-name { font-size: .78rem; color: var(--cream); font-weight: 500; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chip-role { font-size: .6rem; color: var(--clay); text-transform: uppercase; letter-spacing: .07em; }
+  .role-pill { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .58rem; border-radius: 20px; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .role-pill.admin    { background: rgba(255,255,255,.12); color: var(--clay); }
+  .role-pill.operador { background: var(--sand); color: var(--terra); }
+  .role-pill.analista { background: var(--azul-bg); color: var(--azul); border: 1px solid #c0d4f5; }
+
+  /* ADMIN PANEL */
+  .admin-overlay { position: fixed; inset: 0; z-index: 600; background: rgba(26,18,8,.6); backdrop-filter: blur(5px); display: none; align-items: flex-start; justify-content: center; padding: 3rem 1rem; overflow-y: auto; }
+  .admin-overlay.open { display: flex; }
+  .admin-panel { background: var(--cream); border-radius: 22px; width: 700px; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 32px 80px rgba(0,0,0,.3); overflow: hidden; animation: slideDown .22s ease; }
+  .admin-hd { background: var(--deep); padding: 1.5rem 1.85rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .admin-hd-title { font-family: 'DM Serif Display', serif; color: white; font-size: 1.05rem; }
+  .admin-hd-sub { font-size: .67rem; color: var(--clay); margin-top: .1rem; text-transform: uppercase; letter-spacing: .08em; }
+  .admin-bd { overflow-y: auto; flex: 1; }
+  .admin-sec { padding: 1.4rem 1.85rem; }
+  .admin-sec + .admin-sec { border-top: 1px solid var(--sand); }
+  .admin-sec-hd { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--terra); margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; }
+  .users-table { width: 100%; border-collapse: collapse; }
+  .users-table th { font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; color: var(--terra); font-weight: 700; padding: .45rem .6rem; text-align: left; border-bottom: 1.5px solid var(--sand); }
+  .users-table td { padding: .65rem .6rem; border-bottom: 1px solid var(--warm); font-size: .83rem; vertical-align: middle; }
+  .users-table tr:last-child td { border-bottom: none; }
+  .users-table tbody tr:hover td { background: var(--warm); }
+  .u-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .65rem; font-weight: 800; color: white; }
+  .u-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; margin-right: .3rem; }
+  .u-dot.activo { background: var(--verde); }
+  .u-dot.inactivo { background: var(--rojo); }
+  .admin-form-sec { background: var(--warm); border-top: 1px solid var(--sand); padding: 1.4rem 1.85rem; display: none; }
+  .admin-form-sec.open { display: block; }
+  .admin-form-title { font-weight: 600; font-size: .88rem; color: var(--deep); margin-bottom: 1rem; }
+  .admin-fg { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+  .admin-field label { display: block; font-size: .7rem; font-weight: 700; color: var(--terra); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .38rem; }
+  .admin-field input, .admin-field select { width: 100%; padding: .62rem .85rem; border: 1.5px solid var(--sand); border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: .87rem; background: white; color: var(--ink); transition: border-color .15s; }
+  .admin-field input:focus, .admin-field select:focus { outline: none; border-color: var(--terra); }
+
+  /* CHANGE PASSWORD MODAL */
+  .pwd-overlay { position: fixed; inset: 0; z-index: 700; background: rgba(26,18,8,.6); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; }
+  .pwd-overlay.open { display: flex; }
+  .pwd-card { background: var(--cream); border-radius: 20px; width: 380px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.3); animation: slideDown .22s ease; }
+  .pwd-hd { background: var(--deep); padding: 1.35rem 1.65rem; }
+  .pwd-hd-title { font-family: 'DM Serif Display', serif; color: white; font-size: 1rem; }
+  .pwd-body { padding: 1.5rem 1.65rem; }
+  .pwd-field { margin-bottom: 1rem; }
+  .pwd-field label { display: block; font-size: .7rem; font-weight: 700; color: var(--terra); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .38rem; }
+  .pwd-field input { width: 100%; padding: .65rem .9rem; border: 1.5px solid var(--sand); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: .88rem; background: white; color: var(--ink); transition: border-color .15s; }
+  .pwd-field input:focus { outline: none; border-color: var(--terra); }
+  .pwd-error { background: var(--rojo-bg); border: 1px solid var(--rojo-bd); color: var(--rojo); padding: .55rem .85rem; border-radius: 8px; font-size: .8rem; margin-bottom: .9rem; display: none; }
+  .pwd-error.show { display: block; }
+  .pwd-foot { display: flex; gap: .6rem; justify-content: flex-end; padding: 1rem 1.65rem; border-top: 1px solid var(--sand); background: var(--warm); }
+
+  /* READONLY BANNER */
+  .readonly-banner { background: var(--azul-bg); border-bottom: 1px solid #c0d4f5; padding: .55rem 2rem; font-size: .78rem; color: var(--azul); display: none; align-items: center; gap: .5rem; }
+  .readonly-banner.show { display: flex; }
+
+  /* ── CREDENCIAL STYLES ── */
+  #cameraContainer { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  #cameraSection { display: flex; flex-direction: column; gap: 1rem; }
+  #cameraMessage { padding: 1rem; background: var(--verde-bg); border: 1.5px solid var(--verde-bd); border-radius: 10px; color: var(--verde); font-size: .9rem; text-align: center; cursor: pointer; transition: all .2s; }
+  #cameraMessage:hover { background: var(--verde); color: white; }
+  #cameraPreview { width: 100%; height: 320px; border-radius: 10px; background: #000; object-fit: cover; display: none; }
+  #cameraCanvas { display: none; }
+  #photoPreview { width: 100%; height: 200px; border-radius: 10px; object-fit: cover; border: 2px solid var(--verde-bd); display: none; margin-bottom: 1rem; }
+  #cameraControls { display: none; gap: .75rem; flex-wrap: wrap; justify-content: center; }
+  #cameraControls button { flex: 1; min-width: 120px; }
+  #credentialPreview { display: flex; justify-content: center; align-items: center; min-height: 320px; }
+
+  .cred, .crev {
+    width: 330px;
+    height: 220px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(0,0,0,.28);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .franja {
+    height: 5px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, #d4a843 33%, #1a5c28 33% 66%, #a8d5a2 66%);
+    print-color-adjust: exact;
+  }
+  .franja-b {
+    height: 5px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, #4aaa5a 33%, #1a5c28 33% 66%, #d4a843 66%);
+    print-color-adjust: exact;
+  }
+
+  .chdr {
+    height: 46px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #1a5c28, #2d7a3a 55%, #4aaa5a);
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-bottom: 2px solid rgba(255,255,255,.2);
+    print-color-adjust: exact;
+  }
+  .chlg {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1.5px solid rgba(255,255,255,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chlg img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+  }
+  .chtxt { flex: 1; }
+  .chorg {
+    font-size: 7.5px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    line-height: 1.3;
+  }
+  .chsub {
+    font-size: 6px;
+    color: rgba(255,255,255,.75);
+    margin-top: 1px;
+  }
+
+  .cbody {
+    flex: 1;
+    background: linear-gradient(135deg, #f5fff7, #e8f5eb);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cname {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a5c28;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .cmeta {
+    font-size: 8px;
+    color: #2d7a3a;
+    line-height: 1.4;
+  }
+  .clbl {
+    font-weight: 600;
+    color: #1a5c28;
+  }
+  .cval {
+    color: #4aaa5a;
+    font-weight: 500;
+  }
+
+  .cfoot {
+    height: 26px;
+    flex-shrink: 0;
+    background: #f5fff7;
+    border-top: 1px solid #a8d5a2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #2d7a3a;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     LOGIN OVERLAY
+══════════════════════════════════════════════════════ -->
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-bg-pattern"></div>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="auth-brand-icon">
+        <svg width="28" height="28" viewBox="0 0 22 22" fill="none">
+          <line x1="11" y1="1.5" x2="11" y2="3.2" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <line x1="16.2" y1="2.9" x2="15.1" y2="4" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <line x1="5.8" y1="2.9" x2="6.9" y2="4" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <line x1="19.5" y1="8" x2="17.8" y2="8" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <line x1="2.5" y1="8" x2="4.2" y2="8" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M5 13 A6 6 0 0 1 17 13" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <line x1="1.5" y1="13" x2="20.5" y2="13" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <circle cx="11" cy="16.5" r="2" stroke="white" stroke-width="1.5"/>
+          <path d="M8 21 Q11 18 14 21" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="auth-brand-name">Centros Diurnos</div>
+        <div class="auth-brand-sub">SENAMA · Línea Base 2025</div>
+      </div>
+    </div>
+    <div class="auth-divider"></div>
+    <div id="authError" class="auth-error">Usuario o contraseña incorrectos.</div>
+    <div class="auth-field">
+      <label>Usuario</label>
+      <input type="text" id="authUser" placeholder="nombre de usuario" autocomplete="username"
+             onkeydown="if(event.key==='Enter')document.getElementById('authPass').focus()">
+    </div>
+    <div class="auth-field">
+      <label>Contraseña</label>
+      <input type="password" id="authPass" placeholder="••••••••" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="auth-submit" id="authBtn" onclick="login()">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 8H2M7 5l3 3-3 3"/><rect x="9" y="2" width="5" height="12" rx="1.5"/></svg>
+      Ingresar
+    </button>
+    <div class="auth-foot">Acceso restringido al personal autorizado.<br>Centros Diurnos SENAMA © 2025</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ADMIN PANEL MODAL
+══════════════════════════════════════════════════════ -->
+<div id="adminOverlay" class="admin-overlay" onclick="if(event.target===this)cerrarAdmin()">
+  <div class="admin-panel">
+    <div class="admin-hd">
+      <div>
+        <div class="admin-hd-title">Gestión de Usuarios</div>
+        <div class="admin-hd-sub">Administra el acceso al sistema</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="cerrarAdmin()">Cerrar</button>
+    </div>
+    <div class="admin-bd">
+      <div class="admin-sec">
+        <div class="admin-sec-hd">
+          <span>Usuarios del sistema</span>
+          <button class="btn btn-primary btn-sm" onclick="toggleAdminForm()">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+            Nuevo usuario
+          </button>
+        </div>
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Nombre</th>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Último acceso</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+      <!-- Form for new/edit user -->
+      <div class="admin-form-sec" id="adminFormSec">
+        <div class="admin-form-title" id="adminFormTitle">Nuevo usuario</div>
+        <div class="admin-fg">
+          <div class="admin-field">
+            <label>Nombre completo</label>
+            <input type="text" id="uf_nombre" placeholder="Ej: María González">
+          </div>
+          <div class="admin-field">
+            <label>Nombre de usuario</label>
+            <input type="text" id="uf_username" placeholder="Ej: mgonzalez" autocomplete="off">
+          </div>
+          <div class="admin-field">
+            <label>Contraseña</label>
+            <input type="password" id="uf_password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          </div>
+          <div class="admin-field">
+            <label>Rol</label>
+            <select id="uf_rol">
+              <option value="operador">Operador — Ingreso de datos</option>
+              <option value="analista">Analista — Informes y reportes</option>
+              <option value="admin">Administrador — Acceso total</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:.65rem;margin-top:1rem;justify-content:flex-end">
+          <button class="btn btn-ghost btn-sm" onclick="cancelarAdminForm()">Cancelar</button>
+          <button class="btn btn-primary btn-sm" onclick="guardarUsuario()">
+            <svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 13H2V2h8.5L13 4.5V13z"/><rect x="4.5" y="9" width="6" height="4"/><rect x="5.5" y="2" width="4" height="3"/></svg>
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CHANGE PASSWORD MODAL
+══════════════════════════════════════════════════════ -->
+<div id="pwdOverlay" class="pwd-overlay" onclick="if(event.target===this)cerrarCambiarPwd()">
+  <div class="pwd-card">
+    <div class="pwd-hd">
+      <div class="pwd-hd-title">Cambiar contraseña</div>
+    </div>
+    <div class="pwd-body">
+      <div id="pwdError" class="pwd-error"></div>
+      <div class="pwd-field">
+        <label>Contraseña actual</label>
+        <input type="password" id="pwdActual" placeholder="••••••••">
+      </div>
+      <div class="pwd-field">
+        <label>Nueva contraseña</label>
+        <input type="password" id="pwdNueva" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="pwd-field">
+        <label>Confirmar nueva contraseña</label>
+        <input type="password" id="pwdConfirm" placeholder="Repetir nueva contraseña">
+      </div>
+    </div>
+    <div class="pwd-foot">
+      <button class="btn btn-ghost btn-sm" onclick="cerrarCambiarPwd()">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarNuevaPwd()">Cambiar contraseña</button>
+    </div>
+  </div>
+</div>
+
+<!-- SYNC SETUP MODAL -->
+<div id="syncSetupModal" class="modal-overlay" style="display: none;">
+  <div class="modal" style="max-width: 500px;">
+    <div class="modal-header">
+      <h2>⚙️ Configurar Sincronización</h2>
+    </div>
+    <div class="modal-body" style="flex: 1; overflow-y: auto;">
+      <div id="syncSetupContent">
+        <p>Cargando...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="11" y1="1.5" x2="11" y2="3.2" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="16.2" y1="2.9" x2="15.1" y2="4" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="5.8" y1="2.9" x2="6.9" y2="4" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="19.5" y1="8" x2="17.8" y2="8" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="2.5" y1="8" x2="4.2" y2="8" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+        <path d="M5 13 A6 6 0 0 1 17 13" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="1.5" y1="13" x2="20.5" y2="13" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+        <circle cx="11" cy="16.5" r="2" stroke="white" stroke-width="1.5"/>
+        <path d="M8 21 Q11 18 14 21" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      Centros Diurnos
+      <span>Línea Base 2025 · SENAMA</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <!-- Visible según rol — controlado por JS -->
+    <button id="btnExportar" class="btn btn-ghost btn-sm" onclick="exportarDatos()" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 2v7"/><path d="M5 7l2.5 2.5L10 7"/><path d="M2 11.5v1A1.5 1.5 0 003.5 14h8A1.5 1.5 0 0013 12.5v-1"/></svg>
+      Exportar CSV
+    </button>
+    <button id="btnNuevo" class="btn btn-primary" onclick="abrirModal()" style="display:none">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2.5"/><path d="M1.5 14c0-2.5 2-4.5 4.5-4.5"/><line x1="12" y1="9.5" x2="12" y2="13.5"/><line x1="10" y1="11.5" x2="14" y2="11.5"/></svg>
+      Nuevo Adulto Mayor
+    </button>
+
+    <div class="header-sep" id="headerSep" style="display:none"></div>
+
+    <!-- Gestión de usuarios — solo admin -->
+    <button id="btnAdmin" class="btn btn-ghost btn-sm" onclick="abrirAdmin()" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/><path d="M1 14c0-2.5 2-4.5 4.5-4.5h1"/><path d="M11 9.5a4.5 4.5 0 014.5 4.5"/></svg>
+      Usuarios
+    </button>
+
+    <!-- Estado de sincronización -->
+    <div id="syncBadge" class="badge" style="background: var(--azul-bg); color: var(--azul); margin: 0 0.5rem;">☁️ Cargando...</div>
+
+    <!-- Cambiar contraseña + logout -->
+    <div id="userChip" class="user-chip" style="display:none" title="Cambiar contraseña" onclick="abrirCambiarPwd()" style="cursor:pointer">
+      <div id="chipAv" class="chip-av rol-operador">U</div>
+      <div>
+        <div id="chipName" class="chip-name">—</div>
+        <div id="chipRole" class="chip-role">—</div>
+      </div>
+    </div>
+    <button id="btnLogout" class="btn btn-ghost btn-sm" onclick="cerrarSesion()" style="display:none" title="Cerrar sesión">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h8M11 5l3 3-3 3"/><path d="M9 2H3a1 1 0 00-1 1v10a1 1 0 001 1h6"/></svg>
+      Salir
+    </button>
+  </div>
+</header>
+
+<!-- Aviso solo lectura para analistas -->
+<div id="readonlyBanner" class="readonly-banner">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r=".5" fill="currentColor"/></svg>
+  Modo lectura — Eres <strong style="margin:0 .2rem">Analista</strong>. Puedes consultar datos y descargar reportes, pero no modificar registros.
+</div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="aside-title">Personas registradas</div>
+    <div class="search-wrap">
+      <span class="search-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l3.5 3.5"/></svg></span>
+      <input type="text" id="searchInput" placeholder="Buscar por nombre o RUT…" oninput="filtrarLista()">
+    </div>
+    <div class="patient-list" id="patientList">
+      <div class="empty-list">No hay registros aún.<br>Haz clic en <strong>+ Nuevo</strong> para comenzar.</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="mainContent">
+    <div class="empty-main">
+      <div class="empty-icon">👴🏻</div>
+      <div class="empty-title">Bienvenido al sistema</div>
+      <div class="empty-desc">Agrega adultos mayores usando el botón "+ Nuevo Adulto Mayor" y el sistema calculará automáticamente su estado de salud.</div>
+      <button class="btn btn-primary" onclick="abrirModal()">+ Agregar primer registro</button>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL FORMULARIO -->
+<div class="modal-overlay" id="modalOverlay" onclick="cerrarModalSiAfuera(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Nuevo Adulto Mayor</div>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- TABS -->
+      <div class="form-tabs">
+        <button class="form-tab active" onclick="cambiarTab(0, this)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em;margin-right:.3em"><circle cx="7" cy="5" r="2.5"/><path d="M1.5 13c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Datos Personales</button>
+        <button class="form-tab" onclick="cambiarTab(1, this)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em;margin-right:.3em"><path d="M7 1.5L2 4v4c0 2.5 2.2 4.5 5 5.5 2.8-1 5-3 5-5.5V4L7 1.5z"/><line x1="7" y1="5.5" x2="7" y2="8.5"/><line x1="5.5" y1="7" x2="8.5" y2="7"/></svg>Atención</button>
+        <button class="form-tab" onclick="cambiarTab(2, this)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em;margin-right:.3em"><rect x="2.5" y="3" width="9" height="10" rx="1.5"/><path d="M5 3V2a2 2 0 014 0v1"/><line x1="4.5" y1="7" x2="9.5" y2="7"/><line x1="4.5" y1="9.5" x2="7.5" y2="9.5"/></svg>Instrumentos VGI</button>
+        <button class="form-tab" onclick="cambiarTab(3, this)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em;margin-right:.3em"><polyline points="1.5,10.5 4.5,6.5 7.5,8.5 10.5,4 13,2"/><line x1="1.5" y1="12.5" x2="12.5" y2="12.5"/></svg>Seguimiento</button>
+        <button class="form-tab" onclick="cambiarTab(4, this)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em;margin-right:.3em"><rect x="2.5" y="1.5" width="9" height="11" rx="1.5"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="7.5" x2="9" y2="7.5"/><line x1="5" y1="10" x2="7" y2="10"/></svg>Notas</button>
+        <button class="form-tab" onclick="cambiarTab(5, this)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em;margin-right:.3em"><rect x="1.5" y="2.5" width="11" height="9" rx="1.5"/><circle cx="7" cy="4" r="1.5"/><path d="M4 9l2-2.5 3 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Credencial</button>
+      </div>
+
+      <!-- TAB 0: Datos Personales -->
+      <div class="form-body tab-content" id="tab0">
+        <div class="field-grid field-grid-4">
+          <div class="field" style="grid-column: span 3">
+            <label>RUT <span class="req">*</span></label>
+            <input type="text" id="f_rut" placeholder="15234578" maxlength="9">
+          </div>
+          <div class="field">
+            <label>DV</label>
+            <input type="text" id="f_dv" placeholder="K" maxlength="1">
+          </div>
+        </div>
+        <div style="height:1rem"></div>
+        <div class="field-grid field-grid-2">
+          <div class="field" style="grid-column: span 2">
+            <label>Nombre Completo <span class="req">*</span></label>
+            <input type="text" id="f_nombre" placeholder="MANUEL ANTONIO JIMÉNEZ CORTÉS">
+          </div>
+          <div class="field">
+            <label>Sexo</label>
+            <select id="f_sexo">
+              <option value="">Seleccionar…</option>
+              <option>Femenino</option>
+              <option>Masculino</option>
+              <option>No Binario</option>
+              <option>Intersexual/Indefinido</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Edad</label>
+            <input type="number" id="f_edad" placeholder="75" min="60" max="120">
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input type="text" id="f_telefono" placeholder="975252578">
+          </div>
+          <div class="field">
+            <label>Escolaridad</label>
+            <select id="f_escolaridad">
+              <option value="">Seleccionar…</option>
+              <option>Sin Escolaridad</option>
+              <option>Básica Incompleta</option>
+              <option>Básica Completa</option>
+              <option>Media Incompleta</option>
+              <option>Media Completa</option>
+              <option>Superior Incompleta</option>
+              <option>Superior Completa</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Pertenencia a Pueblo Originario</label>
+            <select id="f_pueblo">
+              <option value="">Seleccionar…</option>
+              <option>Sí</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tramo RSH</label>
+            <select id="f_rsh">
+              <option value="">Seleccionar…</option>
+              <option>0%-40%</option>
+              <option>41%-50%</option>
+              <option>51%-60%</option>
+              <option>61%-70%</option>
+              <option>71%-80%</option>
+              <option>81%-90%</option>
+              <option>91%-100%</option>
+              <option>10% de menor vulnerabilidad</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 1: Atención -->
+      <div class="form-body tab-content" id="tab1" style="display:none">
+        <div class="field-grid field-grid-2">
+          <div class="field">
+            <label>Fecha de Ingreso al CD</label>
+            <input type="date" id="f_f_ingreso">
+          </div>
+          <div class="field">
+            <label>Fecha Firma Consentimiento</label>
+            <input type="date" id="f_f_consentimiento">
+          </div>
+          <div class="field">
+            <label>Fecha de Egreso del CD</label>
+            <input type="date" id="f_f_egreso">
+          </div>
+          <div class="field">
+            <label>Naturaleza del Centro</label>
+            <select id="f_naturaleza">
+              <option value="">Seleccionar…</option>
+              <option>Comunitario</option>
+              <option>Referencial</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Comuna</label>
+            <input type="text" id="f_comuna" placeholder="Ej: Contulmo">
+          </div>
+          <div class="field">
+            <label>Rural / Urbana</label>
+            <select id="f_rural">
+              <option value="">Seleccionar…</option>
+              <option>Rural</option>
+              <option>Urbana</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Nivel de Dependencia</label>
+            <select id="f_dependencia">
+              <option value="">Seleccionar…</option>
+              <option>Leve</option>
+              <option>Moderada</option>
+              <option>Severa</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Enfermedades Crónicas</label>
+            <select id="f_enfermedades">
+              <option value="">Seleccionar…</option>
+              <option>Hipertensión</option>
+              <option>DM tipo 1</option>
+              <option>DM tipo 2</option>
+              <option>Epiléptico</option>
+              <option>EPOC</option>
+              <option>LCFA</option>
+              <option>Dislipidemia</option>
+              <option>Obesidad</option>
+              <option>Artritis Reumatoide</option>
+              <option>Artrosis</option>
+              <option>Cardiopatía Coronaria</option>
+              <option>Secuela ACV</option>
+              <option>Parkinson</option>
+              <option>Asma</option>
+              <option>Enfermedad Renal Crónica</option>
+              <option>Daño Hepático Crónico</option>
+              <option>Cáncer</option>
+              <option>Comorbilidad</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Cuenta con PAI</label>
+            <select id="f_pai">
+              <option value="">Seleccionar…</option>
+              <option>Sí</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>N° Objetivos PAI</label>
+            <input type="number" id="f_obj_pai" placeholder="0" min="0" max="10">
+          </div>
+          <div class="field">
+            <label>N° Objetivos Alcanzados</label>
+            <input type="number" id="f_obj_alc" placeholder="0" min="0" max="10">
+          </div>
+          <div class="field">
+            <label>Talleres</label>
+            <select id="f_talleres">
+              <option value="">Seleccionar…</option>
+              <option>Participa entre 1 y 2 talleres semanales</option>
+              <option>Participa entre 2 y 4 talleres semanales</option>
+              <option>Participa entre 4 y 6 talleres semanales</option>
+              <option>Participa en más de 6 talleres semanales</option>
+              <option>Taller de Estimulación cognitiva</option>
+              <option>Taller de actividad física y prevención de caídas</option>
+              <option>Taller de entrenamiento en actividades de la vida diaria</option>
+              <option>Taller De Historia De Vida</option>
+              <option>Taller De Habilidades Sociales</option>
+              <option>Taller De Resolución De Conflictos</option>
+              <option>Taller De Participación Comunitaria</option>
+              <option>Taller De Buen Trato</option>
+              <option>Otro</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Instrumentos VGI -->
+      <div class="form-body tab-content" id="tab2" style="display:none">
+
+        <!-- Barthel -->
+        <div class="instrument-block">
+          <div class="instrument-header">
+            <div class="instrument-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="2.5" r="1.5"/><line x1="7.5" y1="4" x2="7.5" y2="8"/><path d="M5.5 5.5l2 2.5 2-2.5"/><path d="M6 8.5l-1.5 4M9 8.5l1.5 4"/></svg></div>
+            <div>
+              <div class="instrument-name">Índice de Barthel</div>
+              <div class="instrument-desc">Funcionalidad en AVD · 0-100 pts · Mayor = mejor</div>
+            </div>
+          </div>
+          <div class="vgi-pair">
+            <div class="field">
+              <label>1ª VGI (Puntaje Barthel)</label>
+              <input type="number" id="f_barthel1" placeholder="0-100" min="0" max="100" oninput="recalcular()">
+              <div class="field-hint">0 = dependencia total · 100 = independiente</div>
+            </div>
+            <div class="field">
+              <label>2ª VGI (Puntaje Barthel)</label>
+              <input type="number" id="f_barthel2" placeholder="0-100" min="0" max="100" oninput="recalcular()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Pfeiffer -->
+        <div class="instrument-block">
+          <div class="instrument-header">
+            <div class="instrument-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 2A4.5 4.5 0 0112 6.5c0 2.5-1.5 4-1.5 5H4.5C4.5 10.5 3 9 3 6.5A4.5 4.5 0 017.5 2z"/><line x1="7.5" y1="11.5" x2="7.5" y2="13"/><line x1="5.5" y1="6" x2="5.5" y2="9"/><line x1="7.5" y1="5.5" x2="7.5" y2="8.5"/><line x1="9.5" y1="6" x2="9.5" y2="9"/></svg></div>
+            <div>
+              <div class="instrument-name">Test de Pfeiffer</div>
+              <div class="instrument-desc">Estado cognitivo · 0-10 errores · Menor = mejor</div>
+            </div>
+          </div>
+          <div class="vgi-pair">
+            <div class="field">
+              <label>1ª VGI (N° errores)</label>
+              <input type="number" id="f_pfeiffer1" placeholder="0-10" min="0" max="10" oninput="recalcular()">
+              <div class="field-hint">0-2: Normal · 3-4: Leve · 5-7: Moderado · 8-10: Severo</div>
+            </div>
+            <div class="field">
+              <label>2ª VGI (N° errores)</label>
+              <input type="number" id="f_pfeiffer2" placeholder="0-10" min="0" max="10" oninput="recalcular()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Lawton -->
+        <div class="instrument-block">
+          <div class="instrument-header">
+            <div class="instrument-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7L7.5 2l5.5 5v6H2V7z"/><rect x="5.5" y="9" width="4" height="4"/></svg></div>
+            <div>
+              <div class="instrument-name">Escala de Lawton y Brody</div>
+              <div class="instrument-desc">Actividades instrumentales · 0-8 pts · Mayor = mejor</div>
+            </div>
+          </div>
+          <div class="vgi-pair">
+            <div class="field">
+              <label>1ª VGI (Puntaje)</label>
+              <input type="number" id="f_lawton1" placeholder="0-8" min="0" max="8" oninput="recalcular()">
+              <div class="field-hint">8 = sin dependencia · 0 = dependencia total</div>
+            </div>
+            <div class="field">
+              <label>2ª VGI (Puntaje)</label>
+              <input type="number" id="f_lawton2" placeholder="0-8" min="0" max="8" oninput="recalcular()">
+            </div>
+          </div>
+        </div>
+
+        <!-- TUG -->
+        <div class="instrument-block">
+          <div class="instrument-header">
+            <div class="instrument-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="9" r="5"/><line x1="7.5" y1="4" x2="7.5" y2="2"/><line x1="6" y1="2" x2="9" y2="2"/><line x1="7.5" y1="9" x2="7.5" y2="7"/><line x1="7.5" y1="9" x2="9.5" y2="8"/></svg></div>
+            <div>
+              <div class="instrument-name">Timed Up and Go (TUG)</div>
+              <div class="instrument-desc">Riesgo de caída · Segundos · Menor = mejor</div>
+            </div>
+          </div>
+          <div class="vgi-pair">
+            <div class="field">
+              <label>1ª VGI (segundos)</label>
+              <input type="number" id="f_tug1" placeholder="segundos" min="0" step="0.1" oninput="recalcular()">
+              <div class="field-hint">&lt;10 seg: Bajo riesgo · 10-20: Moderado · &gt;20: Alto riesgo</div>
+            </div>
+            <div class="field">
+              <label>2ª VGI (segundos)</label>
+              <input type="number" id="f_tug2" placeholder="segundos" min="0" step="0.1" oninput="recalcular()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Minimental -->
+        <div class="instrument-block">
+          <div class="instrument-header">
+            <div class="instrument-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="4" height="4" rx="1"/><rect x="9" y="2" width="4" height="4" rx="1"/><rect x="2" y="9" width="4" height="4" rx="1"/><rect x="9" y="9" width="4" height="4" rx="1"/><line x1="7.5" y1="4" x2="9" y2="4"/><line x1="7.5" y1="11" x2="9" y2="11"/><line x1="4" y1="7.5" x2="4" y2="9"/><line x1="11" y1="7.5" x2="11" y2="9"/></svg></div>
+            <div>
+              <div class="instrument-name">Mini Mental State (MMSE)</div>
+              <div class="instrument-desc">Deterioro cognitivo · 0-30 pts · Mayor = mejor</div>
+            </div>
+          </div>
+          <div class="vgi-pair">
+            <div class="field">
+              <label>1ª VGI (Puntaje)</label>
+              <input type="number" id="f_mini1" placeholder="0-30" min="0" max="30" oninput="recalcular()">
+              <div class="field-hint">≥25: Normal · 18-24: Leve · &lt;18: Mod/Severo</div>
+            </div>
+            <div class="field">
+              <label>2ª VGI (Puntaje)</label>
+              <input type="number" id="f_mini2" placeholder="0-30" min="0" max="30" oninput="recalcular()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Yesavage -->
+        <div class="instrument-block">
+          <div class="instrument-header">
+            <div class="instrument-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r="5.5"/><path d="M5 9c.5-1 1.5-1.5 2.5-1.5s2 .5 2.5 1.5"/><circle cx="5.5" cy="6.5" r=".6" fill="white" stroke="none"/><circle cx="9.5" cy="6.5" r=".6" fill="white" stroke="none"/></svg></div>
+            <div>
+              <div class="instrument-name">Escala de Yesavage (GDS)</div>
+              <div class="instrument-desc">Depresión geriátrica · 0-15 pts · Menor = mejor</div>
+            </div>
+          </div>
+          <div class="vgi-pair">
+            <div class="field">
+              <label>1ª VGI (Puntaje)</label>
+              <input type="number" id="f_yesa1" placeholder="0-15" min="0" max="15" oninput="recalcular()">
+              <div class="field-hint">0-5: Sin depresión · 6-10: Moderada · 11-15: Severa</div>
+            </div>
+            <div class="field">
+              <label>2ª VGI (Puntaje)</label>
+              <input type="number" id="f_yesa2" placeholder="0-15" min="0" max="15" oninput="recalcular()">
+            </div>
+          </div>
+        </div>
+
+        <!-- EQ-5D -->
+        <div class="instrument-block">
+          <div class="instrument-header">
+            <div class="instrument-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 12.5S2 8.5 2 5.5a3 3 0 015.5-1.5A3 3 0 0113 5.5c0 3-5.5 7-5.5 7z"/></svg></div>
+            <div>
+              <div class="instrument-name">Autopercepción de Salud (EQ-5D)</div>
+              <div class="instrument-desc">Percepción subjetiva de salud</div>
+            </div>
+          </div>
+          <div class="vgi-pair">
+            <div class="field">
+              <label>1ª VGI</label>
+              <select id="f_eq1" onchange="recalcular()">
+                <option value="">Seleccionar…</option>
+                <option>Muy buena</option>
+                <option>Buena</option>
+                <option>Más o menos</option>
+                <option>Mala</option>
+                <option>Muy mala</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>2ª VGI</label>
+              <select id="f_eq2" onchange="recalcular()">
+                <option value="">Seleccionar…</option>
+                <option>Muy buena</option>
+                <option>Buena</option>
+                <option>Más o menos</option>
+                <option>Mala</option>
+                <option>Muy mala</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live score preview -->
+        <div id="liveScore" style="text-align:center; padding: 1rem; display:none;">
+          <div style="font-size:.8rem; color:var(--terra); margin-bottom:.4rem; font-weight:600; text-transform:uppercase; letter-spacing:.06em;">Puntaje calculado en tiempo real</div>
+          <div id="liveScoreBadge" class="score-display score-gray" style="font-size:1.1rem; padding:.5rem 1.25rem">—</div>
+        </div>
+
+      </div>
+
+      <!-- TAB 3: Seguimiento Periódico -->
+      <div class="form-body tab-content" id="tab3" style="display:none">
+        <div style="background:var(--azul-bg);border:1px solid #c0d4f5;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--azul)">
+          <strong><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><polyline points="1.5,10.5 4.5,6.5 7.5,8.5 10.5,4 13,2"/><line x1="1.5" y1="12.5" x2="12.5" y2="12.5"/></svg> Seguimiento periódico</strong> — Registra los puntajes ponderados en cada período para hacer comparaciones a lo largo del tiempo.
+        </div>
+        <div class="field-grid" style="grid-template-columns:1fr 1fr;gap:1.25rem">
+
+          <!-- T1 -->
+          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate2,#4A6FA5);margin-bottom:.85rem">🗓 1er Trimestre</div>
+            <div class="field-grid field-grid-2" style="gap:.75rem">
+              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t1_fecha"></div>
+              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t1_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()"></div>
+              <div class="field"><label>Barthel</label><input type="number" id="f_t1_barthel" placeholder="0-100" min="0" max="100"></div>
+              <div class="field"><label>Minimental</label><input type="number" id="f_t1_mini" placeholder="0-30" min="0" max="30"></div>
+            </div>
+          </div>
+
+          <!-- T2 -->
+          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate2,#4A6FA5);margin-bottom:.85rem">🗓 2do Trimestre</div>
+            <div class="field-grid field-grid-2" style="gap:.75rem">
+              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t2_fecha"></div>
+              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t2_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()"></div>
+              <div class="field"><label>Barthel</label><input type="number" id="f_t2_barthel" placeholder="0-100" min="0" max="100"></div>
+              <div class="field"><label>Minimental</label><input type="number" id="f_t2_mini" placeholder="0-30" min="0" max="30"></div>
+            </div>
+          </div>
+
+          <!-- T3 -->
+          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate2,#4A6FA5);margin-bottom:.85rem">🗓 3er Trimestre</div>
+            <div class="field-grid field-grid-2" style="gap:.75rem">
+              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t3_fecha"></div>
+              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t3_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()"></div>
+              <div class="field"><label>Barthel</label><input type="number" id="f_t3_barthel" placeholder="0-100" min="0" max="100"></div>
+              <div class="field"><label>Minimental</label><input type="number" id="f_t3_mini" placeholder="0-30" min="0" max="30"></div>
+            </div>
+          </div>
+
+          <!-- T4 -->
+          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate2,#4A6FA5);margin-bottom:.85rem">🗓 4to Trimestre</div>
+            <div class="field-grid field-grid-2" style="gap:.75rem">
+              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t4_fecha"></div>
+              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t4_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()"></div>
+              <div class="field"><label>Barthel</label><input type="number" id="f_t4_barthel" placeholder="0-100" min="0" max="100"></div>
+              <div class="field"><label>Minimental</label><input type="number" id="f_t4_mini" placeholder="0-30" min="0" max="30"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen en vivo -->
+        <div id="segResumen" style="display:none;margin-top:1.25rem;background:var(--deep);border-radius:12px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
+          <div>
+            <div style="font-size:.7rem;color:var(--clay);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Puntaje inicial</div>
+            <div id="seg_inicial" style="font-family:'DM Serif Display',serif;font-size:2rem;color:white">—</div>
+          </div>
+          <div style="font-size:2rem;color:var(--clay)">→</div>
+          <div>
+            <div style="font-size:.7rem;color:var(--clay);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Puntaje actual</div>
+            <div id="seg_final" style="font-family:'DM Serif Display',serif;font-size:2rem;color:white">—</div>
+          </div>
+          <div style="flex:1;min-width:120px;text-align:center">
+            <div style="font-size:.7rem;color:var(--clay);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Diferencia</div>
+            <div id="seg_diff" style="font-family:'DM Serif Display',serif;font-size:2.5rem">—</div>
+          </div>
+          <div style="flex:1;min-width:120px;text-align:center">
+            <div id="seg_tendencia" style="font-size:1.1rem;font-weight:700;color:white">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: Notas -->
+      <div class="form-body tab-content" id="tab4" style="display:none">
+        <div class="field-grid">
+          <div class="field">
+            <label>Observaciones generales</label>
+            <textarea id="f_notas" rows="5" placeholder="Anotar observaciones clínicas, conductuales, familiares o de seguimiento…"></textarea>
+          </div>
+          <div class="field">
+            <label>Plan de seguimiento</label>
+            <textarea id="f_plan" rows="4" placeholder="Próximas acciones, intervenciones planificadas, derivaciones…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: Credencial -->
+      <div class="form-body tab-content" id="tab5" style="display:none">
+        <div id="cameraContainer">
+          <div id="cameraSection">
+            <div id="cameraMessage" onclick="initCamera()">📷 Toca aquí para acceder a la cámara</div>
+            <video id="cameraPreview" autoplay playsinline muted style="display:none;"></video>
+            <img id="photoPreview" alt="Foto capturada" style="display:none;">
+            <div id="cameraControls" style="display:none;">
+              <button class="btn btn-primary btn-sm" id="captureBtn" onclick="capturePhoto()">📸 Capturar</button>
+              <button class="btn btn-ghost btn-sm" onclick="stopCamera()">✕ Cerrar cámara</button>
+            </div>
+          </div>
+          <div id="credentialPreview">
+            <div style="text-align:center;color:var(--terra);font-size:.9rem;">
+              📋 Captura una foto para ver la credencial
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="printCredential()" style="flex:1;min-width:150px;">🖨️ Imprimir Credencial</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('cameraPreview').style.display='none';stopCamera()" style="flex:1;min-width:150px;">Limpiar foto</button>
+        </div>
+      </div>
+
+    </div><!-- modal-body -->
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarPaciente()"><svg width="14" height="14" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 13H2V2h8.5L13 4.5V13z"/><rect x="4.5" y="9" width="6" height="4"/><rect x="5.5" y="2" width="4" height="3"/></svg> Guardar registro</button>
+    </div>
+  </div><!-- modal -->
+</div><!-- modal-overlay -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  AUTH — Constantes
+// ═══════════════════════════════════════════════════════
+const USERS_KEY   = 'cd_usuarios_v1';
+const SESSION_KEY = 'cd_sesion_v1';
+const SESSION_TTL = 8 * 60 * 60 * 1000; // 8 horas en ms
+
+const ROL_LABELS = { admin: 'Administrador', operador: 'Operador', analista: 'Analista' };
+const ROL_COLORS = {
+  admin:    ['#5C3D2E','#1A1208'],
+  operador: ['#C4A882','#8B6F47'],
+  analista: ['#4A8FC4','#2B5BA8'],
+};
+
+let currentUser = null;
+let usuarios     = [];
+
+// ── Hash SHA-256 con salt ──────────────────────────────
+async function hashPwd(pwd) {
+  const data = new TextEncoder().encode(pwd + '::cd2025::');
+  const buf  = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── Usuarios en localStorage ──────────────────────────
+function loadUsuarios() {
+  usuarios = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+}
+function saveUsuarios() {
+  localStorage.setItem(USERS_KEY, JSON.stringify(usuarios));
+}
+
+// ── Sesión ────────────────────────────────────────────
+function getSession() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SESSION_KEY));
+    if (!s) return null;
+    if (Date.now() - s.loggedAt > SESSION_TTL) { clearSession(); return null; }
+    return s;
+  } catch { return null; }
+}
+function saveSession(user) {
+  const s = { id: user.id, username: user.username, nombre: user.nombre, rol: user.rol, loggedAt: Date.now() };
+  localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+  currentUser = s;
+}
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+  currentUser = null;
+}
+
+// ── Admin por defecto (primer arranque) ───────────────
+async function initDefaultAdmin() {
+  if (usuarios.length) return;
+  usuarios.push({
+    id: 1,
+    username: 'admin',
+    nombre:   'Administrador',
+    rol:      'admin',
+    password: await hashPwd('admin123'),
+    activo:   true,
+    creado:   new Date().toISOString(),
+    ultimoAcceso: null,
+  });
+  saveUsuarios();
+}
+
+// ── LOGIN ─────────────────────────────────────────────
+async function login() {
+  const btn  = document.getElementById('authBtn');
+  const err  = document.getElementById('authError');
+  const user = document.getElementById('authUser').value.trim();
+  const pass = document.getElementById('authPass').value;
+
+  err.classList.remove('show');
+  if (!user || !pass) { err.textContent = 'Completa usuario y contraseña.'; err.classList.add('show'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Verificando…';
+
+  const hash    = await hashPwd(pass);
+  const match   = usuarios.find(u => u.username === user && u.password === hash && u.activo);
+
+  if (!match) {
+    err.textContent = 'Usuario o contraseña incorrectos.';
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 8H2M7 5l3 3-3 3"/><rect x="9" y="2" width="5" height="12" rx="1.5"/></svg> Ingresar';
+    return;
+  }
+
+  // Actualizar último acceso
+  match.ultimoAcceso = new Date().toISOString();
+  saveUsuarios();
+
+  saveSession(match);
+  mostrarApp();
+}
+
+// ── LOGOUT ────────────────────────────────────────────
+function cerrarSesion() {
+  if (!confirm('¿Cerrar sesión?')) return;
+  clearSession();
+  location.reload();
+}
+
+// ── Mostrar app tras login ────────────────────────────
+function mostrarApp() {
+  const overlay = document.getElementById('authOverlay');
+  overlay.classList.add('hidden');
+  setTimeout(() => { overlay.style.display = 'none'; }, 380);
+  actualizarHeaderUI();
+  renderAll();
+}
+
+// ── Actualizar UI del header según rol ───────────────
+function actualizarHeaderUI() {
+  if (!currentUser) return;
+  const { rol, nombre } = currentUser;
+
+  // User chip
+  const chip   = document.getElementById('userChip');
+  const chipAv = document.getElementById('chipAv');
+  const chipNm = document.getElementById('chipName');
+  const chipRl = document.getElementById('chipRole');
+  const initials = nombre.split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+  chip.style.display = 'flex';
+  chipAv.className   = `chip-av rol-${rol}`;
+  chipAv.textContent = initials;
+  chipNm.textContent = nombre;
+  chipRl.textContent = ROL_LABELS[rol] || rol;
+
+  // Botones condicionales
+  document.getElementById('btnLogout').style.display   = 'flex';
+  document.getElementById('headerSep').style.display   = 'block';
+  document.getElementById('btnNuevo').style.display    = (rol === 'admin' || rol === 'operador') ? 'flex' : 'none';
+  document.getElementById('btnExportar').style.display = (rol === 'admin' || rol === 'analista') ? 'flex' : 'none';
+  document.getElementById('btnAdmin').style.display    = rol === 'admin' ? 'flex' : 'none';
+
+  // Banner solo lectura
+  const banner = document.getElementById('readonlyBanner');
+  banner.classList.toggle('show', rol === 'analista');
+}
+
+// ── Permisos ──────────────────────────────────────────
+function puedeEditar()  { return currentUser && (currentUser.rol === 'admin' || currentUser.rol === 'operador'); }
+function puedeExportar(){ return currentUser && (currentUser.rol === 'admin' || currentUser.rol === 'analista'); }
+function puedeEliminar(){ return currentUser && currentUser.rol === 'admin'; }
+function esAdmin()      { return currentUser && currentUser.rol === 'admin'; }
+
+// ═══════════════════════════════════════════════════════
+//  ADMIN PANEL — Gestión de usuarios
+// ═══════════════════════════════════════════════════════
+function abrirAdmin() {
+  if (!esAdmin()) return;
+  renderUsersTable();
+  document.getElementById('adminOverlay').classList.add('open');
+}
+function cerrarAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+  cancelarAdminForm();
+}
+
+function renderUsersTable() {
+  const tbody = document.getElementById('usersTableBody');
+  tbody.innerHTML = usuarios.map(u => {
+    const [c1, c2] = ROL_COLORS[u.rol] || ['#888','#666'];
+    const inits     = u.nombre.split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+    const acceso    = u.ultimoAcceso ? new Date(u.ultimoAcceso).toLocaleString('es-CL',{dateStyle:'short',timeStyle:'short'}) : 'Nunca';
+    const esCurrent = currentUser && u.id === currentUser.id;
+    return `<tr>
+      <td><div class="u-av" style="background:linear-gradient(135deg,${c1},${c2})">${inits}</div></td>
+      <td><strong>${u.nombre}</strong>${esCurrent ? ' <span style="font-size:.68rem;color:var(--terra)">(tú)</span>' : ''}</td>
+      <td style="color:var(--terra);font-family:monospace;font-size:.8rem">${u.username}</td>
+      <td><span class="role-pill ${u.rol}">${ROL_LABELS[u.rol]||u.rol}</span></td>
+      <td><span class="u-dot ${u.activo?'activo':'inactivo'}"></span>${u.activo?'Activo':'Inactivo'}</td>
+      <td style="color:#888;font-size:.78rem">${acceso}</td>
+      <td style="text-align:right;white-space:nowrap">
+        ${!esCurrent ? `<button class="btn btn-ghost btn-sm" style="font-size:.75rem;padding:.25rem .55rem" onclick="toggleUserActivo(${u.id})">${u.activo?'Desactivar':'Activar'}</button>` : ''}
+        <button class="btn btn-ghost btn-sm" style="font-size:.75rem;padding:.25rem .55rem;margin-left:.3rem" onclick="resetPwdAdmin(${u.id})">Nueva clave</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+let adminFormEditing = null;
+
+function toggleAdminForm() {
+  const sec = document.getElementById('adminFormSec');
+  const isOpen = sec.classList.contains('open');
+  if (isOpen) { cancelarAdminForm(); return; }
+  adminFormEditing = null;
+  document.getElementById('adminFormTitle').textContent = 'Nuevo usuario';
+  document.getElementById('uf_nombre').value   = '';
+  document.getElementById('uf_username').value = '';
+  document.getElementById('uf_password').value = '';
+  document.getElementById('uf_rol').value      = 'operador';
+  document.getElementById('uf_password').placeholder = 'Mínimo 6 caracteres';
+  sec.classList.add('open');
+}
+function cancelarAdminForm() {
+  document.getElementById('adminFormSec').classList.remove('open');
+  adminFormEditing = null;
+}
+
+async function guardarUsuario() {
+  const nombre   = document.getElementById('uf_nombre').value.trim();
+  const username = document.getElementById('uf_username').value.trim().toLowerCase();
+  const pwd      = document.getElementById('uf_password').value;
+  const rol      = document.getElementById('uf_rol').value;
+
+  if (!nombre || !username) { toast('⚠️ Nombre y usuario son obligatorios'); return; }
+  if (pwd.length > 0 && pwd.length < 6) { toast('⚠️ La contraseña debe tener al menos 6 caracteres'); return; }
+
+  const duplicado = usuarios.find(u => u.username === username && u.id !== adminFormEditing);
+  if (duplicado) { toast('⚠️ Ese nombre de usuario ya existe'); return; }
+
+  if (adminFormEditing) {
+    // Editar existente
+    const u = usuarios.find(u => u.id === adminFormEditing);
+    if (u) {
+      u.nombre = nombre; u.username = username; u.rol = rol;
+      if (pwd) u.password = await hashPwd(pwd);
+    }
+    toast('✅ Usuario actualizado');
+  } else {
+    if (!pwd) { toast('⚠️ La contraseña es obligatoria para nuevos usuarios'); return; }
+    usuarios.push({
+      id: Date.now(), username, nombre, rol,
+      password: await hashPwd(pwd),
+      activo: true,
+      creado: new Date().toISOString(),
+      ultimoAcceso: null,
+    });
+    toast('✅ Usuario creado correctamente');
+  }
+  saveUsuarios();
+  renderUsersTable();
+  cancelarAdminForm();
+}
+
+function toggleUserActivo(id) {
+  const u = usuarios.find(u => u.id === id);
+  if (!u) return;
+  u.activo = !u.activo;
+  saveUsuarios();
+  renderUsersTable();
+  toast(u.activo ? '✅ Usuario activado' : '⚠️ Usuario desactivado');
+}
+
+async function resetPwdAdmin(id) {
+  const u = usuarios.find(u => u.id === id);
+  if (!u) return;
+  const nueva = prompt(`Nueva contraseña para "${u.nombre}":\n(mínimo 6 caracteres)`);
+  if (!nueva) return;
+  if (nueva.length < 6) { toast('⚠️ La contraseña debe tener al menos 6 caracteres'); return; }
+  u.password = await hashPwd(nueva);
+  saveUsuarios();
+  toast('✅ Contraseña actualizada');
+}
+
+// ═══════════════════════════════════════════════════════
+//  CAMBIAR CONTRASEÑA (propio usuario)
+// ═══════════════════════════════════════════════════════
+function abrirCambiarPwd() {
+  document.getElementById('pwdActual').value  = '';
+  document.getElementById('pwdNueva').value   = '';
+  document.getElementById('pwdConfirm').value = '';
+  document.getElementById('pwdError').classList.remove('show');
+  document.getElementById('pwdOverlay').classList.add('open');
+}
+function cerrarCambiarPwd() {
+  document.getElementById('pwdOverlay').classList.remove('open');
+}
+async function guardarNuevaPwd() {
+  const errEl   = document.getElementById('pwdError');
+  const actual  = document.getElementById('pwdActual').value;
+  const nueva   = document.getElementById('pwdNueva').value;
+  const confirm = document.getElementById('pwdConfirm').value;
+
+  errEl.classList.remove('show');
+  if (!actual || !nueva || !confirm) { errEl.textContent = 'Completa todos los campos.'; errEl.classList.add('show'); return; }
+  if (nueva.length < 6)              { errEl.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.'; errEl.classList.add('show'); return; }
+  if (nueva !== confirm)             { errEl.textContent = 'Las contraseñas no coinciden.'; errEl.classList.add('show'); return; }
+
+  const hashActual = await hashPwd(actual);
+  const u = usuarios.find(u => u.id === currentUser.id);
+  if (!u || u.password !== hashActual) { errEl.textContent = 'La contraseña actual es incorrecta.'; errEl.classList.add('show'); return; }
+
+  u.password = await hashPwd(nueva);
+  saveUsuarios();
+  cerrarCambiarPwd();
+  toast('✅ Contraseña cambiada correctamente');
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT AUTH
+// ═══════════════════════════════════════════════════════
+async function initAuth() {
+  loadUsuarios();
+  await initDefaultAdmin();
+
+  const sesion = getSession();
+  if (sesion) {
+    currentUser = sesion;
+    document.getElementById('authOverlay').style.display = 'none';
+    actualizarHeaderUI();
+    renderAll();
+  }
+  // Si no hay sesión, el overlay ya está visible por defecto
+}
+
+// ═══════════════════════════════════════════════════════
+//  DATA STORE (archivo compartido vía OneDrive)
+// ═══════════════════════════════════════════════════════
+let pacientes = [];
+let editandoId = null;
+let syncEnabled = false;
+
+async function cargarDatosDB() {
+  if (!window.electronAPI?.db) {
+    pacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
+    return;
+  }
+  const result = await window.electronAPI.db.read();
+  if (result.ok) {
+    pacientes = result.data.pacientes || [];
+    syncEnabled = true;
+    updateSyncStatus('synced');
+  } else if (result.reason === 'not-configured') {
+    pacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
+    mostrarSetupSync();
+  } else {
+    toast('⚠️ Error al leer datos: ' + result.reason);
+    pacientes = [];
+  }
+}
+
+async function guardar() {
+  if (syncEnabled && window.electronAPI?.db) {
+    const result = await window.electronAPI.db.write(pacientes);
+    if (!result.ok) {
+      toast('⚠️ Error al guardar: ' + result.reason);
+      updateSyncStatus('error');
+    } else {
+      updateSyncStatus('saving');
+      setTimeout(() => updateSyncStatus('synced'), 500);
+    }
+  } else {
+    localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCORING
+// ═══════════════════════════════════════════════════════
+function score(p) {
+  const vals = [];
+  const n = v => v !== '' && v !== null && v !== undefined && !isNaN(Number(v));
+
+  // Barthel (0-100): /100*10
+  if (n(p.barthel2)) vals.push(Number(p.barthel2)/100*10);
+  else if (n(p.barthel1)) vals.push(Number(p.barthel1)/100*10);
+
+  // Pfeiffer (0-10 errors, inverted)
+  if (n(p.pfeiffer2)) vals.push((10-Number(p.pfeiffer2))/10*10);
+  else if (n(p.pfeiffer1)) vals.push((10-Number(p.pfeiffer1))/10*10);
+
+  // Lawton (0-8)
+  if (n(p.lawton2)) vals.push(Number(p.lawton2)/8*10);
+  else if (n(p.lawton1)) vals.push(Number(p.lawton1)/8*10);
+
+  // TUG (seconds, inverted, cap 20)
+  if (n(p.tug2)) vals.push(Math.max(0, Math.min(10,(20-Number(p.tug2))/10*10)));
+  else if (n(p.tug1)) vals.push(Math.max(0, Math.min(10,(20-Number(p.tug1))/10*10)));
+
+  // Minimental (0-30)
+  if (n(p.mini2)) vals.push(Number(p.mini2)/30*10);
+  else if (n(p.mini1)) vals.push(Number(p.mini1)/30*10);
+
+  // Yesavage (0-15, inverted)
+  if (n(p.yesa2)) vals.push((15-Number(p.yesa2))/15*10);
+  else if (n(p.yesa1)) vals.push((15-Number(p.yesa1))/15*10);
+
+  // EQ-5D
+  const eqMap = {'muy buena':10,'buena':7.5,'más o menos':5,'mala':2.5,'muy mala':0};
+  const eqVal = (v) => v ? eqMap[v.toLowerCase()] : undefined;
+  const eq = eqVal(p.eq2) ?? eqVal(p.eq1);
+  if (eq !== undefined) vals.push(eq);
+
+  if (!vals.length) return null;
+  return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length*10);
+}
+
+function semaforo(sc) {
+  if (sc === null) return {label:'Sin datos', color:'gray', emoji:'⚪'};
+  if (sc >= 80)   return {label:'BIEN', color:'verde', emoji:'🟢'};
+  if (sc >= 50)   return {label:'REGULAR', color:'ambar', emoji:'🟡'};
+  return {label:'CRÍTICO', color:'rojo', emoji:'🔴'};
+}
+
+function componentScores(p) {
+  const n = v => v !== '' && v !== null && v !== undefined && !isNaN(Number(v));
+  return [
+    { label: 'Barthel', val: n(p.barthel2) ? Number(p.barthel2)/100*10 : n(p.barthel1) ? Number(p.barthel1)/100*10 : null },
+    { label: 'Pfeiffer', val: n(p.pfeiffer2) ? (10-Number(p.pfeiffer2))/10*10 : n(p.pfeiffer1) ? (10-Number(p.pfeiffer1))/10*10 : null },
+    { label: 'Lawton', val: n(p.lawton2) ? Number(p.lawton2)/8*10 : n(p.lawton1) ? Number(p.lawton1)/8*10 : null },
+    { label: 'TUG', val: n(p.tug2) ? Math.max(0,Math.min(10,(20-Number(p.tug2))/10*10)) : n(p.tug1) ? Math.max(0,Math.min(10,(20-Number(p.tug1))/10*10)) : null },
+    { label: 'Minimental', val: n(p.mini2) ? Number(p.mini2)/30*10 : n(p.mini1) ? Number(p.mini1)/30*10 : null },
+    { label: 'Yesavage', val: n(p.yesa2) ? (15-Number(p.yesa2))/15*10 : n(p.yesa1) ? (15-Number(p.yesa1))/15*10 : null },
+    { label: 'EQ-5D', val: (() => { const eqMap = {'muy buena':10,'buena':7.5,'más o menos':5,'mala':2.5,'muy mala':0}; const v = p.eq2 || p.eq1; return v ? eqMap[v.toLowerCase()] ?? null : null; })() },
+  ];
+}
+
+// ═══════════════════════════════════════════════════════
+//  LIVE SCORE IN MODAL
+// ═══════════════════════════════════════════════════════
+function recalcular() {
+  const tmp = leerFormulario();
+  const sc = score(tmp);
+  const sem = semaforo(sc);
+  const el = document.getElementById('liveScoreBadge');
+  const wrap = document.getElementById('liveScore');
+  wrap.style.display = 'block';
+  el.className = `score-display score-${sem.color}`;
+  el.textContent = sc !== null ? `${sem.emoji} ${sc}/100 — ${sem.label}` : '⚪ Sin datos suficientes';
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════════
+function abrirModal(id = null) {
+  if (!puedeEditar()) { toast('⚠️ No tienes permiso para crear o editar registros'); return; }
+  editandoId = id;
+  limpiarFormulario();
+  document.getElementById('modalTitle').textContent = id ? 'Editar Adulto Mayor' : 'Nuevo Adulto Mayor';
+  cambiarTab(0, document.querySelector('.form-tab'));
+  if (id !== null) {
+    const p = pacientes.find(x => x.id === id);
+    if (p) cargarFormulario(p);
+  }
+  // Agregar listeners para actualizar credencial en tiempo real
+  ['f_nombre', 'f_rut', 'f_dv', 'f_edad'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', generateCredential);
+  });
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('liveScore').style.display = 'none';
+}
+function cerrarModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editandoId = null;
+}
+function cerrarModalSiAfuera(e) {
+  if (e.target === document.getElementById('modalOverlay')) cerrarModal();
+}
+function cambiarTab(idx, btn) {
+  document.querySelectorAll('.tab-content').forEach((el,i) => el.style.display = i === idx ? '' : 'none');
+  document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  FORM I/O
+// ═══════════════════════════════════════════════════════
+function leerFormulario() {
+  return {
+    rut: document.getElementById('f_rut').value.trim(),
+    dv: document.getElementById('f_dv').value.trim(),
+    nombre: document.getElementById('f_nombre').value.trim(),
+    sexo: document.getElementById('f_sexo').value,
+    edad: document.getElementById('f_edad').value,
+    telefono: document.getElementById('f_telefono').value,
+    escolaridad: document.getElementById('f_escolaridad').value,
+    pueblo: document.getElementById('f_pueblo').value,
+    rsh: document.getElementById('f_rsh').value,
+    f_ingreso: document.getElementById('f_f_ingreso').value,
+    f_consentimiento: document.getElementById('f_f_consentimiento').value,
+    f_egreso: document.getElementById('f_f_egreso').value,
+    naturaleza: document.getElementById('f_naturaleza').value,
+    comuna: document.getElementById('f_comuna').value,
+    rural: document.getElementById('f_rural').value,
+    dependencia: document.getElementById('f_dependencia').value,
+    enfermedades: document.getElementById('f_enfermedades').value,
+    pai: document.getElementById('f_pai').value,
+    obj_pai: document.getElementById('f_obj_pai').value,
+    obj_alc: document.getElementById('f_obj_alc').value,
+    talleres: document.getElementById('f_talleres').value,
+    barthel1: document.getElementById('f_barthel1').value,
+    barthel2: document.getElementById('f_barthel2').value,
+    pfeiffer1: document.getElementById('f_pfeiffer1').value,
+    pfeiffer2: document.getElementById('f_pfeiffer2').value,
+    lawton1: document.getElementById('f_lawton1').value,
+    lawton2: document.getElementById('f_lawton2').value,
+    tug1: document.getElementById('f_tug1').value,
+    tug2: document.getElementById('f_tug2').value,
+    mini1: document.getElementById('f_mini1').value,
+    mini2: document.getElementById('f_mini2').value,
+    yesa1: document.getElementById('f_yesa1').value,
+    yesa2: document.getElementById('f_yesa2').value,
+    eq1: document.getElementById('f_eq1').value,
+    eq2: document.getElementById('f_eq2').value,
+    notas: document.getElementById('f_notas').value,
+    plan: document.getElementById('f_plan').value,
+    // Seguimiento trimestral
+    t1_fecha: document.getElementById('f_t1_fecha').value,
+    t1_punt: document.getElementById('f_t1_punt').value,
+    t1_barthel: document.getElementById('f_t1_barthel').value,
+    t1_mini: document.getElementById('f_t1_mini').value,
+    t2_fecha: document.getElementById('f_t2_fecha').value,
+    t2_punt: document.getElementById('f_t2_punt').value,
+    t2_barthel: document.getElementById('f_t2_barthel').value,
+    t2_mini: document.getElementById('f_t2_mini').value,
+    t3_fecha: document.getElementById('f_t3_fecha').value,
+    t3_punt: document.getElementById('f_t3_punt').value,
+    t3_barthel: document.getElementById('f_t3_barthel').value,
+    t3_mini: document.getElementById('f_t3_mini').value,
+    t4_fecha: document.getElementById('f_t4_fecha').value,
+    t4_punt: document.getElementById('f_t4_punt').value,
+    t4_barthel: document.getElementById('f_t4_barthel').value,
+    t4_mini: document.getElementById('f_t4_mini').value,
+  };
+}
+function cargarFormulario(p) {
+  Object.keys(p).forEach(k => {
+    const el = document.getElementById('f_' + k);
+    if (el) el.value = p[k] || '';
+  });
+  // Cargar foto si existe
+  if (p.foto) {
+    cargarFotoEnFormulario(p.foto);
+  } else {
+    credentialState.photoData = null;
+  }
+  // Generar credencial con datos cargados
+  setTimeout(() => generateCredential(), 100);
+  recalcular();
+}
+function limpiarFormulario() {
+  ['rut','dv','nombre','sexo','edad','telefono','escolaridad','pueblo','rsh',
+   'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
+   'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
+   'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
+   'tug1','tug2','mini1','mini2','yesa1','yesa2','eq1','eq2','notas','plan',
+   't1_fecha','t1_punt','t1_barthel','t1_mini',
+   't2_fecha','t2_punt','t2_barthel','t2_mini',
+   't3_fecha','t3_punt','t3_barthel','t3_mini',
+   't4_fecha','t4_punt','t4_barthel','t4_mini',
+  ].forEach(k => { const el = document.getElementById('f_'+k); if(el) el.value = ''; });
+  // Limpiar foto
+  credentialState.photoData = null;
+  const photoPreview = document.getElementById('photoPreview');
+  if (photoPreview) photoPreview.style.display = 'none';
+  const sr = document.getElementById('segResumen');
+  if (sr) sr.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════
+//  CRUD
+// ═══════════════════════════════════════════════════════
+async function guardarPaciente() {
+  if (!puedeEditar()) { toast('⚠️ No tienes permiso para guardar registros'); return; }
+  const datos = leerFormulario();
+  if (!datos.nombre) { toast('⚠️ El nombre es obligatorio'); return; }
+  if (!datos.rut)    { toast('⚠️ El RUT es obligatorio'); return; }
+
+  // Guardar foto si existe
+  guardarFotoEnPaciente(datos);
+
+  if (editandoId !== null) {
+    const idx = pacientes.findIndex(p => p.id === editandoId);
+    pacientes[idx] = { ...pacientes[idx], ...datos, modificadoPor: currentUser?.username, modificadoEn: new Date().toISOString() };
+  } else {
+    datos.id = Date.now();
+    datos.fechaRegistro = new Date().toISOString();
+    datos.creadoPor = currentUser?.username;
+    pacientes.push(datos);
+  }
+  await guardar();
+  cerrarModal();
+  renderAll();
+  toast('✅ Registro guardado correctamente');
+}
+async function eliminarPaciente(id) {
+  if (!puedeEliminar()) { toast('⚠️ Solo el administrador puede eliminar registros'); return; }
+  if (!confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')) return;
+  pacientes = pacientes.filter(p => p.id !== id);
+  await guardar();
+  renderAll();
+  renderMain();
+  toast('🗑 Registro eliminado');
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER SIDEBAR
+// ═══════════════════════════════════════════════════════
+function renderSidebar(lista) {
+  const el = document.getElementById('patientList');
+  if (!lista.length) { el.innerHTML = '<div class="empty-list">No hay registros.<br>Agrega el primero.</div>'; return; }
+  el.innerHTML = lista.map(p => {
+    const sc = score(p);
+    const sem = semaforo(sc);
+    const initials = (p.nombre||'?').split(' ').slice(0,2).map(w=>w[0]).join('');
+    const colors = ['#8B6F47','#4A6FA5','#2D7A4F','#9A6C00','#B83232'];
+    const color = colors[p.id % colors.length] || colors[0];
+    return `<div class="patient-card" onclick="verPaciente(${p.id})">
+      <div class="patient-avatar" style="background:${color}">${initials}</div>
+      <div class="patient-info">
+        <div class="patient-name">${p.nombre}</div>
+        <div class="patient-meta">${p.edad ? p.edad+' años' : ''}${p.comuna ? ' · '+p.comuna : ''}</div>
+      </div>
+      <div class="sem-dot sem-${sem.color === 'gray' ? 'gray' : sem.color === 'verde' ? 'verde' : sem.color === 'ambar' ? 'ambar' : 'rojo'}"></div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER MAIN (dashboard)
+// ═══════════════════════════════════════════════════════
+function renderMain() {
+  const main = document.getElementById('mainContent');
+  if (!pacientes.length) {
+    main.innerHTML = `<div class="empty-main">
+      <div class="empty-icon" style="font-size:3.5rem;opacity:.2">
+        <svg width="72" height="72" viewBox="0 0 22 22" fill="none" stroke="var(--terra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="11" y1="1.5" x2="11" y2="3.2"/><line x1="16.2" y1="2.9" x2="15.1" y2="4"/><line x1="5.8" y1="2.9" x2="6.9" y2="4"/>
+          <line x1="19.5" y1="8" x2="17.8" y2="8"/><line x1="2.5" y1="8" x2="4.2" y2="8"/>
+          <path d="M5 13 A6 6 0 0 1 17 13"/><line x1="1.5" y1="13" x2="20.5" y2="13"/>
+          <circle cx="11" cy="16.5" r="2"/><path d="M8 21 Q11 18 14 21"/>
+        </svg>
+      </div>
+      <div class="empty-title">Sin registros aún</div>
+      <div class="empty-desc">${puedeEditar() ? 'Comienza agregando el primer adulto mayor con el botón superior.' : 'No hay registros disponibles en el sistema.'}</div>
+      ${puedeEditar() ? `<button class="btn btn-primary" onclick="abrirModal()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="6" cy="5" r="2.5"/><path d="M1.5 14c0-2.5 2-4.5 4.5-4.5"/><line x1="12" y1="9.5" x2="12" y2="13.5"/><line x1="10" y1="11.5" x2="14" y2="11.5"/></svg>
+        Agregar primer registro
+      </button>` : ''}
+    </div>`;
+    return;
+  }
+  const scores = pacientes.map(p => score(p));
+  const totalV = scores.filter(s => s !== null && s >= 80).length;
+  const totalA = scores.filter(s => s !== null && s >= 50 && s < 80).length;
+  const totalR = scores.filter(s => s !== null && s < 50).length;
+  const totalSin = scores.filter(s => s === null).length;
+  // Seguimiento stats
+  const conSeg = pacientes.filter(p => getPeriodos(p).length > 0).length;
+  const mejoras = pacientes.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt > ps[0].punt; }).length;
+  const deterioros = pacientes.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt < ps[0].punt; }).length;
+
+  main.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">Panel General <span>${pacientes.length} personas registradas</span></div>
+      <button class="btn btn-primary btn-sm" onclick="abrirModal()">+ Nuevo</button>
+    </div>
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total registros</div>
+        <div class="stat-value">${pacientes.length}</div>
+        <div class="stat-sub">adultos mayores</div>
+      </div>
+      <div class="stat-card stat-verde">
+        <div class="stat-label"><svg width="8" height="8" viewBox="0 0 8 8" style="vertical-align:-.05em"><circle cx="4" cy="4" r="4" fill="var(--verde)"/></svg> Estado BIEN</div>
+        <div class="stat-value">${totalV}</div>
+        <div class="stat-sub">puntaje 80-100</div>
+      </div>
+      <div class="stat-card stat-ambar">
+        <div class="stat-label"><svg width="8" height="8" viewBox="0 0 8 8" style="vertical-align:-.05em"><circle cx="4" cy="4" r="4" fill="var(--ambar)"/></svg> Estado REGULAR</div>
+        <div class="stat-value">${totalA}</div>
+        <div class="stat-sub">puntaje 50-79</div>
+      </div>
+      <div class="stat-card stat-rojo">
+        <div class="stat-label"><svg width="8" height="8" viewBox="0 0 8 8" style="vertical-align:-.05em"><circle cx="4" cy="4" r="4" fill="var(--rojo)"/></svg> Estado CRÍTICO</div>
+        <div class="stat-value">${totalR}</div>
+        <div class="stat-sub">puntaje 0-49</div>
+      </div>
+    </div>
+
+    ${conSeg > 0 ? `<div class="dashboard-grid" style="margin-bottom:2rem">
+      <div class="stat-card">
+        <div class="stat-label">${_IC.trend} Con seguimiento</div>
+        <div class="stat-value">${conSeg}</div>
+        <div class="stat-sub">de ${pacientes.length} personas</div>
+      </div>
+      <div class="stat-card stat-verde">
+        <div class="stat-label"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><line x1="7" y1="12" x2="7" y2="2"/><path d="M4 5l3-3 3 3"/></svg> Con mejora</div>
+        <div class="stat-value">${mejoras}</div>
+        <div class="stat-sub">puntaje subió</div>
+      </div>
+      <div class="stat-card stat-rojo">
+        <div class="stat-label"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><line x1="7" y1="2" x2="7" y2="10"/><path d="M4 8l3 3 3-3"/></svg> Con deterioro</div>
+        <div class="stat-value">${deterioros}</div>
+        <div class="stat-sub">puntaje bajó</div>
+      </div>
+      <div class="stat-card stat-ambar">
+        <div class="stat-label"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><line x1="2" y1="7" x2="12" y2="7"/><path d="M9 4l3 3-3 3"/></svg> Sin cambio</div>
+        <div class="stat-value">${conSeg - mejoras - deterioros}</div>
+        <div class="stat-sub">puntaje estable</div>
+      </div>
+    </div>` : ''}
+
+    <div class="section-header" style="margin-top:1.5rem">
+      <div class="section-title">Listado de personas</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>RUT</th>
+            <th>Edad</th>
+            <th>Comuna</th>
+            <th>Dependencia</th>
+            <th>Puntaje</th>
+            <th>Estado</th>
+            <th>Tendencia</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${pacientes.map(p => {
+            const sc = score(p);
+            const sem = semaforo(sc);
+            const badgeClass = sem.color === 'verde' ? 'score-verde' : sem.color === 'ambar' ? 'score-ambar' : sem.color === 'rojo' ? 'score-rojo' : 'score-gray';
+            const ps = getPeriodos(p);
+            let tendHtml = '<td style="color:#ccc;font-size:.8rem">—</td>';
+            if (ps.length >= 2) {
+              const diff = Math.round((ps[ps.length-1].punt - ps[0].punt)*10)/10;
+              const tc = diff > 0 ? 'var(--verde)' : diff < 0 ? 'var(--rojo)' : '#aaa';
+              const ta = diff > 10 ? '⬆' : diff > 0 ? '↗' : diff === 0 ? '→' : '⬇';
+              tendHtml = `<td style="font-weight:700;color:${tc};font-size:.88rem">${ta} ${diff>0?'+':''}${diff}</td>`;
+            } else if (ps.length === 1) {
+              tendHtml = `<td style="font-size:.75rem;color:#bbb">T1: ${ps[0].punt}</td>`;
+            }
+            return `<tr onclick="verPaciente(${p.id})">
+              <td class="td-name">${p.nombre||'—'}</td>
+              <td>${p.rut||'—'}</td>
+              <td>${p.edad||'—'}</td>
+              <td>${p.comuna||'—'}</td>
+              <td>${p.dependencia||'—'}</td>
+              <td><span style="font-weight:700; color:${sem.color === 'verde'?'var(--verde)':sem.color==='ambar'?'var(--ambar)':sem.color==='rojo'?'var(--rojo)':'#aaa'}">${sc !== null ? sc : '—'}</span></td>
+              <td><span class="score-display ${badgeClass}" style="font-size:.75rem;padding:.2rem .6rem">${sem.emoji} ${sem.label}</span></td>
+              ${tendHtml}
+              <td onclick="event.stopPropagation()">
+                ${puedeEditar() ? `<button class="btn btn-sm btn-verde" onclick="abrirModal(${p.id})"><svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z"/></svg></button>` : ''}
+                ${puedeEliminar() ? `<button class="btn btn-sm btn-danger" onclick="eliminarPaciente(${p.id})" style="margin-left:.3rem"><svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,4 12,4"/><path d="M5 4V2.5h4V4"/><path d="M3 4l.8 8h6.4l.8-8"/></svg></button>` : ''}
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  RECALCULAR SEGUIMIENTO (modal live preview)
+// ═══════════════════════════════════════════════════════
+function recalcularSeg() {
+  const punts = ['t1_punt','t2_punt','t3_punt','t4_punt']
+    .map(k => { const v = document.getElementById('f_'+k)?.value; return (v !== '' && v !== undefined && !isNaN(Number(v))) ? Number(v) : null; });
+  const valid = punts.filter(v => v !== null);
+  if (valid.length < 1) { const sr = document.getElementById('segResumen'); if(sr) sr.style.display='none'; return; }
+  const inicial = valid[0];
+  const final_  = valid[valid.length-1];
+  const diff    = Math.round((final_ - inicial)*10)/10;
+  const tendencia = diff > 10 ? '⬆ Mejora notable' : diff > 0 ? '↗ Mejora leve' : diff === 0 ? '→ Sin cambio' : '⬇ Deterioro';
+  const diffColor = diff > 0 ? '#4ade80' : diff < 0 ? '#f87171' : '#999';
+  const sr = document.getElementById('segResumen');
+  if (sr) {
+    sr.style.display = 'flex';
+    document.getElementById('seg_inicial').textContent = inicial;
+    document.getElementById('seg_final').textContent = final_;
+    document.getElementById('seg_diff').textContent = (diff > 0 ? '+' : '') + diff;
+    document.getElementById('seg_diff').style.color = diffColor;
+    document.getElementById('seg_tendencia').textContent = tendencia;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SEGUIMIENTO DATA HELPERS
+// ═══════════════════════════════════════════════════════
+function getPeriodos(p) {
+  const periodos = [];
+  for (let t = 1; t <= 4; t++) {
+    const punt = p[`t${t}_punt`];
+    const fecha = p[`t${t}_fecha`];
+    if (punt !== '' && punt !== undefined && !isNaN(Number(punt))) {
+      periodos.push({
+        label: `T${t}`, fecha: fecha || `Trimestre ${t}`,
+        punt: Number(punt),
+        barthel: p[`t${t}_barthel`] !== '' ? Number(p[`t${t}_barthel`]) : null,
+        mini: p[`t${t}_mini`] !== '' ? Number(p[`t${t}_mini`]) : null,
+      });
+    }
+  }
+  return periodos;
+}
+
+function sparklineCanvas(periodos) {
+  if (periodos.length < 2) return '';
+  const id = 'spark_' + Date.now();
+  // Build inline SVG sparkline
+  const w = 400, h = 90, pad = 16;
+  const vals = periodos.map(p => p.punt);
+  const minV = Math.max(0, Math.min(...vals) - 10);
+  const maxV = Math.min(100, Math.max(...vals) + 10);
+  const range = maxV - minV || 1;
+  const xs = periodos.map((_, i) => pad + (i / (periodos.length - 1)) * (w - pad*2));
+  const ys = vals.map(v => h - pad - ((v - minV) / range) * (h - pad*2));
+  const pathD = xs.map((x, i) => (i === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + ys[i].toFixed(1)).join(' ');
+  const areaD = pathD + ` L${xs[xs.length-1].toFixed(1)} ${h} L${xs[0].toFixed(1)} ${h} Z`;
+  const lastDiff = vals[vals.length-1] - vals[0];
+  const lineColor = lastDiff > 0 ? '#1F7A4A' : lastDiff < 0 ? '#B02020' : '#9A6200';
+  const areaColor = lastDiff > 0 ? 'rgba(31,122,74,.12)' : lastDiff < 0 ? 'rgba(176,32,32,.1)' : 'rgba(154,98,0,.1)';
+
+  const dots = xs.map((x, i) => {
+    const isLast = i === periodos.length - 1;
+    return `<circle cx="${x.toFixed(1)}" cy="${ys[i].toFixed(1)}" r="${isLast ? 5 : 3.5}" fill="${lineColor}" stroke="white" stroke-width="2"/>
+            <text x="${x.toFixed(1)}" y="${(ys[i]-10).toFixed(1)}" text-anchor="middle" font-size="10" fill="${lineColor}" font-weight="700">${vals[i]}</text>
+            <text x="${x.toFixed(1)}" y="${(h-2).toFixed(1)}" text-anchor="middle" font-size="9" fill="#888">${periodos[i].label}</text>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:90px">
+    <path d="${areaD}" fill="${areaColor}"/>
+    <path d="${pathD}" fill="none" stroke="${lineColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${dots}
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  VER PACIENTE INDIVIDUAL
+// ═══════════════════════════════════════════════════════
+function verPaciente(id) {
+  const p = pacientes.find(x => x.id === id);
+  if (!p) return;
+  const sc = score(p);
+  const sem = semaforo(sc);
+  const comps = componentScores(p);
+  const periodos = getPeriodos(p);
+
+  document.querySelectorAll('.patient-card').forEach(c => c.classList.remove('active'));
+
+  const barColor = (v) => {
+    if (v === null) return '#ddd';
+    if (v >= 8) return 'var(--verde)';
+    if (v >= 5) return 'var(--ambar)';
+    return 'var(--rojo)';
+  };
+
+  const barsHtml = comps.map(c => `
+    <div class="bar-row">
+      <div class="bar-label">${c.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${c.val !== null ? c.val*10 : 0}%;background:${barColor(c.val)}"></div></div>
+      <div class="bar-val">${c.val !== null ? Math.round(c.val*10) : '—'}</div>
+    </div>`).join('');
+
+  const lightV = sem.color === 'verde' ? 'on' : '';
+  const lightA = sem.color === 'ambar' ? 'on' : '';
+  const lightR = sem.color === 'rojo'  ? 'on' : '';
+
+  // Seguimiento section
+  let segHtml = '';
+  if (periodos.length > 0) {
+    const primer = periodos[0].punt;
+    const ultimo = periodos[periodos.length-1].punt;
+    const diff   = Math.round((ultimo - primer)*10)/10;
+    const diffColor = diff > 0 ? 'var(--verde)' : diff < 0 ? 'var(--rojo)' : '#aaa';
+    const tendStr = diff > 10 ? '⬆ Mejora notable' : diff > 0 ? '↗ Mejora leve' : diff === 0 ? '→ Sin cambio' : '⬇ Deterioro';
+
+    const periodCards = periodos.map((per, idx) => {
+      const prev = idx > 0 ? periodos[idx-1].punt : null;
+      const delta = prev !== null ? per.punt - prev : null;
+      const sem_ = semaforo(per.punt);
+      const badgeClass = `score-${sem_.color === 'gray' ? 'gray' : sem_.color}`;
+      return `<div class="seg-period-card${idx === periodos.length-1 ? ' active-period' : ''}">
+        <div class="seg-period-header">
+          <div class="seg-period-label">${per.label}</div>
+          <div class="seg-period-date">${per.fecha ? per.fecha.split('-').reverse().join('/') : ''}</div>
+        </div>
+        <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--deep);line-height:1">${per.punt}</div>
+        <div style="font-size:.72rem;color:#aaa;margin-bottom:.6rem">/ 100 pts</div>
+        <span class="score-display ${badgeClass}" style="font-size:.75rem;padding:.2rem .6rem">${sem_.emoji} ${sem_.label}</span>
+        ${delta !== null ? `<div style="margin-top:.6rem;font-size:.8rem;font-weight:700;color:${delta>0?'var(--verde)':delta<0?'var(--rojo)':'#aaa'}">${delta>0?'+':''}${delta} pts vs anterior</div>` : ''}
+        ${per.barthel !== null ? `<div style="margin-top:.4rem;font-size:.75rem;color:#888">Barthel: <strong>${per.barthel}</strong></div>` : ''}
+        ${per.mini !== null ? `<div style="font-size:.75rem;color:#888">Minimental: <strong>${per.mini}</strong></div>` : ''}
+      </div>`;
+    }).join('');
+
+    const sparkSvg = periodos.length >= 2 ? sparklineCanvas(periodos) : '<div style="color:#aaa;font-size:.85rem;padding:1rem 0">Agrega al menos 2 trimestres para ver la gráfica de evolución.</div>';
+
+    segHtml = `<div class="form-panel" style="margin-bottom:1.5rem">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--sand);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-weight:600;color:var(--deep);font-size:.9rem">${_IC.trend} Seguimiento periódico</div>
+        <div style="display:flex;gap:1.5rem;align-items:center">
+          <div style="text-align:center"><div style="font-size:.7rem;color:var(--terra);text-transform:uppercase;letter-spacing:.06em">Diferencia anual</div>
+            <div style="font-weight:700;font-size:1.2rem;color:${diffColor}">${diff>0?'+':''}${diff} pts</div></div>
+          <div style="text-align:center"><div style="font-size:.7rem;color:var(--terra);text-transform:uppercase;letter-spacing:.06em">Tendencia</div>
+            <div style="font-weight:700;font-size:.95rem;color:${diffColor}">${tendStr}</div></div>
+        </div>
+      </div>
+      <div style="padding:1.25rem 1.5rem">
+        <div class="seg-period-grid" style="grid-template-columns:repeat(${Math.min(periodos.length,4)},1fr)">${periodCards}</div>
+        ${periodos.length >= 2 ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--sand)">
+          <div style="font-size:.72rem;font-weight:600;color:var(--terra);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem">Evolución del puntaje ponderado</div>
+          ${sparkSvg}
+        </div>` : ''}
+      </div>
+    </div>`;
+  } else {
+    segHtml = `<div class="form-panel" style="margin-bottom:1.5rem">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--sand);font-weight:600;color:var(--deep);font-size:.9rem">${_IC.trend} Seguimiento periódico</div>
+      <div style="padding:2rem;text-align:center;color:#aaa;font-size:.88rem">
+        Aún no hay datos de seguimiento registrados.<br>
+        <button class="btn btn-primary btn-sm" style="margin-top:.75rem" onclick="abrirModal(${p.id});setTimeout(()=>document.querySelectorAll('.form-tab')[3].click(),100)">+ Agregar seguimiento</button>
+      </div>
+    </div>`;
+  }
+
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">${p.nombre}</div>
+      <div style="display:flex;gap:.5rem">
+        <button class="btn btn-ghost btn-sm" onclick="renderMain()">← Volver</button>
+        ${puedeEditar() ? `<button class="btn btn-primary btn-sm" onclick="abrirModal(${p.id})"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z"/></svg> Editar</button>` : ''}
+        ${puedeEliminar() ? `<button class="btn btn-danger btn-sm" onclick="eliminarPaciente(${p.id})"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><polyline points="2,4 12,4"/><path d="M5 4V2.5h4V4"/><path d="M3 4l.8 8h6.4l.8-8"/></svg> Eliminar</button>` : ''}
+      </div>
+    </div>
+
+    <div class="semaforo-widget">
+      <div class="sem-lights">
+        <div class="sem-light sem-light-verde ${lightV}"></div>
+        <div class="sem-light sem-light-ambar ${lightA}"></div>
+        <div class="sem-light sem-light-rojo ${lightR}"></div>
+      </div>
+      <div class="sem-info">
+        <div class="sem-name">${p.nombre}</div>
+        <div class="sem-status-text" style="color:${sem.color==='verde'?'#4ade80':sem.color==='ambar'?'#fbbf24':sem.color==='rojo'?'#f87171':'#999'}">${sem.emoji} ${sem.label}</div>
+        <div style="color:var(--clay);font-size:.82rem;margin-top:.3rem">${p.edad ? p.edad+' años' : ''} ${p.sexo ? '· '+p.sexo : ''} ${p.comuna ? '· '+p.comuna : ''}</div>
+      </div>
+      <div class="sem-bars">${barsHtml}</div>
+      <div class="sem-score-big">
+        <div class="sem-score-num">${sc !== null ? sc : '—'}</div>
+        <div class="sem-score-label">/ 100 pts</div>
+      </div>
+    </div>
+
+    ${segHtml}
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+      <div class="form-panel">
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--sand);font-weight:600;color:var(--deep);font-size:.9rem">${_IC.person} Datos Personales</div>
+        <div style="padding:1.25rem 1.5rem">
+          ${fila('RUT', p.rut ? p.rut+'-'+p.dv : '—')}
+          ${fila('Sexo', p.sexo)}
+          ${fila('Edad', p.edad ? p.edad+' años' : '—')}
+          ${fila('Teléfono', p.telefono)}
+          ${fila('Escolaridad', p.escolaridad)}
+          ${fila('Pueblo Originario', p.pueblo)}
+          ${fila('Tramo RSH', p.rsh)}
+        </div>
+      </div>
+      <div class="form-panel">
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--sand);font-weight:600;color:var(--deep);font-size:.9rem">${_IC.shield} Atención</div>
+        <div style="padding:1.25rem 1.5rem">
+          ${fila('Ingreso CD', p.f_ingreso)}
+          ${fila('Naturaleza', p.naturaleza)}
+          ${fila('Comuna', p.comuna)}
+          ${fila('Rural/Urbana', p.rural)}
+          ${fila('Dependencia', p.dependencia)}
+          ${fila('Enfermedades', p.enfermedades)}
+          ${fila('PAI', p.pai)}
+          ${fila('Objetivos PAI', p.obj_pai ? `${p.obj_alc||0}/${p.obj_pai} alcanzados` : '—')}
+          ${fila('Talleres', p.talleres)}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-panel" style="margin-bottom:1.5rem">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--sand);font-weight:600;color:var(--deep);font-size:.9rem">${_IC.clipboard} Instrumentos VGI (Línea Base)</div>
+      <div style="padding:1.25rem 1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem">
+        ${instrCard('barthel','Barthel', p.barthel1, p.barthel2, 100, false)}
+        ${instrCard('pfeiffer','Pfeiffer', p.pfeiffer1, p.pfeiffer2, 10, true)}
+        ${instrCard('lawton','Lawton', p.lawton1, p.lawton2, 8, false)}
+        ${instrCard('tug','TUG (seg)', p.tug1, p.tug2, 20, true)}
+        ${instrCard('minimental','Minimental', p.mini1, p.mini2, 30, false)}
+        ${instrCard('yesavage','Yesavage', p.yesa1, p.yesa2, 15, true)}
+        <div style="background:var(--warm);border-radius:10px;padding:1rem;border:1px solid var(--sand)">
+          <div style="font-size:.75rem;font-weight:600;color:var(--terra);margin-bottom:.4rem">${_IC.eq5d} EQ-5D</div>
+          <div style="font-size:.78rem;color:#888">1ª VGI</div>
+          <div style="font-weight:500;font-size:.88rem">${p.eq1||'—'}</div>
+          <div style="font-size:.78rem;color:#888;margin-top:.3rem">2ª VGI</div>
+          <div style="font-weight:500;font-size:.88rem">${p.eq2||'—'}</div>
+        </div>
+      </div>
+    </div>
+
+    ${(p.notas || p.plan) ? `<div class="form-panel">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--sand);font-weight:600;color:var(--deep);font-size:.9rem">${_IC.doc} Notas</div>
+      <div style="padding:1.25rem 1.5rem">
+        ${p.notas ? `<div style="margin-bottom:1rem"><div style="font-size:.75rem;font-weight:600;color:var(--terra);margin-bottom:.3rem">OBSERVACIONES</div><div style="font-size:.88rem;line-height:1.6;color:var(--ink)">${p.notas}</div></div>` : ''}
+        ${p.plan  ? `<div><div style="font-size:.75rem;font-weight:600;color:var(--terra);margin-bottom:.3rem">PLAN DE SEGUIMIENTO</div><div style="font-size:.88rem;line-height:1.6;color:var(--ink)">${p.plan}</div></div>` : ''}
+      </div>
+    </div>` : ''}`;
+}
+
+function fila(label, val) {
+  return `<div style="display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--sand);font-size:.82rem">
+    <span style="color:var(--terra);font-weight:500">${label}</span>
+    <span style="color:var(--ink);text-align:right;max-width:60%">${val||'—'}</span>
+  </div>`;
+}
+
+const _IC = {
+  barthel:    `<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><circle cx="7.5" cy="2.5" r="1.5"/><line x1="7.5" y1="4" x2="7.5" y2="8"/><path d="M5.5 5.5l2 2.5 2-2.5"/><path d="M6 8.5l-1.5 4M9 8.5l1.5 4"/></svg>`,
+  pfeiffer:   `<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><path d="M7.5 2A4.5 4.5 0 0112 6.5c0 2.5-1.5 4-1.5 5H4.5C4.5 10.5 3 9 3 6.5A4.5 4.5 0 017.5 2z"/><line x1="5.5" y1="6" x2="5.5" y2="9"/><line x1="7.5" y1="5.5" x2="7.5" y2="8.5"/><line x1="9.5" y1="6" x2="9.5" y2="9"/></svg>`,
+  lawton:     `<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><path d="M2 7L7.5 2l5.5 5v6H2V7z"/><rect x="5.5" y="9" width="4" height="4"/></svg>`,
+  tug:        `<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><circle cx="7.5" cy="9" r="5"/><line x1="7.5" y1="4" x2="7.5" y2="2"/><line x1="6" y1="2" x2="9" y2="2"/><line x1="7.5" y1="9" x2="7.5" y2="7"/><line x1="7.5" y1="9" x2="9.5" y2="8"/></svg>`,
+  minimental: `<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><rect x="2" y="2" width="4" height="4" rx="1"/><rect x="9" y="2" width="4" height="4" rx="1"/><rect x="2" y="9" width="4" height="4" rx="1"/><rect x="9" y="9" width="4" height="4" rx="1"/></svg>`,
+  yesavage:   `<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><circle cx="7.5" cy="7.5" r="5.5"/><path d="M5 9c.5-1 1.5-1.5 2.5-1.5s2 .5 2.5 1.5"/><circle cx="5.5" cy="6.5" r=".6" fill="currentColor" stroke="none"/><circle cx="9.5" cy="6.5" r=".6" fill="currentColor" stroke="none"/></svg>`,
+  eq5d:       `<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><path d="M7.5 12.5S2 8.5 2 5.5a3 3 0 015.5-1.5A3 3 0 0113 5.5c0 3-5.5 7-5.5 7z"/></svg>`,
+  calendar:   `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><rect x="1.5" y="2.5" width="11" height="10" rx="1.5"/><line x1="1.5" y1="5.5" x2="12.5" y2="5.5"/><line x1="5" y1="1.5" x2="5" y2="3.5"/><line x1="9" y1="1.5" x2="9" y2="3.5"/></svg>`,
+  clipboard:  `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><rect x="2.5" y="3" width="9" height="10" rx="1.5"/><path d="M5 3V2a2 2 0 014 0v1"/><line x1="4.5" y1="7" x2="9.5" y2="7"/><line x1="4.5" y1="9.5" x2="7.5" y2="9.5"/></svg>`,
+  person:     `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><circle cx="7" cy="5" r="2.5"/><path d="M1.5 13c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>`,
+  shield:     `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><path d="M7 1.5L2 4v4c0 2.5 2.2 4.5 5 5.5 2.8-1 5-3 5-5.5V4L7 1.5z"/></svg>`,
+  doc:        `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><rect x="2.5" y="1.5" width="9" height="11" rx="1.5"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="7.5" x2="9" y2="7.5"/><line x1="5" y1="10" x2="7" y2="10"/></svg>`,
+  trend:      `<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.1em"><polyline points="1.5,10.5 4.5,6.5 7.5,8.5 10.5,4 13,2"/><line x1="1.5" y1="12.5" x2="12.5" y2="12.5"/></svg>`,
+};
+
+function instrCard(icon, name, v1, v2, max, inverted) {
+  const n = v => v !== '' && v !== null && v !== undefined && !isNaN(Number(v));
+  let sc = null;
+  if (n(v2)) sc = inverted ? (max-Number(v2))/max*10 : Number(v2)/max*10;
+  else if (n(v1)) sc = inverted ? (max-Number(v1))/max*10 : Number(v1)/max*10;
+  const color = sc === null ? '#aaa' : sc >= 7 ? 'var(--verde)' : sc >= 4 ? 'var(--ambar)' : 'var(--rojo)';
+  const svg = _IC[icon] || '';
+  return `<div style="background:var(--warm);border-radius:10px;padding:1rem;border:1px solid var(--sand)">
+    <div style="font-size:.75rem;font-weight:600;color:var(--terra);margin-bottom:.4rem">${svg} ${name}</div>
+    <div style="font-size:.78rem;color:#888">1ª VGI</div>
+    <div style="font-weight:700;font-size:1.1rem;color:${color}">${n(v1)?v1:'—'}</div>
+    <div style="font-size:.78rem;color:#888;margin-top:.3rem">2ª VGI</div>
+    <div style="font-weight:700;font-size:1.1rem;color:${color}">${n(v2)?v2:'—'}</div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  SEARCH
+// ═══════════════════════════════════════════════════════
+function filtrarLista() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtrados = q ? pacientes.filter(p => (p.nombre||'').toLowerCase().includes(q) || (p.rut||'').includes(q)) : pacientes;
+  renderSidebar(filtrados);
+}
+
+// ═══════════════════════════════════════════════════════
+//  EXPORT CSV
+// ═══════════════════════════════════════════════════════
+function exportarDatos() {
+  if (!puedeExportar()) { toast('⚠️ No tienes permiso para exportar datos'); return; }
+  if (!pacientes.length) { toast('No hay datos para exportar'); return; }
+  const headers = ['Nombre','RUT','DV','Edad','Sexo','Comuna','Rural','Dependencia','Enfermedades',
+    'PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2',
+    'TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2',
+    'Puntaje_Base','Estado_Base',
+    'T1_Fecha','T1_Puntaje','T1_Barthel','T1_Minimental',
+    'T2_Fecha','T2_Puntaje','T2_Barthel','T2_Minimental',
+    'T3_Fecha','T3_Puntaje','T3_Barthel','T3_Minimental',
+    'T4_Fecha','T4_Puntaje','T4_Barthel','T4_Minimental',
+    'Diferencia_Anual','Tendencia'];
+  const rows = pacientes.map(p => {
+    const sc = score(p);
+    const sem = semaforo(sc);
+    const periodos = getPeriodos(p);
+    const primer = periodos.length > 0 ? periodos[0].punt : '';
+    const ultimo = periodos.length > 0 ? periodos[periodos.length-1].punt : '';
+    const diff = (primer !== '' && ultimo !== '') ? Math.round((ultimo-primer)*10)/10 : '';
+    const tend = diff !== '' ? (diff > 10 ? 'Mejora notable' : diff > 0 ? 'Mejora leve' : diff === 0 ? 'Sin cambio' : 'Deterioro') : '';
+    return [
+      p.nombre,p.rut,p.dv,p.edad,p.sexo,p.comuna,p.rural,p.dependencia,p.enfermedades,
+      p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,
+      p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,
+      sc,sem.label,
+      p.t1_fecha,p.t1_punt,p.t1_barthel,p.t1_mini,
+      p.t2_fecha,p.t2_punt,p.t2_barthel,p.t2_mini,
+      p.t3_fecha,p.t3_punt,p.t3_barthel,p.t3_mini,
+      p.t4_fecha,p.t4_punt,p.t4_barthel,p.t4_mini,
+      diff, tend
+    ].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+  });
+  const csv = [headers.join(','), ...rows].join('\n');
+  if (window.electronAPI) {
+    window.electronAPI.saveFile(
+      'linea_base_2025.csv',
+      '\uFEFF' + csv,
+      [{ name: 'CSV', extensions: ['csv'] }]
+    ).then(r => { if (r.success) toast('📥 CSV guardado en: ' + r.filePath); });
+  } else {
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+    a.download = 'linea_base_2025.csv';
+    a.click();
+    toast('📥 CSV descargado con datos de seguimiento');
+  }
+}
+
+// ── Backup JSON (solo escritorio) ──
+async function guardarBackup() {
+  if (!window.electronAPI) { toast('⚠️ Función solo disponible en la app de escritorio'); return; }
+  const r = await window.electronAPI.saveFile(
+    'backup_linea_base.json',
+    JSON.stringify(pacientes, null, 2),
+    [{ name: 'JSON', extensions: ['json'] }]
+  );
+  if (r.success) toast('✅ Copia de seguridad guardada');
+}
+
+// ── Restaurar JSON (solo escritorio) ──
+async function cargarDatos() {
+  if (!window.electronAPI) { toast('⚠️ Función solo disponible en la app de escritorio'); return; }
+  const r = await window.electronAPI.loadJson();
+  if (!r.success) return;
+  try {
+    const datos = JSON.parse(r.content);
+    if (!Array.isArray(datos)) throw new Error();
+    if (!confirm(`¿Reemplazar los ${pacientes.length} registros actuales con los ${datos.length} del archivo?`)) return;
+    pacientes = datos;
+    await guardar();
+    renderAll();
+    toast(`✅ ${datos.length} registros cargados correctamente`);
+  } catch {
+    toast('❌ El archivo no tiene el formato correcto');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SYNC CON ONEDRIVE
+// ═══════════════════════════════════════════════════════
+function updateSyncStatus(status) {
+  const badge = document.getElementById('syncBadge');
+  if (!badge) return;
+
+  const states = {
+    synced: { text: '☁️ Sincronizado', color: '#2D7A4F' },
+    saving: { text: '↻ Guardando...', color: '#9A6C00' },
+    error: { text: '⚠️ Error', color: '#B83232' },
+    offline: { text: '✗ No configurado', color: '#9A6C00' },
+  };
+
+  const state = states[status] || states.offline;
+  badge.textContent = state.text;
+  badge.style.color = state.color;
+}
+
+async function mostrarSetupSync() {
+  const modal = document.getElementById('syncSetupModal');
+  if (!modal) return;
+
+  // Detectar OneDrive automáticamente
+  const detected = await window.electronAPI.db.detectOneDrive();
+  const suggestedPath = detected.path ? detected.path + '\\CentrosDiurnos SENAMA' : '';
+
+  const div = document.getElementById('syncSetupContent');
+  div.innerHTML = `
+    <h3 style="margin-bottom: 1rem; color: var(--deep);">⚙️ Configurar sincronización en OneDrive</h3>
+    <p style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--terra);">
+      Los datos se guardarán en una carpeta compartida en OneDrive para que ambos usuarios vean la misma información.
+    </p>
+    <div style="background: var(--azul-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+      <p style="font-size: 0.85rem; margin: 0;">📁 Ruta sugerida:</p>
+      <code style="display: block; margin-top: 0.5rem; font-family: 'Courier New'; font-size: 0.8rem; word-break: break-all;">${suggestedPath}</code>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <button id="btnConfirmSync" class="btn" style="flex: 1; background: var(--verde); color: white;">✓ Usar esta ruta</button>
+      <button id="btnBrowseSync" class="btn" style="flex: 1; background: var(--warm);">📂 Seleccionar otra</button>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+
+  document.getElementById('btnConfirmSync').addEventListener('click', async () => {
+    if (suggestedPath) {
+      await window.electronAPI.db.setConfig({ dataFolder: suggestedPath });
+      await cargarDatosDB();
+      modal.style.display = 'none';
+      toast('✅ Sincronización configurada');
+    }
+  });
+
+  document.getElementById('btnBrowseSync').addEventListener('click', async () => {
+    const result = await window.electronAPI.db.selectFolder();
+    if (!result.canceled) {
+      await window.electronAPI.db.setConfig({ dataFolder: result.path });
+      await cargarDatosDB();
+      modal.style.display = 'none';
+      toast('✅ Carpeta configurada: ' + result.path);
+    }
+  });
+}
+
+// Escuchar cambios en el archivo (sincronización con otro PC)
+if (window.electronAPI?.db?.onChange) {
+  window.electronAPI.db.onChange(async () => {
+    toast('🔄 Datos actualizados desde otro dispositivo...');
+    await cargarDatosDB();
+    renderAll();
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+function renderAll() {
+  renderSidebar(pacientes);
+  renderMain();
+}
+
+// Inicializar: primero cargar datos, luego autenticación
+(async () => {
+  await cargarDatosDB();
+  initAuth();
+})();
+</script>
+
+<!-- Canvas para captura de cámara -->
+<canvas id="cameraCanvas" style="display:none;"></canvas>
+
+<!-- Cargar módulo de credenciales -->
+<script src="credentials-module.js"></script>
+
+</body>
+</html>
