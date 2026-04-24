@@ -56,9 +56,15 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
     }
   };
 
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onCancel();
+    }
+  };
+
   return (
-    <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={handleOverlayClick}>
+      <div className="modal">
         <div className="modal-header">
           <h3>➕ Crear Usuario</h3>
           <button className="modal-close" onClick={onCancel}>✕</button>
