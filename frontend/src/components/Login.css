@@ -1,0 +1,113 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--terra) 0%, var(--deep) 100%);
+  font-family: var(--sans);
+}
+
+.login-box {
+  background: var(--cream);
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h1 {
+  margin: 0 0 10px 0;
+  color: var(--ink);
+  text-align: center;
+  font-size: 28px;
+  font-family: var(--heading);
+  font-weight: 400;
+}
+
+.login-box .subtitle {
+  margin: 0 0 30px 0;
+  color: var(--terra);
+  text-align: center;
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--sand);
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.3s;
+  background: white;
+  font-family: var(--sans);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.form-group input:disabled {
+  background-color: var(--warm);
+  cursor: not-allowed;
+  color: var(--terra);
+}
+
+.error-message {
+  background-color: var(--rojo-bg);
+  color: var(--rojo);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border-left: 4px solid var(--rojo);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: var(--clay);
+  color: var(--deep);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: var(--sans);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #d4b894;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hint {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--sand);
+  color: var(--terra);
+  font-size: 12px;
+  text-align: center;
+}

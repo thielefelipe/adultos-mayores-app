@@ -1,0 +1,90 @@
+.header {
+  background: var(--deep);
+  color: var(--cream);
+  padding: 15px 0;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--cream);
+  font-family: var(--heading);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.welcome {
+  font-size: 14px;
+  opacity: 0.95;
+  color: var(--cream);
+}
+
+.welcome strong {
+  font-weight: 600;
+}
+
+.rol-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--cream);
+}
+
+.btn-logout {
+  background-color: var(--clay);
+  color: var(--deep);
+  border: 1px solid var(--clay);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-logout:hover {
+  background-color: #d4b894;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .user-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-logout {
+    width: 100%;
+    text-align: center;
+  }
+}
