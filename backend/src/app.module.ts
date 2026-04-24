@@ -9,6 +9,7 @@ import { AuditModule } from './audit/audit.module';
 import { AuthModule } from './auth/auth.module';
 import { PacientesModule } from './pacientes/pacientes.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { UbicacionModule } from './ubicacion/ubicacion.module';
 import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
 
 @Module({
@@ -49,6 +50,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
     AuthModule,
     PacientesModule,
     UsuariosModule,
+    UbicacionModule,
   ],
   controllers: [AppController],
   providers: [AppService, CrearAdminSeeder],
