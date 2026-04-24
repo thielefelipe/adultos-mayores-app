@@ -15,6 +15,26 @@ import { UsuariosService } from './usuarios.service';
 import { UbicacionService } from '../services/ubicacion.service';
 import { CrearUsuarioDto, ActualizarUsuarioDto, CambiarContrasenaDto, EliminarUsuarioDto, RestablecerContrasenaDto } from './dtos';
 
+@Controller('ubicacion')
+export class UbicacionController {
+  constructor(private ubicacionService: UbicacionService) {}
+
+  @Get('regiones')
+  getRegiones() {
+    return this.ubicacionService.getRegiones();
+  }
+
+  @Get('provincias')
+  getProvincias(@Query('region') region: string) {
+    return this.ubicacionService.getProvincias(region);
+  }
+
+  @Get('comunas')
+  getComunas(@Query('region') region: string, @Query('provincia') provincia: string) {
+    return this.ubicacionService.getComunas(region, provincia);
+  }
+}
+
 @Controller('usuarios')
 @UseGuards(JwtGuard)
 export class UsuariosController {
@@ -22,21 +42,6 @@ export class UsuariosController {
     private usuariosService: UsuariosService,
     private ubicacionService: UbicacionService,
   ) {}
-
-  @Get('ubicacion/regiones')
-  getRegiones() {
-    return this.ubicacionService.getRegiones();
-  }
-
-  @Get('ubicacion/provincias')
-  getProvincias(@Query('region') region: string) {
-    return this.ubicacionService.getProvincias(region);
-  }
-
-  @Get('ubicacion/comunas')
-  getComunas(@Query('region') region: string, @Query('provincia') provincia: string) {
-    return this.ubicacionService.getComunas(region, provincia);
-  }
 
   @Post('cambiar-contrasena')
   async cambiarContrasena(@Body() cambiarDto: CambiarContrasenaDto, @Request() req) {

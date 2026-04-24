@@ -24,7 +24,7 @@ exports.UsuariosModule = UsuariosModule = __decorate([
             audit_module_1.AuditModule,
         ],
         providers: [usuarios_service_1.UsuariosService, ubicacion_service_1.UbicacionService],
-        controllers: [usuarios_controller_1.UsuariosController],
+        controllers: [usuarios_controller_1.UsuariosController, usuarios_controller_1.UbicacionController],
         exports: [usuarios_service_1.UsuariosService],
     })
 ], UsuariosModule);

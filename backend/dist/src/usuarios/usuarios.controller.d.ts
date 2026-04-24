@@ -1,13 +1,17 @@
 import { UsuariosService } from './usuarios.service';
 import { UbicacionService } from '../services/ubicacion.service';
 import { CrearUsuarioDto, ActualizarUsuarioDto, CambiarContrasenaDto, EliminarUsuarioDto, RestablecerContrasenaDto } from './dtos';
+export declare class UbicacionController {
+    private ubicacionService;
+    constructor(ubicacionService: UbicacionService);
+    getRegiones(): string[];
+    getProvincias(region: string): string[];
+    getComunas(region: string, provincia: string): string[];
+}
 export declare class UsuariosController {
     private usuariosService;
     private ubicacionService;
     constructor(usuariosService: UsuariosService, ubicacionService: UbicacionService);
-    getRegiones(): string[];
-    getProvincias(region: string): string[];
-    getComunas(region: string, provincia: string): string[];
     cambiarContrasena(cambiarDto: CambiarContrasenaDto, req: any): Promise<{
         mensaje: string;
     }>;

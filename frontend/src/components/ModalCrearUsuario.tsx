@@ -3,6 +3,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { usuariosService } from '../services/usuariosService';
 import './Modal.css';
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://adultos-mayores-backend.onrender.com/api';
+
 interface ModalProps {
   onConfirm: () => void;
   onCancel: () => void;
@@ -48,9 +50,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
 
   const obtenerRegiones = async () => {
     try {
-      const response = await fetch('https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/regiones', {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      const response = await fetch(`${API_URL}/ubicacion/regiones`);
       if (!response.ok) throw new Error('Error al obtener regiones');
       const data = await response.json();
       if (Array.isArray(data)) {
@@ -67,9 +67,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
 
   const obtenerProvincias = async () => {
     try {
-      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/provincias?region=${encodeURIComponent(formData.region)}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      const response = await fetch(`${API_URL}/ubicacion/provincias?region=${encodeURIComponent(formData.region)}`);
       if (!response.ok) throw new Error('Error al obtener provincias');
       const data = await response.json();
       if (Array.isArray(data)) {
@@ -86,9 +84,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
 
   const obtenerComunas = async () => {
     try {
-      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/usuarios/ubicacion/comunas?region=${encodeURIComponent(formData.region)}&provincia=${encodeURIComponent(formData.provincia)}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      const response = await fetch(`${API_URL}/ubicacion/comunas?region=${encodeURIComponent(formData.region)}&provincia=${encodeURIComponent(formData.provincia)}`);
       if (!response.ok) throw new Error('Error al obtener comunas');
       const data = await response.json();
       if (Array.isArray(data)) {
