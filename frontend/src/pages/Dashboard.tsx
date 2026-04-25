@@ -17,11 +17,27 @@ export function Dashboard({ onLogout }: DashboardProps) {
   // Siempre comenzar en 'inicio' al cargar el Dashboard
   const [vista, setVistaState] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>('inicio');
 
-  // Wrapper para setVista que también guarda en localStorage
+  // Wrapper para setVista que también guarda en localStorage y en el historial del navegador
   const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores') => {
     localStorage.setItem('dashboardVista', nuevaVista);
     setVistaState(nuevaVista);
+    // Agregar al historial del navegador para que funcione el botón "Atrás"
+    window.history.pushState({ vista: nuevaVista }, '', window.location.href);
   };
+
+  // Manejar el botón "Atrás" del navegador
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state?.vista) {
+        setVistaState(event.state.vista);
+      } else {
+        setVistaState('inicio');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const [usuariosActivos, setUsuariosActivos] = useState<Usuario[]>([]);
 
