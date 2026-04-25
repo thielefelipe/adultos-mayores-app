@@ -10,7 +10,19 @@ interface DashboardProps {
 
 export function Dashboard({ onLogout }: DashboardProps) {
   const { usuario, token } = useAuth();
-  const [vista, setVista] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>('inicio');
+
+  // Recuperar la vista guardada en localStorage, o 'inicio' por defecto
+  const [vista, setVistaState] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>(() => {
+    const vistaGuardada = localStorage.getItem('dashboardVista') as 'inicio' | 'usuarios' | 'gestorOperadores' | null;
+    return vistaGuardada || 'inicio';
+  });
+
+  // Wrapper para setVista que también guarda en localStorage
+  const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores') => {
+    localStorage.setItem('dashboardVista', nuevaVista);
+    setVistaState(nuevaVista);
+  };
+
   const [usuariosActivos, setUsuariosActivos] = useState<Usuario[]>([]);
 
   useEffect(() => {
