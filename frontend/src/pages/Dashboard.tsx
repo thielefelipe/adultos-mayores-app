@@ -236,10 +236,12 @@ export function Dashboard({ onLogout }: DashboardProps) {
             padding: '24px',
             border: '1px solid #E0E0E0',
             boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
-            cursor: 'pointer',
-            transition: 'transform .18s, box-shadow .18s'
+            transition: 'transform .18s, box-shadow .18s',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
           }}
-            onClick={() => setVista('gestorOperadores')}
             onMouseEnter={e => {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
               (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
@@ -249,27 +251,34 @@ export function Dashboard({ onLogout }: DashboardProps) {
               (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
             }}
           >
-            <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
-              Operadores y Analistas
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                Operadores y Analistas
+              </div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
+                {usuariosActivos.length}
+              </div>
+              <div style={{ color: '#999999', fontSize: 12, marginBottom: 20 }}>
+                Activos en este momento
+              </div>
             </div>
-            <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
-              {usuariosActivos.length}
-            </div>
-            <div style={{ color: '#999999', fontSize: 12, marginBottom: 20 }}>
-              Activos en este momento
-            </div>
-            <button style={{
-              background: '#0066CC',
-              color: '#FFFFFF',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: 13,
-              fontWeight: 600,
-              width: '100%',
-              transition: 'background 0.2s'
-            }}
+            <button
+              onClick={() => {
+                console.log('Abriendo gestor operadores');
+                setVista('gestorOperadores');
+              }}
+              style={{
+                background: '#0066CC',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '10px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: 600,
+                width: '100%',
+                transition: 'background 0.2s'
+              }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
               }}
