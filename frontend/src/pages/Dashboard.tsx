@@ -389,36 +389,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
             </button>
           </div>
 
-          {/* Card: Últimas Actividades */}
-          <div style={{
-            background: '#FFFFFF',
-            borderRadius: 8,
-            padding: '24px',
-            border: '1px solid #E0E0E0',
-            boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
-            cursor: 'pointer',
-            transition: 'transform .18s, box-shadow .18s'
-          }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
-            }}
-          >
-            <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
-              Últimas Actividades
-            </div>
-            <div style={{ color: '#666666', fontSize: 14, marginBottom: 8 }}>
-              Usuario: {usuario?.nombre || usuario?.username}
-            </div>
-            <div style={{ color: '#999999', fontSize: 12 }}>
-              Hace 2 horas
-            </div>
-          </div>
-
           </div>
         </div>
 
