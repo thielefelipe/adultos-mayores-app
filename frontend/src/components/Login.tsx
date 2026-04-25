@@ -65,13 +65,9 @@ export function Login({ onLoginSuccess }: LoginProps) {
           {error && <div className="error-message">{error}</div>}
 
           <button type="submit" disabled={loading} className="btn-primary">
-            {loading ? '⏳ Iniciando sesión...' : '🚀 Iniciar sesión'}
+            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
-
-        <p className="hint">
-          📝 Credenciales de prueba: admin / admin123
-        </p>
       </div>
     </div>
   );
