@@ -11,6 +11,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { UsuariosService } from './usuarios.service';
 import { UbicacionService } from '../services/ubicacion.service';
 import { CrearUsuarioDto, ActualizarUsuarioDto, CambiarContrasenaDto, EliminarUsuarioDto, RestablecerContrasenaDto } from './dtos';
@@ -36,7 +38,7 @@ export class UbicacionController {
 }
 
 @Controller('usuarios')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 export class UsuariosController {
   constructor(
     private usuariosService: UsuariosService,
@@ -58,6 +60,7 @@ export class UsuariosController {
   }
 
   @Get('activos')
+  @Roles('admin')
   async obtenerActivos() {
     const usuarios = await this.usuariosService.obtenerTodosConUltimoAcceso();
     const ahora = new Date();
@@ -77,16 +80,19 @@ export class UsuariosController {
   }
 
   @Post()
+  @Roles('admin')
   async crear(@Body() crearDto: CrearUsuarioDto, @Request() req) {
     return this.usuariosService.crear(crearDto, req.user.username);
   }
 
   @Get(':id')
+  @Roles('admin')
   async obtenerPorId(@Param('id') id: string) {
     return this.usuariosService.obtenerPorId(id);
   }
 
   @Put(':id')
+  @Roles('admin')
   async actualizar(
     @Param('id') id: string,
     @Body() actualizarDto: ActualizarUsuarioDto,
@@ -96,6 +102,7 @@ export class UsuariosController {
   }
 
   @Post(':id/restablecer-contrasena')
+  @Roles('admin')
   async restablecerContrasena(
     @Param('id') id: string,
     @Body() restablecerDto: RestablecerContrasenaDto,
@@ -105,6 +112,7 @@ export class UsuariosController {
   }
 
   @Delete(':id')
+  @Roles('admin')
   async eliminar(
     @Param('id') id: string,
     @Body() eliminarDto: EliminarUsuarioDto,
