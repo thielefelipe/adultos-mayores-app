@@ -56,7 +56,17 @@
       "mcp__Claude_in_Chrome__resize_window",
       "Bash(\"C:\\\\Users\\\\felip\\\\OneDrive\\\\Documentos\\\\Adultos mayores\\\\backend\")",
       "mcp__Claude_Preview__preview_start",
-      "Bash(curl -s -w '\\\\n%{http_code}' -X POST https://adultos-mayores-backend.onrender.com/api/auth/login -H 'Content-Type: application/json' -d '{\"username\":\"admin\",\"password\":\"admin123\"}')"
+      "Bash(curl -s -w '\\\\n%{http_code}' -X POST https://adultos-mayores-backend.onrender.com/api/auth/login -H 'Content-Type: application/json' -d '{\"username\":\"admin\",\"password\":\"admin123\"}')",
+      "mcp__1ad2e200-f10f-471e-bc31-a38878edee2a__generate-design",
+      "mcp__1ad2e200-f10f-471e-bc31-a38878edee2a__create-design-from-candidate",
+      "mcp__1ad2e200-f10f-471e-bc31-a38878edee2a__start-editing-transaction",
+      "mcp__1ad2e200-f10f-471e-bc31-a38878edee2a__perform-editing-operations",
+      "mcp__1ad2e200-f10f-471e-bc31-a38878edee2a__commit-editing-transaction",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Style: Actualizar diseño de Login con nuevos colores y estilos *)",
+      "Bash(git commit -m 'Style: Actualizar botón a azul y limpiar componentes innecesarios *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }

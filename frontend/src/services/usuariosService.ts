@@ -27,6 +27,24 @@ export const usuariosService = {
     return response.json();
   },
 
+  async obtenerActivos(token: string): Promise<Usuario[]> {
+    const response = await fetch(`${API_URL}/usuarios/activos`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Error al obtener usuarios activos');
+    return response.json();
+  },
+
+  async enviarHeartbeat(token: string): Promise<void> {
+    const response = await fetch(`${API_URL}/usuarios/heartbeat`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Error al enviar heartbeat');
+  },
+
   async obtenerPorId(id: string, token: string): Promise<Usuario> {
     const response = await fetch(`${API_URL}/usuarios/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` },

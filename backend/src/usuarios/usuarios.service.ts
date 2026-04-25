@@ -21,6 +21,19 @@ export class UsuariosService {
     });
   }
 
+  async obtenerTodosConUltimoAcceso() {
+    return this.usuarioRepository.find({
+      where: { activo: true },
+      select: ['id', 'username', 'nombre', 'rol', 'email', 'ultimoAcceso'],
+    });
+  }
+
+  async actualizarUltimoAcceso(usuarioId: string) {
+    const usuario = await this.obtenerPorId(usuarioId);
+    usuario.ultimoAcceso = new Date();
+    return this.usuarioRepository.save(usuario);
+  }
+
   async obtenerPorId(id: string) {
     const usuario = await this.usuarioRepository.findOne({ where: { id } });
     if (!usuario) {

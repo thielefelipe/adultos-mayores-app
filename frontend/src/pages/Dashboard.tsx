@@ -10,28 +10,82 @@ interface DashboardProps {
 export function Dashboard({ onLogout }: DashboardProps) {
   const { usuario, token } = useAuth();
   const [vista, setVista] = useState<'inicio' | 'usuarios'>('inicio');
-  const [usuariosActivos, setUsuariosActivos] = useState(0);
+  const [usuariosActivos, setUsuariosActivos] = useState<Usuario[]>([]);
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    const cargarUsuarios = async () => {
-      try {
-        if (!token) return;
-        const usuarios: Usuario[] = await usuariosService.obtenerTodos(token);
+    if (!token) return;
 
-        // Contar usuarios activos (solo operador y analista, sin admin)
-        const activos = usuarios.filter(u => (u.rol === 'operador' || u.rol === 'analista') && u.activo);
-        setUsuariosActivos(activos.length);
+    const cargarUsuariosActivos = async () => {
+      try {
+        const usuarios = await usuariosService.obtenerActivos(token);
+        const filtrados = usuarios.filter(u => u.rol === 'operador' || u.rol === 'analista');
+        setUsuariosActivos(filtrados);
+        setCargando(false);
       } catch (error) {
-        console.error('Error al cargar usuarios:', error);
+        console.error('Error al cargar usuarios activos:', error);
+        setCargando(false);
       }
     };
 
-    cargarUsuarios();
+    // Enviar heartbeat inmediatamente
+    usuariosService.enviarHeartbeat(token).catch(err => console.error('Error en heartbeat:', err));
+
+    // Cargar usuarios activos
+    cargarUsuariosActivos();
+
+    // Enviar heartbeat cada 30 segundos
+    const heartbeatInterval = setInterval(() => {
+      usuariosService.enviarHeartbeat(token).catch(err => console.error('Error en heartbeat:', err));
+    }, 30000);
+
+    // Recargar usuarios activos cada 10 segundos
+    const reloadInterval = setInterval(() => {
+      cargarUsuariosActivos();
+    }, 10000);
+
+    return () => {
+      clearInterval(heartbeatInterval);
+      clearInterval(reloadInterval);
+    };
   }, [token]);
 
   const handleLogout = async () => {
     await onLogout();
   };
+
+  // Control de acceso: solo admin puede ver el dashboard
+  if (usuario?.rol !== 'admin') {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: '#FFFFFF',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: "'Open Sans', sans-serif"
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ color: '#003D82', fontSize: 32, marginBottom: 16 }}>Acceso Denegado</h1>
+          <p style={{ color: '#666666', fontSize: 16, marginBottom: 24 }}>
+            Solo administradores pueden acceder al Dashboard RRHH
+          </p>
+          <button onClick={handleLogout} style={{
+            background: '#0066CC',
+            color: '#FFFFFF',
+            border: 'none',
+            padding: '12px 24px',
+            borderRadius: 8,
+            cursor: 'pointer',
+            fontSize: 14,
+            fontWeight: 600
+          }}>
+            Volver al Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (vista === 'usuarios') {
     return (
@@ -205,27 +259,48 @@ export function Dashboard({ onLogout }: DashboardProps) {
             padding: '24px',
             border: '1px solid #E0E0E0',
             boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
-            cursor: 'pointer',
-            transition: 'transform .18s, box-shadow .18s'
-          }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
-            }}
-          >
+            gridColumn: 'span 1'
+          }}>
             <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
               Operadores y Analistas
             </div>
-            <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 8 }}>
-              {usuariosActivos}
+            <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
+              {usuariosActivos.length}
             </div>
-            <div style={{ color: '#999999', fontSize: 12 }}>
-              Usuarios activos en el sistema
+            <div style={{ color: '#999999', fontSize: 12, marginBottom: 16 }}>
+              Activos en este momento
             </div>
+
+            {cargando ? (
+              <div style={{ color: '#666666', fontSize: 13 }}>Cargando...</div>
+            ) : usuariosActivos.length > 0 ? (
+              <div style={{
+                maxHeight: 180,
+                overflowY: 'auto',
+                borderTop: '1px solid #E0E0E0',
+                paddingTop: 12
+              }}>
+                {usuariosActivos.map((u) => (
+                  <div key={u.id} style={{
+                    paddingBottom: 8,
+                    marginBottom: 8,
+                    borderBottom: '1px solid #F0F0F0',
+                    fontSize: 13
+                  }}>
+                    <div style={{ fontWeight: 600, color: '#003D82' }}>
+                      {u.nombre}
+                    </div>
+                    <div style={{ color: '#666666', fontSize: 11 }}>
+                      @{u.username} ({u.rol})
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ color: '#999999', fontSize: 13 }}>
+                No hay usuarios activos en este momento
+              </div>
+            )}
           </div>
 
           {/* Card: Reportes Pendientes */}

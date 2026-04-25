@@ -57,6 +57,25 @@ export class UsuariosController {
     return this.usuariosService.obtenerTodos();
   }
 
+  @Get('activos')
+  async obtenerActivos() {
+    const usuarios = await this.usuariosService.obtenerTodosConUltimoAcceso();
+    const ahora = new Date();
+    const cincoMinutos = 5 * 60 * 1000;
+
+    return usuarios.filter(u => {
+      if (!u.ultimoAcceso) return false;
+      const tiempoInactivo = ahora.getTime() - new Date(u.ultimoAcceso).getTime();
+      return tiempoInactivo < cincoMinutos;
+    });
+  }
+
+  @Post('heartbeat')
+  async heartbeat(@Request() req) {
+    await this.usuariosService.actualizarUltimoAcceso(req.user.sub);
+    return { mensaje: 'Heartbeat registrado' };
+  }
+
   @Post()
   async crear(@Body() crearDto: CrearUsuarioDto, @Request() req) {
     return this.usuariosService.crear(crearDto, req.user.username);
