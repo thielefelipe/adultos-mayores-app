@@ -7,6 +7,11 @@ export interface Usuario {
   username: string;
   nombre: string;
   rol: 'admin' | 'operador' | 'analista';
+  email?: string;
+  telefono?: string;
+  region?: string;
+  provincia?: string;
+  comuna?: string;
   activo?: boolean;
   creado?: string;
   ultimoAcceso?: string;
@@ -136,7 +141,12 @@ export const usuariosService = {
       ID: usuario.id,
       Usuario: usuario.username,
       Nombre: usuario.nombre,
+      Email: usuario.email || '',
+      Teléfono: usuario.telefono || '',
       Rol: usuario.rol?.toUpperCase() || '',
+      Región: usuario.region || '',
+      Provincia: usuario.provincia || '',
+      Comuna: usuario.comuna || '',
       Activo: usuario.activo ? 'Sí' : 'No',
       'Fecha Creación': usuario.creado
         ? new Date(usuario.creado).toLocaleDateString('es-CL')
@@ -148,22 +158,27 @@ export const usuariosService = {
 
     const ws = XLSX.utils.json_to_sheet(datosExportacion);
 
-    // Ancho de columnas
+    // Ancho de columnas (12 columnas ahora)
     ws['!cols'] = [
       { wch: 36 }, // ID
       { wch: 15 }, // Usuario
       { wch: 20 }, // Nombre
+      { wch: 25 }, // Email
+      { wch: 15 }, // Teléfono
       { wch: 12 }, // Rol
+      { wch: 15 }, // Región
+      { wch: 15 }, // Provincia
+      { wch: 15 }, // Comuna
       { wch: 10 }, // Activo
       { wch: 15 }, // Fecha Creación
       { wch: 15 }, // Último Acceso
     ];
 
     // Agregar filtros automáticos
-    ws['!autofilter'] = { ref: `A1:G${datosExportacion.length + 1}` };
+    ws['!autofilter'] = { ref: `A1:L${datosExportacion.length + 1}` };
 
     // Formatear encabezados
-    for (let col = 0; col < 7; col++) {
+    for (let col = 0; col < 12; col++) {
       const cellRef = XLSX.utils.encode_col(col) + '1';
       if (ws[cellRef]) {
         ws[cellRef].s = {
