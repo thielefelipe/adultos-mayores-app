@@ -109,14 +109,16 @@ export function AdminUsuarios() {
       <div className="admin-header">
         <h2>👥 Gestión de Usuarios</h2>
         <div className="header-buttons">
-          <button
-            className="btn-exportar"
-            onClick={handleExportar}
-            disabled={exportando}
-            title="Exportar usuarios a Excel"
-          >
-            {exportando ? '⏳ Exportando...' : '📊 Exportar Excel'}
-          </button>
+          {usuario?.rol === 'admin' && (
+            <button
+              className="btn-exportar"
+              onClick={handleExportar}
+              disabled={exportando}
+              title="Exportar usuarios a Excel"
+            >
+              {exportando ? '⏳ Exportando...' : '📊 Exportar Excel'}
+            </button>
+          )}
           <button className="btn-crear" onClick={handleCrear}>
             ➕ Crear Usuario
           </button>
