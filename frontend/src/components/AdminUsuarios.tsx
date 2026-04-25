@@ -4,6 +4,7 @@ import { usuariosService, type Usuario } from '../services/usuariosService';
 import { ModalEliminarUsuario } from './ModalEliminarUsuario';
 import { ModalRestablecerContrasena } from './ModalRestablecerContrasena';
 import { ModalCrearUsuario } from './ModalCrearUsuario';
+import { ModalEditarUsuario } from './ModalEditarUsuario';
 import './AdminUsuarios.css';
 
 export function AdminUsuarios() {
@@ -42,6 +43,10 @@ export function AdminUsuarios() {
 
   const handleCrear = () => {
     setShowModal({ type: 'crear' });
+  };
+
+  const handleEditar = (usuario: Usuario) => {
+    setShowModal({ type: 'editar', usuario });
   };
 
   const handleModalClose = () => {
@@ -93,6 +98,13 @@ export function AdminUsuarios() {
                   </td>
                   <td className="actions">
                     <button
+                      className="btn-action btn-editar"
+                      onClick={() => handleEditar(usuario)}
+                      title="Editar usuario"
+                    >
+                      ✏️
+                    </button>
+                    <button
                       className="btn-action btn-restablecer"
                       onClick={() => handleRestablecer(usuario.id)}
                       title="Restablecer contraseña"
@@ -134,6 +146,14 @@ export function AdminUsuarios() {
 
       {showModal?.type === 'crear' && (
         <ModalCrearUsuario
+          onConfirm={handleModalClose}
+          onCancel={() => setShowModal(null)}
+        />
+      )}
+
+      {showModal?.type === 'editar' && showModal?.usuario && (
+        <ModalEditarUsuario
+          usuario={showModal.usuario}
           onConfirm={handleModalClose}
           onCancel={() => setShowModal(null)}
         />
