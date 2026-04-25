@@ -187,17 +187,21 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
               <tbody>
                 {todosLosUsuarios.map((u, index) => {
                   const conectado = estaConectado(u.id);
+                  const bgConectado = '#E8F5E9'; // Verde claro
+                  const bgDesconectado = '#FFEBEE'; // Rojo claro
+                  const bgBase = conectado ? bgConectado : bgDesconectado;
+
                   return (
                     <tr key={u.id} style={{
                       borderBottom: index < todosLosUsuarios.length - 1 ? '1px solid #E0E0E0' : 'none',
-                      background: index % 2 === 0 ? '#FFFFFF' : '#F9F9F9',
+                      background: bgBase,
                       transition: 'background 0.2s'
                     }}
                       onMouseEnter={e => {
-                        (e.currentTarget as HTMLElement).style.background = '#F0F5FF';
+                        (e.currentTarget as HTMLElement).style.background = conectado ? '#C8E6C9' : '#FFCDD2';
                       }}
                       onMouseLeave={e => {
-                        (e.currentTarget as HTMLElement).style.background = index % 2 === 0 ? '#FFFFFF' : '#F9F9F9';
+                        (e.currentTarget as HTMLElement).style.background = bgBase;
                       }}
                     >
                       <td style={{
@@ -205,12 +209,27 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
                         textAlign: 'center'
                       }}>
                         <div style={{
-                          width: 12,
-                          height: 12,
-                          borderRadius: '50%',
-                          background: conectado ? '#4CAF50' : '#CCCCCC',
-                          margin: '0 auto'
-                        }} title={conectado ? 'Conectado' : 'Desconectado'} />
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: 8
+                        }}>
+                          <div style={{
+                            width: 12,
+                            height: 12,
+                            borderRadius: '50%',
+                            background: conectado ? '#4CAF50' : '#F44336',
+                            margin: '0 auto',
+                            boxShadow: conectado ? '0 0 8px rgba(76, 175, 80, 0.5)' : '0 0 8px rgba(244, 67, 54, 0.5)'
+                          }} title={conectado ? 'Conectado' : 'Desconectado'} />
+                          <span style={{
+                            fontSize: 12,
+                            fontWeight: 600,
+                            color: conectado ? '#4CAF50' : '#F44336'
+                          }}>
+                            {conectado ? 'En línea' : 'Offline'}
+                          </span>
+                        </div>
                       </td>
                       <td style={{
                         padding: '16px',
