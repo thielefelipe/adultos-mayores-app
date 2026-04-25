@@ -8,7 +8,7 @@ import { ModalEditarUsuario } from './ModalEditarUsuario';
 import './AdminUsuarios.css';
 
 export function AdminUsuarios() {
-  const { token, usuario } = useAuth();
+  const { token } = useAuth();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -109,16 +109,14 @@ export function AdminUsuarios() {
       <div className="admin-header">
         <h2>👥 Gestión de Usuarios</h2>
         <div className="header-buttons">
-          {usuario?.rol === 'admin' && (
-            <button
-              className="btn-exportar"
-              onClick={handleExportar}
-              disabled={exportando}
-              title="Exportar usuarios a Excel"
-            >
-              {exportando ? '⏳ Exportando...' : '📊 Exportar Excel'}
-            </button>
-          )}
+          <button
+            className="btn-exportar"
+            onClick={handleExportar}
+            disabled={exportando}
+            title="Exportar usuarios a Excel"
+          >
+            {exportando ? '⏳ Exportando...' : '📊 Exportar Excel'}
+          </button>
           <button className="btn-crear" onClick={handleCrear}>
             ➕ Crear Usuario
           </button>
