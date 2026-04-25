@@ -1,14 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { AdminUsuarios } from '../components/AdminUsuarios';
+import { usuariosService, type Usuario } from '../services/usuariosService';
 
 interface DashboardProps {
   onLogout: () => void;
 }
 
 export function Dashboard({ onLogout }: DashboardProps) {
-  const { usuario } = useAuth();
+  const { usuario, token } = useAuth();
   const [vista, setVista] = useState<'inicio' | 'usuarios'>('inicio');
+  const [usuariosActivos, setUsuariosActivos] = useState(0);
+  const [totalUsuarios, setTotalUsuarios] = useState(0);
+
+  useEffect(() => {
+    const cargarUsuarios = async () => {
+      try {
+        if (!token) return;
+        const usuarios: Usuario[] = await usuariosService.obtenerTodos(token);
+
+        // Contar usuarios activos (solo operador y analista, sin admin)
+        const activos = usuarios.filter(u => (u.rol === 'operador' || u.rol === 'analista') && u.activo);
+        setUsuariosActivos(activos.length);
+        setTotalUsuarios(usuarios.filter(u => u.rol !== 'admin').length);
+      } catch (error) {
+        console.error('Error al cargar usuarios:', error);
+      }
+    };
+
+    cargarUsuarios();
+  }, [token]);
 
   const handleLogout = async () => {
     await onLogout();
@@ -199,13 +220,13 @@ export function Dashboard({ onLogout }: DashboardProps) {
             }}
           >
             <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
-              Usuarios Activos
+              Operadores y Analistas
             </div>
             <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 8 }}>
-              24
+              {usuariosActivos}
             </div>
             <div style={{ color: '#999999', fontSize: 12 }}>
-              Activos en el sistema
+              Usuarios activos en el sistema
             </div>
           </div>
 
@@ -268,7 +289,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
               Hace 2 horas
             </div>
           </div>
-        </div>
+
+          </div>
         </div>
 
         {/* Botón Ir a Gestión de Usuarios */}
