@@ -11,7 +11,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const { usuario, token } = useAuth();
   const [vista, setVista] = useState<'inicio' | 'usuarios'>('inicio');
   const [usuariosActivos, setUsuariosActivos] = useState(0);
-  const [totalUsuarios, setTotalUsuarios] = useState(0);
 
   useEffect(() => {
     const cargarUsuarios = async () => {
@@ -22,7 +21,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
         // Contar usuarios activos (solo operador y analista, sin admin)
         const activos = usuarios.filter(u => (u.rol === 'operador' || u.rol === 'analista') && u.activo);
         setUsuariosActivos(activos.length);
-        setTotalUsuarios(usuarios.filter(u => u.rol !== 'admin').length);
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
       }
