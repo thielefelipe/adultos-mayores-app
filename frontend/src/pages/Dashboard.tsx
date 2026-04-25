@@ -452,36 +452,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
           </div>
         </div>
 
-        {/* Botón Ir a Gestión de Usuarios */}
-        {usuario?.rol === 'admin' && (
-          <div style={{ marginTop: 40 }}>
-            <button
-              onClick={() => setVista('usuarios')}
-              style={{
-                background: '#0066CC',
-                color: '#FFFFFF',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: 'pointer',
-                boxShadow: '0px 2px 8px rgba(0,0,0,0.1)',
-                transition: 'all 0.3s'
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.15)';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.1)';
-              }}
-            >
-              → Ir a Gestión de Usuarios
-            </button>
-          </div>
-        )}
       </main>
     </div>
   );
