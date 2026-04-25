@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { AdminUsuarios } from '../components/AdminUsuarios';
+import { UsuariosConectados } from './UsuariosConectados';
 import { usuariosService, type Usuario } from '../services/usuariosService';
 
 interface DashboardProps {
@@ -9,7 +10,7 @@ interface DashboardProps {
 
 export function Dashboard({ onLogout }: DashboardProps) {
   const { usuario, token } = useAuth();
-  const [vista, setVista] = useState<'inicio' | 'usuarios'>('inicio');
+  const [vista, setVista] = useState<'inicio' | 'usuarios' | 'usuariosConectados'>('inicio');
   const [usuariosActivos, setUsuariosActivos] = useState<Usuario[]>([]);
   const [cargando, setCargando] = useState(true);
 
@@ -57,6 +58,15 @@ export function Dashboard({ onLogout }: DashboardProps) {
     await onLogout();
   };
 
+
+  if (vista === 'usuariosConectados') {
+    return (
+      <UsuariosConectados
+        onVolver={() => setVista('inicio')}
+        onLogout={handleLogout}
+      />
+    );
+  }
 
   if (vista === 'usuarios') {
     return (
@@ -230,48 +240,49 @@ export function Dashboard({ onLogout }: DashboardProps) {
             padding: '24px',
             border: '1px solid #E0E0E0',
             boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
-            gridColumn: 'span 1'
-          }}>
+            cursor: 'pointer',
+            transition: 'transform .18s, box-shadow .18s'
+          }}
+            onClick={() => setVista('usuariosConectados')}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
+            }}
+          >
             <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
               Operadores y Analistas
             </div>
             <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
               {usuariosActivos.length}
             </div>
-            <div style={{ color: '#999999', fontSize: 12, marginBottom: 16 }}>
+            <div style={{ color: '#999999', fontSize: 12, marginBottom: 20 }}>
               Activos en este momento
             </div>
-
-            {cargando ? (
-              <div style={{ color: '#666666', fontSize: 13 }}>Cargando...</div>
-            ) : usuariosActivos.length > 0 ? (
-              <div style={{
-                maxHeight: 180,
-                overflowY: 'auto',
-                borderTop: '1px solid #E0E0E0',
-                paddingTop: 12
-              }}>
-                {usuariosActivos.map((u) => (
-                  <div key={u.id} style={{
-                    paddingBottom: 8,
-                    marginBottom: 8,
-                    borderBottom: '1px solid #F0F0F0',
-                    fontSize: 13
-                  }}>
-                    <div style={{ fontWeight: 600, color: '#003D82' }}>
-                      {u.nombre}
-                    </div>
-                    <div style={{ color: '#666666', fontSize: 11 }}>
-                      @{u.username} ({u.rol})
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div style={{ color: '#999999', fontSize: 13 }}>
-                No hay usuarios activos en este momento
-              </div>
-            )}
+            <button style={{
+              background: '#0066CC',
+              color: '#FFFFFF',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: 13,
+              fontWeight: 600,
+              width: '100%',
+              transition: 'background 0.2s'
+            }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+              }}
+            >
+              Ver todos →
+            </button>
           </div>
 
           {/* Card: Reportes Pendientes */}
