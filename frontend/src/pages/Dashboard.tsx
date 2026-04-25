@@ -21,37 +21,39 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores') => {
     localStorage.setItem('dashboardVista', nuevaVista);
     setVistaState(nuevaVista);
-    // Actualizar la URL según la vista
-    const baseUrl = window.location.origin;
-    let newUrl = `${baseUrl}/`;
+    // Actualizar la URL usando hash para que funcione con Render
+    let hash = '';
     if (nuevaVista === 'usuarios') {
-      newUrl = `${baseUrl}/admin/usuarios`;
+      hash = '#/admin/usuarios';
     } else if (nuevaVista === 'gestorOperadores') {
-      newUrl = `${baseUrl}/admin/gestoroperadores`;
+      hash = '#/admin/gestoroperadores';
     }
-    window.history.pushState({ vista: nuevaVista }, '', newUrl);
+    window.location.hash = hash;
   };
 
-  // Manejar el botón "Atrás" del navegador y cargar vista según la URL
+  // Manejar el botón "Atrás" del navegador y cargar vista según la URL hash
   useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      if (event.state?.vista) {
-        setVistaState(event.state.vista);
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash.includes('admin/usuarios')) {
+        setVistaState('usuarios');
+      } else if (hash.includes('admin/gestoroperadores')) {
+        setVistaState('gestorOperadores');
       } else {
         setVistaState('inicio');
       }
     };
 
-    // Detectar la vista actual según la URL
-    const currentPath = window.location.pathname;
-    if (currentPath.includes('/admin/usuarios')) {
+    // Detectar la vista inicial según la URL hash
+    const currentHash = window.location.hash;
+    if (currentHash.includes('admin/usuarios')) {
       setVistaState('usuarios');
-    } else if (currentPath.includes('/admin/gestoroperadores')) {
+    } else if (currentHash.includes('admin/gestoroperadores')) {
       setVistaState('gestorOperadores');
     }
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const [usuariosActivos, setUsuariosActivos] = useState<Usuario[]>([]);
