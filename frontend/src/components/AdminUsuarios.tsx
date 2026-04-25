@@ -109,7 +109,7 @@ export function AdminUsuarios() {
       <div className="admin-header">
         <h2>👥 Gestión de Usuarios</h2>
         <div className="header-buttons">
-          {usuario?.rol === 'admin' && (
+          {usuario && usuario.rol === 'admin' && (
             <button
               className="btn-exportar"
               onClick={handleExportar}
