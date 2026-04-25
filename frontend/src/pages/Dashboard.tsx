@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { AdminUsuarios } from '../components/AdminUsuarios';
-import { UsuariosConectados } from './UsuariosConectados';
+import { GestorOperadores } from './GestorOperadores';
 import { usuariosService, type Usuario } from '../services/usuariosService';
 
 interface DashboardProps {
@@ -10,7 +10,7 @@ interface DashboardProps {
 
 export function Dashboard({ onLogout }: DashboardProps) {
   const { usuario, token } = useAuth();
-  const [vista, setVista] = useState<'inicio' | 'usuarios' | 'usuariosConectados'>('inicio');
+  const [vista, setVista] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>('inicio');
   const [usuariosActivos, setUsuariosActivos] = useState<Usuario[]>([]);
   const [cargando, setCargando] = useState(true);
 
@@ -59,9 +59,9 @@ export function Dashboard({ onLogout }: DashboardProps) {
   };
 
 
-  if (vista === 'usuariosConectados') {
+  if (vista === 'gestorOperadores') {
     return (
-      <UsuariosConectados
+      <GestorOperadores
         onVolver={() => setVista('inicio')}
         onLogout={handleLogout}
       />
@@ -243,7 +243,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             cursor: 'pointer',
             transition: 'transform .18s, box-shadow .18s'
           }}
-            onClick={() => setVista('usuariosConectados')}
+            onClick={() => setVista('gestorOperadores')}
             onMouseEnter={e => {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
               (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
