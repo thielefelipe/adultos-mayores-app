@@ -14,11 +14,13 @@ export function Dashboard({ onLogout }: DashboardProps) {
   // Recuperar la vista guardada en localStorage, o 'inicio' por defecto
   const [vista, setVistaState] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>(() => {
     const vistaGuardada = localStorage.getItem('dashboardVista') as 'inicio' | 'usuarios' | 'gestorOperadores' | null;
+    console.log('📍 Dashboard montado - Vista guardada en localStorage:', vistaGuardada);
     return vistaGuardada || 'inicio';
   });
 
   // Wrapper para setVista que también guarda en localStorage
   const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores') => {
+    console.log('📍 Cambiando vista a:', nuevaVista);
     localStorage.setItem('dashboardVista', nuevaVista);
     setVistaState(nuevaVista);
   };
