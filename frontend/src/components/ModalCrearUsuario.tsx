@@ -13,8 +13,8 @@ interface ModalProps {
 export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
   const { token } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',
     rut: '',
+    username: '',
     nombre: '',
     email: '',
     telefono: '',
@@ -100,26 +100,45 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
     }
   };
 
-  if (!token) return null;
+  const formatRut = (rut: string): string => {
+    const cleanRut = rut.replace(/[^0-9kK]/g, '');
+    if (cleanRut.length < 8) return rut;
+    const body = cleanRut.slice(0, -1);
+    const dv = cleanRut.slice(-1);
+    const formatted = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${formatted}-${dv}`;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === 'rut') {
+      const formattedRut = formatRut(value);
+      const cleanRut = value.replace(/[^0-9kK]/g, '');
+      const rutWithoutDV = cleanRut.slice(0, -1);
+
+      setFormData((prev) => ({
+        ...prev,
+        rut: formattedRut,
+        username: cleanRut.toLowerCase(),
+        password: rutWithoutDV,
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
+  if (!token) return null;
+
   const handleConfirm = async () => {
-    if (!formData.username || !formData.nombre || !formData.password) {
-      setError('Usuario, nombre y contraseña son requeridos');
+    if (!formData.rut || !formData.nombre || !formData.password) {
+      setError('RUT, nombre y contraseña son requeridos');
       return;
     }
 
-    if (formData.username.length < 3) {
-      setError('El usuario debe tener al menos 3 caracteres');
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres');
+    const cleanRut = formData.rut.replace(/[^0-9kK]/g, '');
+    if (cleanRut.length < 8) {
+      setError('RUT inválido');
       return;
     }
 
@@ -128,7 +147,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
 
     try {
       await usuariosService.crear(formData, token);
-      alert(`✅ Usuario ${formData.nombre} creado exitosamente`);
+      alert(`✅ Usuario ${formData.nombre} creado exitosamente\nUsuario: ${formData.username}\nContraseña: ${formData.password}`);
       onConfirm();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -147,21 +166,6 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
 
         <div className="modal-body">
           <div className="form-group">
-            <label htmlFor="username">Usuario:</label>
-            <input
-              id="username"
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Nombre de usuario"
-              disabled={loading}
-              autoFocus
-            />
-            <small>Mínimo 3 caracteres, único</small>
-          </div>
-
-          <div className="form-group">
             <label htmlFor="rut">RUT:</label>
             <input
               id="rut"
@@ -169,10 +173,37 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
               name="rut"
               value={formData.rut}
               onChange={handleChange}
-              placeholder="12.345.678-9 o 12345678-9"
+              placeholder="19.747.981-7"
               disabled={loading}
+              autoFocus
             />
-            <small>Opcional - Formato: 12.345.678-9</small>
+            <small>Ej: 19747981-7 o 19.747.981-7 (se formatea automáticamente)</small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="username">Usuario (RUT):</label>
+            <input
+              id="username"
+              type="text"
+              name="username"
+              value={formData.username}
+              disabled
+              readOnly
+            />
+            <small>Se llena automáticamente con el RUT</small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Contraseña (RUT sin DV):</label>
+            <input
+              id="password"
+              type="text"
+              name="password"
+              value={formData.password}
+              disabled
+              readOnly
+            />
+            <small>Se llena automáticamente (RUT sin dígito verificador)</small>
           </div>
 
           <div className="form-group">
@@ -273,20 +304,6 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
           )}
 
           <div className="form-group">
-            <label htmlFor="password">Contraseña:</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              disabled={loading}
-            />
-            <small>Mínimo 8 caracteres</small>
-          </div>
-
-          <div className="form-group">
             <label htmlFor="rol">Rol:</label>
             <select
               id="rol"
@@ -313,7 +330,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
             onClick={handleConfirm}
             disabled={loading}
           >
-            {loading ? '⏳ Creando...' : '➕ Crear'}
+            {loading ? '⏳ Creando...' : '➕ Crear Usuario'}
           </button>
         </div>
       </div>
