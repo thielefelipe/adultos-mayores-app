@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .header-title { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: bold; color: #FFFFFF; }
+      .page-title { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: bold; color: #003D82; }
+      .section-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: bold; color: #003D82; }
+      .label { font-family: 'Open Sans', sans-serif; font-size: 12px; color: #999999; }
+      .value { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #333333; }
+      .button-primary { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #FFFFFF; }
+      .button-danger { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #FFFFFF; }
+      .button-secondary { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #666666; }
+      .badge { font-family: 'Open Sans', sans-serif; font-size: 10px; font-weight: bold; }
+      .menu-text { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #333333; }
+      .menu-text-active { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #0066CC; }
+    </style>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="1920" height="1080" fill="#FFFFFF"/>
+
+  <!-- Header -->
+  <rect width="1920" height="80" fill="#003D82" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <circle cx="60" cy="40" r="25" fill="#0066CC" opacity="0.8"/>
+  <text x="60" y="45" text-anchor="middle" class="header-title" font-size="18">MC</text>
+  <text x="960" y="50" text-anchor="middle" class="header-title">Dashboard RRHH</text>
+  <circle cx="1880" cy="40" r="25" fill="#4DA6FF" opacity="0.8"/>
+  <text x="1880" y="45" text-anchor="middle" class="header-title" font-size="18">FT</text>
+
+  <!-- Sidebar -->
+  <rect x="0" y="80" width="250" height="1000" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="20" y="130" class="menu-text">📊 Dashboard</text>
+  <rect x="0" y="150" width="250" height="50" fill="#E8F0FF"/>
+  <text x="20" y="180" class="menu-text-active">👥 Gestión Usuarios</text>
+  <text x="20" y="235" class="menu-text">📈 Reportes</text>
+  <text x="20" y="290" class="menu-text">⚙️ Configuración</text>
+
+  <!-- Contenido Principal -->
+  <text x="280" y="130" class="page-title">Detalles del Usuario</text>
+
+  <!-- Sección: Información Personal -->
+  <text x="280" y="180" class="section-title">Datos Personales</text>
+  <line x1="280" y1="190" x2="1680" y2="190" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Fila 1: Nombre -->
+  <text x="280" y="225" class="label">Nombre</text>
+  <text x="280" y="245" class="value">Felipe Thiele Jara</text>
+
+  <!-- Fila 2: Email -->
+  <text x="800" y="225" class="label">Email</text>
+  <text x="800" y="245" class="value">fthiele@coelemu.cl</text>
+
+  <!-- Fila 3: Usuario -->
+  <text x="280" y="290" class="label">Usuario</text>
+  <text x="280" y="310" class="value">fthiele</text>
+
+  <!-- Fila 4: Teléfono -->
+  <text x="800" y="290" class="label">Teléfono</text>
+  <text x="800" y="310" class="value">+56912345678</text>
+
+  <!-- Sección: Ubicación -->
+  <text x="280" y="370" class="section-title">Ubicación</text>
+  <line x1="280" y1="380" x2="1680" y2="380" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Fila 5: Región -->
+  <text x="280" y="415" class="label">Región</text>
+  <text x="280" y="435" class="value">Los Ríos</text>
+
+  <!-- Fila 6: Provincia -->
+  <text x="800" y="415" class="label">Provincia</text>
+  <text x="800" y="435" class="value">Valdivia</text>
+
+  <!-- Fila 7: Comuna -->
+  <text x="1320" y="415" class="label">Comuna</text>
+  <text x="1320" y="435" class="value">Valdivia</text>
+
+  <!-- Sección: Rol y Permisos -->
+  <text x="280" y="495" class="section-title">Rol y Permisos</text>
+  <line x1="280" y1="505" x2="1680" y2="505" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Fila 8: Rol -->
+  <text x="280" y="540" class="label">Rol</text>
+  <rect x="280" y="550" width="70" height="25" rx="12" fill="#003D82"/>
+  <text x="315" y="563" text-anchor="middle" class="badge" fill="#FFFFFF">Admin</text>
+
+  <!-- Fila 9: Estado -->
+  <text x="800" y="540" class="label">Estado</text>
+  <rect x="800" y="550" width="70" height="25" rx="12" fill="#4CAF50"/>
+  <text x="835" y="563" text-anchor="middle" class="badge" fill="#FFFFFF">Activo</text>
+
+  <!-- Fila 10: Fecha Creación -->
+  <text x="1320" y="540" class="label">Fecha Creación</text>
+  <text x="1320" y="560" class="value">15/03/2026</text>
+
+  <!-- Fila 11: Último Acceso -->
+  <text x="280" y="605" class="label">Último Acceso</text>
+  <text x="280" y="625" class="value">25/04/2026 14:30</text>
+
+  <!-- Botones de Acción -->
+  <rect x="280" y="680" width="130" height="48" rx="8" fill="#0066CC" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="345" y="710" text-anchor="middle" class="button-primary">✏️ Editar</text>
+
+  <rect x="430" y="680" width="130" height="48" rx="8" fill="#E53935" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="495" y="710" text-anchor="middle" class="button-danger">🗑️ Eliminar</text>
+
+  <rect x="580" y="680" width="130" height="48" rx="8" fill="#E0E0E0" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="645" y="710" text-anchor="middle" class="button-secondary">← Volver</text>
+
+</svg>

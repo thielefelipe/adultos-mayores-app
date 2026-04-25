@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .header-title { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: bold; color: #FFFFFF; }
+      .page-title { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: bold; color: #003D82; }
+      .card-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: bold; color: #003D82; }
+      .text-body { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #666666; }
+      .text-label { font-family: 'Open Sans', sans-serif; font-size: 12px; color: #999999; }
+      .menu-text { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #333333; }
+      .menu-text-active { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #0066CC; }
+      .stat-number { font-family: 'Montserrat', sans-serif; font-size: 36px; font-weight: bold; color: #0066CC; }
+      .button-text { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #FFFFFF; }
+    </style>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="1920" height="1080" fill="#FFFFFF"/>
+
+  <!-- Header -->
+  <rect width="1920" height="80" fill="#003D82" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+
+  <!-- Logo Header -->
+  <circle cx="60" cy="40" r="25" fill="#0066CC" opacity="0.8"/>
+  <text x="60" y="45" text-anchor="middle" class="header-title" font-size="18">MC</text>
+
+  <!-- Título Header -->
+  <text x="960" y="50" text-anchor="middle" class="header-title">Dashboard RRHH</text>
+
+  <!-- Avatar Usuario -->
+  <circle cx="1880" cy="40" r="25" fill="#4DA6FF" opacity="0.8"/>
+  <text x="1880" y="45" text-anchor="middle" class="header-title" font-size="18">FT</text>
+
+  <!-- Sidebar Izquierda -->
+  <rect x="0" y="80" width="250" height="1000" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Menú Sidebar -->
+  <!-- Dashboard (Activo) -->
+  <rect x="0" y="100" width="250" height="50" fill="#E8F0FF"/>
+  <text x="20" y="130" class="menu-text-active">📊 Dashboard</text>
+
+  <!-- Gestión Usuarios -->
+  <text x="20" y="185" class="menu-text">👥 Gestión Usuarios</text>
+
+  <!-- Reportes -->
+  <text x="20" y="240" class="menu-text">📈 Reportes</text>
+
+  <!-- Configuración -->
+  <text x="20" y="295" class="menu-text">⚙️ Configuración</text>
+
+  <!-- Contenido Principal -->
+  <text x="280" y="130" class="page-title">Bienvenido al Sistema</text>
+  <text x="280" y="165" class="text-body">Sistema de Gestión de Recursos Humanos</text>
+
+  <!-- Cards de Estadísticas -->
+  <!-- Card 1: Usuarios Activos -->
+  <rect x="280" y="200" width="320" height="140" rx="8" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.05))"/>
+  <text x="300" y="230" class="card-title">Usuarios Activos</text>
+  <text x="300" y="290" class="stat-number">24</text>
+  <text x="300" y="320" class="text-label">Activos en el sistema</text>
+
+  <!-- Card 2: Reportes Pendientes -->
+  <rect x="620" y="200" width="320" height="140" rx="8" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.05))"/>
+  <text x="640" y="230" class="card-title">Reportes Pendientes</text>
+  <text x="640" y="290" class="stat-number">8</text>
+  <text x="640" y="320" class="text-label">Por revisar</text>
+
+  <!-- Card 3: Últimas Actividades -->
+  <rect x="960" y="200" width="320" height="140" rx="8" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.05))"/>
+  <text x="980" y="230" class="card-title">Últimas Actividades</text>
+  <text x="980" y="260" class="text-body">Usuario: Felipe T.</text>
+  <text x="980" y="285" class="text-body">Acción: Crear usuario</text>
+  <text x="980" y="310" class="text-label">Hace 2 horas</text>
+
+  <!-- Botón Ir a Gestión de Usuarios -->
+  <rect x="280" y="380" width="300" height="48" rx="8" fill="#0066CC" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="430" y="410" text-anchor="middle" class="button-text">→ Ir a Gestión de Usuarios</text>
+
+</svg>

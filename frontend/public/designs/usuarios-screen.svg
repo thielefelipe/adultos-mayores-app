@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .header-title { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: bold; color: #FFFFFF; }
+      .page-title { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: bold; color: #003D82; }
+      .button-text { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #FFFFFF; }
+      .button-secondary-text { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #333333; }
+      .text-body { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #666666; }
+      .table-header { font-family: 'Open Sans', sans-serif; font-size: 12px; font-weight: bold; color: #333333; }
+      .table-cell { font-family: 'Open Sans', sans-serif; font-size: 12px; color: #666666; }
+      .menu-text { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #333333; }
+      .menu-text-active { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #0066CC; }
+      .badge { font-family: 'Open Sans', sans-serif; font-size: 10px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="1920" height="1080" fill="#FFFFFF"/>
+
+  <!-- Header -->
+  <rect width="1920" height="80" fill="#003D82" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <circle cx="60" cy="40" r="25" fill="#0066CC" opacity="0.8"/>
+  <text x="60" y="45" text-anchor="middle" class="header-title" font-size="18">MC</text>
+  <text x="960" y="50" text-anchor="middle" class="header-title">Dashboard RRHH</text>
+  <circle cx="1880" cy="40" r="25" fill="#4DA6FF" opacity="0.8"/>
+  <text x="1880" y="45" text-anchor="middle" class="header-title" font-size="18">FT</text>
+
+  <!-- Sidebar -->
+  <rect x="0" y="80" width="250" height="1000" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="20" y="130" class="menu-text">📊 Dashboard</text>
+  <rect x="0" y="150" width="250" height="50" fill="#E8F0FF"/>
+  <text x="20" y="180" class="menu-text-active">👥 Gestión Usuarios</text>
+  <text x="20" y="235" class="menu-text">📈 Reportes</text>
+  <text x="20" y="290" class="menu-text">⚙️ Configuración</text>
+
+  <!-- Contenido Principal -->
+  <text x="280" y="130" class="page-title">Gestión de Usuarios</text>
+
+  <!-- Botones de Acción -->
+  <rect x="280" y="150" width="200" height="48" rx="8" fill="#0066CC" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="380" y="180" text-anchor="middle" class="button-text">➕ Crear Usuario</text>
+
+  <rect x="500" y="150" width="200" height="48" rx="8" fill="#E8A05C" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="600" y="180" text-anchor="middle" class="button-secondary-text">📊 Exportar Excel</text>
+
+  <!-- Tabla de Usuarios -->
+  <!-- Header de Tabla -->
+  <rect x="280" y="220" width="1400" height="40" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="300" y="245" class="table-header">ID</text>
+  <text x="380" y="245" class="table-header">Usuario</text>
+  <text x="520" y="245" class="table-header">Nombre</text>
+  <text x="720" y="245" class="table-header">Email</text>
+  <text x="1020" y="245" class="table-header">Teléfono</text>
+  <text x="1220" y="245" class="table-header">Rol</text>
+  <text x="1380" y="245" class="table-header">Región</text>
+  <text x="1540" y="245" class="table-header">Activo</text>
+
+  <!-- Fila 1 -->
+  <rect x="280" y="260" width="1400" height="35" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="300" y="282" class="table-cell">001</text>
+  <text x="380" y="282" class="table-cell">fthiele</text>
+  <text x="520" y="282" class="table-cell">Felipe Thiele</text>
+  <text x="720" y="282" class="table-cell">fthiele@coelemu.cl</text>
+  <text x="1020" y="282" class="table-cell">+56912345678</text>
+  <rect x="1220" y="268" width="70" height="20" rx="10" fill="#003D82"/>
+  <text x="1255" y="280" text-anchor="middle" class="badge" fill="#FFFFFF">Admin</text>
+  <text x="1380" y="282" class="table-cell">Los Ríos</text>
+  <rect x="1540" y="268" width="50" height="20" rx="10" fill="#4CAF50"/>
+  <text x="1565" y="280" text-anchor="middle" class="badge" fill="#FFFFFF">Sí</text>
+
+  <!-- Fila 2 -->
+  <rect x="280" y="295" width="1400" height="35" fill="#FAFAFA" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="300" y="317" class="table-cell">002</text>
+  <text x="380" y="317" class="table-cell">mrodriguez</text>
+  <text x="520" y="317" class="table-cell">María Rodríguez</text>
+  <text x="720" y="317" class="table-cell">mrodriguez@coelemu.cl</text>
+  <text x="1020" y="317" class="table-cell">+56987654321</text>
+  <rect x="1220" y="303" width="70" height="20" rx="10" fill="#0066CC"/>
+  <text x="1255" y="315" text-anchor="middle" class="badge" fill="#FFFFFF">Operador</text>
+  <text x="1380" y="317" class="table-cell">Los Ríos</text>
+  <rect x="1540" y="303" width="50" height="20" rx="10" fill="#4CAF50"/>
+  <text x="1565" y="315" text-anchor="middle" class="badge" fill="#FFFFFF">Sí</text>
+
+  <!-- Fila 3 -->
+  <rect x="280" y="330" width="1400" height="35" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="300" y="352" class="table-cell">003</text>
+  <text x="380" y="352" class="table-cell">jgomez</text>
+  <text x="520" y="352" class="table-cell">Juan Gómez</text>
+  <text x="720" y="352" class="table-cell">jgomez@coelemu.cl</text>
+  <text x="1020" y="352" class="table-cell">+56912345679</text>
+  <rect x="1220" y="338" width="70" height="20" rx="10" fill="#4DA6FF"/>
+  <text x="1255" y="350" text-anchor="middle" class="badge" fill="#FFFFFF">Analista</text>
+  <text x="1380" y="352" class="table-cell">Los Ríos</text>
+  <rect x="1540" y="338" width="50" height="20" rx="10" fill="#4CAF50"/>
+  <text x="1565" y="350" text-anchor="middle" class="badge" fill="#FFFFFF">Sí</text>
+
+  <!-- Texto Nota -->
+  <text x="280" y="410" class="text-body">💡 Haz clic en cualquier fila para ver detalles del usuario</text>
+
+</svg>

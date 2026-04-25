@@ -1,0 +1,78 @@
+.designs-viewer {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #f5f5f5;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.designs-sidebar {
+  width: 280px;
+  background: #003d82;
+  color: white;
+  padding: 20px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.designs-sidebar h3 {
+  margin: 0 0 20px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.design-btn {
+  width: 100%;
+  padding: 14px 12px;
+  margin-bottom: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-weight: 500;
+}
+
+.design-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateX(4px);
+}
+
+.design-btn.active {
+  background: #0066cc;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.4);
+}
+
+.designs-content {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: white;
+  min-width: 0;
+}
+
+.design-object {
+  width: 90%;
+  height: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.design-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background: white;
+  border-radius: 4px;
+}

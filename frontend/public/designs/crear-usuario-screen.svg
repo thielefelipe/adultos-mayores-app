@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .header-title { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: bold; color: #FFFFFF; }
+      .page-title { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: bold; color: #003D82; }
+      .section-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: bold; color: #003D82; }
+      .label { font-family: 'Open Sans', sans-serif; font-size: 12px; font-weight: bold; color: #333333; }
+      .input-placeholder { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #999999; }
+      .button-text { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #FFFFFF; }
+      .button-secondary-text { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #666666; }
+      .menu-text { font-family: 'Open Sans', sans-serif; font-size: 14px; color: #333333; }
+      .menu-text-active { font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: bold; color: #0066CC; }
+    </style>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="1920" height="1080" fill="#FFFFFF"/>
+
+  <!-- Header -->
+  <rect width="1920" height="80" fill="#003D82" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <circle cx="60" cy="40" r="25" fill="#0066CC" opacity="0.8"/>
+  <text x="60" y="45" text-anchor="middle" class="header-title" font-size="18">MC</text>
+  <text x="960" y="50" text-anchor="middle" class="header-title">Dashboard RRHH</text>
+  <circle cx="1880" cy="40" r="25" fill="#4DA6FF" opacity="0.8"/>
+  <text x="1880" y="45" text-anchor="middle" class="header-title" font-size="18">FT</text>
+
+  <!-- Sidebar -->
+  <rect x="0" y="80" width="250" height="1000" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="20" y="130" class="menu-text">📊 Dashboard</text>
+  <rect x="0" y="150" width="250" height="50" fill="#E8F0FF"/>
+  <text x="20" y="180" class="menu-text-active">👥 Gestión Usuarios</text>
+  <text x="20" y="235" class="menu-text">📈 Reportes</text>
+  <text x="20" y="290" class="menu-text">⚙️ Configuración</text>
+
+  <!-- Contenido Principal -->
+  <text x="280" y="130" class="page-title">Crear Nuevo Usuario</text>
+
+  <!-- Columna Izquierda -->
+  <text x="280" y="180" class="label">Usuario</text>
+  <rect x="280" y="190" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="300" y="215" class="input-placeholder">usuario123</text>
+
+  <text x="280" y="260" class="label">Email</text>
+  <rect x="280" y="270" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="300" y="295" class="input-placeholder">usuario@coelemu.cl</text>
+
+  <text x="280" y="340" class="label">Región</text>
+  <rect x="280" y="350" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="300" y="375" class="input-placeholder">Los Ríos ▼</text>
+
+  <text x="280" y="420" class="label">Provincia</text>
+  <rect x="280" y="430" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="300" y="455" class="input-placeholder">Valdivia ▼</text>
+
+  <!-- Columna Derecha -->
+  <text x="860" y="180" class="label">Nombre</text>
+  <rect x="860" y="190" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="880" y="215" class="input-placeholder">Felipe Thiele</text>
+
+  <text x="860" y="260" class="label">Teléfono</text>
+  <rect x="860" y="270" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="880" y="295" class="input-placeholder">+56912345678</text>
+
+  <text x="860" y="340" class="label">Rol</text>
+  <rect x="860" y="350" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="880" y="375" class="input-placeholder">Admin ▼</text>
+
+  <text x="860" y="420" class="label">Comuna</text>
+  <rect x="860" y="430" width="500" height="40" rx="4" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+  <text x="880" y="455" class="input-placeholder">Valdivia ▼</text>
+
+  <!-- Botones -->
+  <rect x="280" y="520" width="150" height="48" rx="8" fill="#0066CC" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="355" y="550" text-anchor="middle" class="button-text">Guardar</text>
+
+  <rect x="450" y="520" width="150" height="48" rx="8" fill="#E0E0E0" filter="drop-shadow(0px 2px 8px rgba(0,0,0,0.1))"/>
+  <text x="525" y="550" text-anchor="middle" class="button-secondary-text">Cancelar</text>
+
+</svg>
