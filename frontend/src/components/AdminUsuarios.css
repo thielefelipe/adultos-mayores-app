@@ -20,6 +20,36 @@
   font-family: var(--heading);
 }
 
+.header-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-exportar {
+  background-color: var(--ambar);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-family: var(--sans);
+}
+
+.btn-exportar:hover:not(:disabled) {
+  background-color: #d89740;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-exportar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-crear {
   background-color: var(--verde);
   color: white;
@@ -157,6 +187,15 @@
   .admin-header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+  }
+
+  .btn-exportar,
+  .btn-crear {
+    width: 100%;
   }
 
   .usuarios-table {

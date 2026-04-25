@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+
 const API_URL = 'https://adultos-mayores-backend.onrender.com/api';
 
 export interface Usuario {
@@ -127,5 +129,55 @@ export const usuariosService = {
       throw new Error(data.message || 'Error al eliminar usuario');
     }
     return response.json();
+  },
+
+  exportarExcel(usuarios: Usuario[]): void {
+    const datosExportacion = usuarios.map((usuario) => ({
+      ID: usuario.id,
+      Usuario: usuario.username,
+      Nombre: usuario.nombre,
+      Rol: usuario.rol?.toUpperCase() || '',
+      Activo: usuario.activo ? 'Sí' : 'No',
+      'Fecha Creación': usuario.creado
+        ? new Date(usuario.creado).toLocaleDateString('es-CL')
+        : '',
+      'Último Acceso': usuario.ultimoAcceso
+        ? new Date(usuario.ultimoAcceso).toLocaleDateString('es-CL')
+        : 'Nunca',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(datosExportacion);
+
+    // Ancho de columnas
+    ws['!cols'] = [
+      { wch: 36 }, // ID
+      { wch: 15 }, // Usuario
+      { wch: 20 }, // Nombre
+      { wch: 12 }, // Rol
+      { wch: 10 }, // Activo
+      { wch: 15 }, // Fecha Creación
+      { wch: 15 }, // Último Acceso
+    ];
+
+    // Agregar filtros automáticos
+    ws['!autofilter'] = { ref: `A1:G${datosExportacion.length + 1}` };
+
+    // Formatear encabezados
+    for (let col = 0; col < 7; col++) {
+      const cellRef = XLSX.utils.encode_col(col) + '1';
+      if (ws[cellRef]) {
+        ws[cellRef].s = {
+          font: { bold: true, color: { rgb: 'FFFFFF' } },
+          fill: { fgColor: { rgb: 'E8A05C' } }, // Color warm del diseño
+          alignment: { horizontal: 'center', vertical: 'center' },
+        };
+      }
+    }
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Usuarios');
+
+    const fecha = new Date().toLocaleDateString('es-CL').replace(/\//g, '-');
+    XLSX.writeFile(wb, `usuarios-exportacion-${fecha}.xlsx`);
   },
 };
