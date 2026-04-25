@@ -269,6 +269,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             </div>
           </div>
         </div>
+        </div>
 
         {/* Botón Ir a Gestión de Usuarios */}
         {usuario?.rol === 'admin' && (
