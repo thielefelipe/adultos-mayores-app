@@ -12,11 +12,9 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const { usuario, token } = useAuth();
   const [vista, setVista] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>('inicio');
   const [usuariosActivos, setUsuariosActivos] = useState<Usuario[]>([]);
-  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
     if (!token || usuario?.rol !== 'admin') {
-      setCargando(false);
       return;
     }
 
@@ -25,10 +23,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
         const usuarios = await usuariosService.obtenerActivos(token);
         const filtrados = usuarios.filter(u => u.rol === 'operador' || u.rol === 'analista');
         setUsuariosActivos(filtrados);
-        setCargando(false);
       } catch (error) {
         console.error('Error al cargar usuarios activos:', error);
-        setCargando(false);
       }
     };
 
