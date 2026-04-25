@@ -21,11 +21,18 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores') => {
     localStorage.setItem('dashboardVista', nuevaVista);
     setVistaState(nuevaVista);
-    // Agregar al historial del navegador para que funcione el botón "Atrás"
-    window.history.pushState({ vista: nuevaVista }, '', window.location.href);
+    // Actualizar la URL según la vista
+    const baseUrl = window.location.origin;
+    let newUrl = `${baseUrl}/`;
+    if (nuevaVista === 'usuarios') {
+      newUrl = `${baseUrl}/admin/usuarios`;
+    } else if (nuevaVista === 'gestorOperadores') {
+      newUrl = `${baseUrl}/admin/gestoroperadores`;
+    }
+    window.history.pushState({ vista: nuevaVista }, '', newUrl);
   };
 
-  // Manejar el botón "Atrás" del navegador
+  // Manejar el botón "Atrás" del navegador y cargar vista según la URL
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       if (event.state?.vista) {
@@ -34,6 +41,14 @@ export function Dashboard({ onLogout }: DashboardProps) {
         setVistaState('inicio');
       }
     };
+
+    // Detectar la vista actual según la URL
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('/admin/usuarios')) {
+      setVistaState('usuarios');
+    } else if (currentPath.includes('/admin/gestoroperadores')) {
+      setVistaState('gestorOperadores');
+    }
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
