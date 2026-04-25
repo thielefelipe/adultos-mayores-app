@@ -14,7 +14,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || usuario?.rol !== 'admin') {
+      setCargando(false);
+      return;
+    }
 
     const cargarUsuariosActivos = async () => {
       try {
@@ -48,7 +51,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
       clearInterval(heartbeatInterval);
       clearInterval(reloadInterval);
     };
-  }, [token]);
+  }, [token, usuario?.rol]);
 
   const handleLogout = async () => {
     await onLogout();
