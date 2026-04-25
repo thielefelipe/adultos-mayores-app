@@ -18,6 +18,7 @@ const audit_module_1 = require("./audit/audit.module");
 const auth_module_1 = require("./auth/auth.module");
 const pacientes_module_1 = require("./pacientes/pacientes.module");
 const usuarios_module_1 = require("./usuarios/usuarios.module");
+const ubicacion_module_1 = require("./ubicacion/ubicacion.module");
 const crear_admin_seeder_1 = require("./seeders/crear-admin.seeder");
 let AppModule = class AppModule {
 };
@@ -61,6 +62,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             pacientes_module_1.PacientesModule,
             usuarios_module_1.UsuariosModule,
+            ubicacion_module_1.UbicacionModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, crear_admin_seeder_1.CrearAdminSeeder],

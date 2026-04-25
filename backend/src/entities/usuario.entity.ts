@@ -8,6 +8,9 @@ export class UsuarioEntity {
   @Column({ type: 'varchar', length: 50, unique: true })
   username: string;
 
+  @Column({ type: 'varchar', length: 12, nullable: true, unique: true })
+  rut?: string;
+
   @Column({ type: 'varchar', length: 255 })
   nombre: string;
 

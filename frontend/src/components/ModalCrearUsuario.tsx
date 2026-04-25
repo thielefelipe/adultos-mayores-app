@@ -14,6 +14,7 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
   const { token } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
+    rut: '',
     nombre: '',
     email: '',
     telefono: '',
@@ -158,6 +159,20 @@ export function ModalCrearUsuario({ onConfirm, onCancel }: ModalProps) {
               autoFocus
             />
             <small>Mínimo 3 caracteres, único</small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rut">RUT:</label>
+            <input
+              id="rut"
+              type="text"
+              name="rut"
+              value={formData.rut}
+              onChange={handleChange}
+              placeholder="12.345.678-9 o 12345678-9"
+              disabled={loading}
+            />
+            <small>Opcional - Formato: 12.345.678-9</small>
           </div>
 
           <div className="form-group">
