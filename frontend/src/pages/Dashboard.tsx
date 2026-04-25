@@ -298,7 +298,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
           >
             <div>
               <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
-                Operadores y Analistas
+                Usuarios Activos
               </div>
               <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
                 {usuariosActivos.length}
