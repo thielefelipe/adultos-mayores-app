@@ -11,11 +11,11 @@ interface DashboardProps {
 export function Dashboard({ onLogout }: DashboardProps) {
   const { usuario, token } = useAuth();
 
-  // Recuperar la vista guardada en localStorage, o 'inicio' por defecto
-  const [vista, setVistaState] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>(() => {
-    const vistaGuardada = localStorage.getItem('dashboardVista') as 'inicio' | 'usuarios' | 'gestorOperadores' | null;
-    return vistaGuardada || 'inicio';
-  });
+  // Limpiar localStorage INMEDIATAMENTE al cargar el componente
+  localStorage.removeItem('dashboardVista');
+
+  // Siempre comenzar en 'inicio' al cargar el Dashboard
+  const [vista, setVistaState] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>('inicio');
 
   // Wrapper para setVista que también guarda en localStorage
   const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores') => {
@@ -304,8 +304,9 @@ export function Dashboard({ onLogout }: DashboardProps) {
             background: '#FFFFFF',
             borderRadius: 8,
             padding: '24px',
-            border: '1px solid #E0E0E0',
+            border: '2px solid #0066CC',
             boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
+            cursor: 'pointer',
             transition: 'transform .18s, box-shadow .18s',
             height: '100%',
             display: 'flex',
@@ -314,7 +315,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
           }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0, 102, 204, 0.15)';
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';

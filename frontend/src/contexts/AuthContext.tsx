@@ -51,6 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsuario(null);
     setToken(null);
     authService.clearAuth();
+    // Limpiar la vista guardada del Dashboard para que siempre comience en 'inicio'
+    localStorage.removeItem('dashboardVista');
   };
 
   return (

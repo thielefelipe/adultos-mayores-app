@@ -13,11 +13,12 @@
   gap: 10px;
 }
 
-.admin-header h2 {
+.admin-container .admin-header h2 {
   margin: 0;
   font-size: 24px;
-  color: var(--ink);
+  color: #0066CC !important;
   font-family: var(--heading);
+  font-weight: 600;
 }
 
 .header-buttons {
@@ -27,22 +28,22 @@
 }
 
 .btn-exportar {
-  background-color: var(--ambar);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s;
-  font-family: var(--sans);
+  background-color: #0066CC !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s !important;
+  font-family: var(--sans) !important;
 }
 
 .btn-exportar:hover:not(:disabled) {
-  background-color: #d89740;
+  background-color: #0052A3;
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.25);
 }
 
 .btn-exportar:disabled {
@@ -51,22 +52,22 @@
 }
 
 .btn-crear {
-  background-color: var(--verde);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s;
-  font-family: var(--sans);
+  background-color: #2ECC71 !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s !important;
+  font-family: var(--sans) !important;
 }
 
 .btn-crear:hover {
-  background-color: #235a3d;
+  background-color: #27AE60;
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25);
 }
 
 .error-banner {
@@ -79,10 +80,11 @@
 }
 
 .usuarios-table-wrapper {
-  background: white;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
+  background: white !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border: 2px solid #0066CC !important;
 }
 
 .usuarios-table {
@@ -91,36 +93,36 @@
 }
 
 .usuarios-table thead {
-  background-color: var(--warm);
-  border-bottom: 2px solid var(--sand);
+  background-color: #0066CC !important;
+  border-bottom: 2px solid #0066CC !important;
 }
 
 .usuarios-table th {
-  padding: 15px;
-  text-align: left;
-  font-weight: 600;
-  color: var(--ink);
-  font-size: 14px;
+  padding: 15px !important;
+  text-align: left !important;
+  font-weight: 600 !important;
+  color: white !important;
+  font-size: 14px !important;
 }
 
 .usuarios-table tbody tr {
-  border-bottom: 1px solid var(--sand);
+  border-bottom: 1px solid #E0E0E0;
   transition: background-color 0.3s;
 }
 
 .usuarios-table tbody tr:hover {
-  background-color: var(--cream);
+  background-color: #F5F9FF;
 }
 
 .usuarios-table td {
   padding: 15px;
-  color: var(--terra);
+  color: #666666;
   font-size: 14px;
 }
 
 .username {
   font-weight: 600;
-  color: var(--ink);
+  color: #003D82;
 }
 
 .rol-badge {
@@ -133,18 +135,18 @@
 }
 
 .rol-admin {
-  background-color: var(--ambar-bg);
-  color: var(--ambar);
+  background-color: #FFF3CD;
+  color: #856404;
 }
 
 .rol-operador {
-  background-color: var(--verde-bg);
-  color: var(--verde);
+  background-color: #D4EDDA;
+  color: #155724;
 }
 
 .rol-analista {
-  background-color: var(--azul-bg);
-  color: var(--azul);
+  background-color: #D1ECF1;
+  color: #0C5460;
 }
 
 .actions {
@@ -157,29 +159,33 @@
   background: none;
   cursor: pointer;
   font-size: 18px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  transition: background-color 0.3s;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.btn-editar:hover {
+  background-color: #D1ECF1;
 }
 
 .btn-restablecer:hover {
-  background-color: var(--azul-bg);
+  background-color: #D1ECF1;
 }
 
 .btn-eliminar:hover {
-  background-color: var(--rojo-bg);
+  background-color: #F8D7DA;
 }
 
 .empty-message {
   text-align: center;
-  color: var(--terra);
+  color: #666666;
   padding: 40px !important;
 }
 
 .loading {
   text-align: center;
   padding: 40px;
-  color: var(--terra);
+  color: #666666;
   font-size: 16px;
 }
 
