@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+
       - name: Create Backup
         env:
           DB_URL: ${{ secrets.RENDER_DB_URL }}
