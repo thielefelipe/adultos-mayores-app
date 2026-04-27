@@ -11,13 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create Backup
+      - name: Create Backup with Docker
         env:
           DB_URL: ${{ secrets.RENDER_DB_URL }}
         run: |
           mkdir -p backups
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          /usr/lib/postgresql/18/bin/pg_dump "$DB_URL" > backups/backup_prod_${TIMESTAMP}.sql
+          docker run --rm postgres:18 pg_dump "$DB_URL" > backups/backup_prod_${TIMESTAMP}.sql
           echo "✅ Backup created: backup_prod_${TIMESTAMP}.sql"
           ls -lh backups/
 
