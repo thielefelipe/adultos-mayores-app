@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { patientsService, type Paciente, type FiltrosPacientes } from '../services/patientsService';
+import { ModalAgregarPaciente } from '../components/ModalAgregarPaciente';
 
 interface PacientesRegistradosProps {
   onVolver: () => void;
@@ -15,6 +16,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   const [provincias, setProvincias] = useState<{id: string, nombre: string}[]>([]);
   const [comunas, setComunas] = useState<{id: string, nombre: string}[]>([]);
   const [operadores, setOperadores] = useState<{id: string, nombre: string}[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const [filtros, setFiltros] = useState<FiltrosPacientes>({});
   const [regionSeleccionada, setRegionSeleccionada] = useState('');
@@ -224,6 +226,19 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     setFiltros({ ...filtros, operador_id: value || undefined });
   };
 
+  const handleGuardarPaciente = async (pacienteData: any) => {
+    try {
+      console.log('Guardar paciente:', pacienteData);
+      // TODO: Implementar guardado en backend
+      // Por ahora, solo mostramos un log y cerramos el modal
+      alert('Paciente guardado exitosamente (pendiente integración con backend)');
+      cargarPacientes();
+    } catch (error) {
+      console.error('Error al guardar paciente:', error);
+      throw error;
+    }
+  };
+
   return (
     <div style={{
       flex: 1,
@@ -279,16 +294,45 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
       {/* Main Content */}
       <main style={{ flex: 1, padding: '40px 24px', maxWidth: 1400, margin: '0 auto', width: '100%' }}>
-        <h2 style={{
-          fontSize: 32,
-          fontWeight: 700,
-          color: '#003D82',
-          marginBottom: 8,
-          fontFamily: "'Montserrat', sans-serif"
-        }}>Pacientes Registrados</h2>
-        <p style={{ color: '#666666', fontSize: 14, marginBottom: 30 }}>
-          Total de pacientes: <strong>{pacientes.length}</strong>
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 }}>
+          <div>
+            <h2 style={{
+              fontSize: 32,
+              fontWeight: 700,
+              color: '#003D82',
+              marginBottom: 8,
+              fontFamily: "'Montserrat', sans-serif"
+            }}>Pacientes Registrados</h2>
+            <p style={{ color: '#666666', fontSize: 14 }}>
+              Total de pacientes: <strong>{pacientes.length}</strong>
+            </p>
+          </div>
+          <button
+            onClick={() => setModalOpen(true)}
+            style={{
+              background: '#0066CC',
+              color: '#FFFFFF',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: 8,
+              cursor: 'pointer',
+              fontSize: 14,
+              fontWeight: 600,
+              transition: 'all 0.3s',
+              height: 'fit-content'
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#004999';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#0066CC';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+            }}
+          >
+            + Agregar Paciente
+          </button>
+        </div>
 
         {/* Filtros */}
         <div style={{
@@ -532,6 +576,13 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
           </div>
         )}
       </main>
+
+      {/* Modal para agregar paciente */}
+      <ModalAgregarPaciente
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={handleGuardarPaciente}
+      />
     </div>
   );
 }
