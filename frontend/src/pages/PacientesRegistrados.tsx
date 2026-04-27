@@ -61,7 +61,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     ];
 
     try {
-      const response = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ubicacion/regiones');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ubicacion/regiones`);
       if (!response.ok) {
         console.warn('API no disponible (status ' + response.status + '), usando datos mock');
         setRegiones(mockRegiones);

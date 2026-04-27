@@ -44,7 +44,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPa
     ];
 
     try {
-      const response = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ubicacion/regiones');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ubicacion/regiones`);
       if (!response.ok) throw new Error();
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
