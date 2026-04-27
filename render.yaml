@@ -13,11 +13,11 @@ services:
       - key: PORT
         value: 3000
       - key: DB_HOST
-        value: dpg-d7ltnllckfvc739crllg-a
+        value: dpg-d7ltnllckfvc739crllg-a.oregon-postgres.render.com
       - key: DB_PORT
         value: 5432
       - key: DB_USERNAME
-        value: postgres
+        value: admin
       - key: DB_PASSWORD
         value: 5ZR21MkYYQN1ad8gqtqPJvVmpQAHydLa
       - key: DB_NAME
