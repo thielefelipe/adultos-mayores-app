@@ -11,20 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install PostgreSQL client
-        run: |
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client-18 --no-install-recommends
-
-      - name: Create Backup
+      - name: Create Backup with Docker
         env:
           DB_URL: ${{ secrets.RENDER_DB_URL }}
         run: |
           mkdir -p backups
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          pg_dump $DB_URL > backups/backup_prod_${TIMESTAMP}.sql
+          docker run --rm postgres:18 pg_dump "$DB_URL" > backups/backup_prod_${TIMESTAMP}.sql
           echo "✅ Backup created: backup_prod_${TIMESTAMP}.sql"
           ls -lh backups/
 
