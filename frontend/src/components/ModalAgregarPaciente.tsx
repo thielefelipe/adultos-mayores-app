@@ -44,7 +44,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPa
     ];
 
     try {
-      const response = await fetch('https://adultos-mayores-backend.onrender.com/api/ubicacion/regiones');
+      const response = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ubicacion/regiones');
       if (!response.ok) throw new Error();
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
@@ -63,7 +63,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPa
   const cargarProvincias = async (region: string) => {
     try {
       const response = await fetch(
-        `https://adultos-mayores-backend.onrender.com/api/ubicacion/provincias?region=${encodeURIComponent(region)}`
+        `${import.meta.env.VITE_API_URL || "http://localhost:3000/api"}/ubicacion/provincias?region=${encodeURIComponent(region)}`
       );
       if (!response.ok) throw new Error();
       const data = await response.json();
@@ -83,7 +83,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPa
   const cargarComunas = async (region: string, provincia: string) => {
     try {
       const response = await fetch(
-        `https://adultos-mayores-backend.onrender.com/api/ubicacion/comunas?region=${encodeURIComponent(region)}&provincia=${encodeURIComponent(provincia)}`
+        `${import.meta.env.VITE_API_URL || "http://localhost:3000/api"}/ubicacion/comunas?region=${encodeURIComponent(region)}&provincia=${encodeURIComponent(provincia)}`
       );
       if (!response.ok) throw new Error();
       const data = await response.json();

@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 
-const API_URL = 'https://adultos-mayores-backend.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export interface Usuario {
   id: string;

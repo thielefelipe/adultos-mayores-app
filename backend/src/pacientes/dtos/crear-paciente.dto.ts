@@ -6,6 +6,8 @@ import {
   IsDate,
   Min,
   Max,
+  MinLength,
+  Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -20,6 +22,7 @@ export class CrearPacienteDto {
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(3)
   nombre: string;
 
   @IsString()
@@ -28,10 +31,13 @@ export class CrearPacienteDto {
 
   @IsNumber()
   @IsOptional()
+  @Min(18)
+  @Max(150)
   edad?: number;
 
   @IsString()
   @IsOptional()
+  @Matches(/^[0-9\s+\-()]*$/, { message: 'Teléfono debe contener solo números y caracteres válidos' })
   telefono?: string;
 
   @IsString()

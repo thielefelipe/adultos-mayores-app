@@ -414,62 +414,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
             </button>
           </div>
 
-          {/* Card: Ingresar Usuarios */}
-          <div style={{
-            background: '#FFFFFF',
-            borderRadius: 8,
-            padding: '24px',
-            border: '2px solid #0066CC',
-            boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
-            cursor: 'pointer',
-            transition: 'transform .18s, box-shadow .18s',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0, 102, 204, 0.15)';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
-            }}
-          >
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
-                Ingresar Usuarios
-              </div>
-              <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
-                Crea nuevos operadores y analistas en el sistema.
-              </div>
-            </div>
-            <button
-              onClick={() => setVista('usuarios')}
-              style={{
-                marginTop: 16,
-                background: '#0066CC',
-                color: '#FFFFFF',
-                border: 'none',
-                padding: '10px 16px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: 13,
-                fontWeight: 600,
-                width: '100%',
-                transition: 'background 0.2s'
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
-              }}
-            >
-              Crear Usuario →
-            </button>
-          </div>
 
           {/* Card: Gestión de Usuarios */}
           <div style={{

@@ -61,7 +61,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     ];
 
     try {
-      const response = await fetch('https://adultos-mayores-backend.onrender.com/api/ubicacion/regiones');
+      const response = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ubicacion/regiones');
       if (!response.ok) {
         console.warn('API no disponible (status ' + response.status + '), usando datos mock');
         setRegiones(mockRegiones);
@@ -103,7 +103,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     };
 
     try {
-      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/ubicacion/provincias?region=${encodeURIComponent(region)}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000/api"}/ubicacion/provincias?region=${encodeURIComponent(region)}`);
       if (!response.ok) {
         const mock = mockProvincias[region] || [];
         console.warn('API no disponible, usando datos mock');
@@ -148,7 +148,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     };
 
     try {
-      const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/ubicacion/comunas?region=${encodeURIComponent(region)}&provincia=${encodeURIComponent(provincia)}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000/api"}/ubicacion/comunas?region=${encodeURIComponent(region)}&provincia=${encodeURIComponent(provincia)}`);
       if (!response.ok) {
         const mock = mockComunas[provincia] || [];
         console.warn('API no disponible, usando datos mock');

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +9,8 @@ import { AuditService } from '../audit/audit.service';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(UsuarioEntity)
     private usuarioRepository: Repository<UsuarioEntity>,
@@ -31,19 +33,19 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto, ip?: string) {
-    console.log('LOGIN ATTEMPT:', loginDto.username);
+    this.logger.debug(`Login attempt for user: ${loginDto.username}`);
     let usuario: UsuarioEntity | null = null;
     try {
       usuario = await this.usuarioRepository.findOne({
         where: { username: loginDto.username },
       });
-      console.log('USUARIO FOUND:', !!usuario);
+      this.logger.debug(`User found: ${!!usuario}`);
     } catch(e) {
-      console.error('ERROR FINDING USER:', e);
+      this.logger.error('Error finding user', e);
       throw e;
     }
 
-    console.log('ACTIVO:', usuario?.activo);
+    this.logger.debug(`User active: ${usuario?.activo}`);
     if (!usuario || !usuario.activo) {
       await this.auditService.registrar(
         loginDto.username,
@@ -56,7 +58,7 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    console.log('PASSWORD CHECK...');
+    this.logger.debug('Validating password');
     const passwordValida = await this.comparePasswords(
       loginDto.password,
       usuario.password,
@@ -74,14 +76,14 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    console.log('PASSWORD VALID:', passwordValida);
+    this.logger.debug('Password is valid');
     // Actualizar último acceso
     try {
       usuario.ultimoAcceso = new Date();
       await this.usuarioRepository.save(usuario);
-      console.log('ULTIMO ACCESO SAVED');
+      this.logger.debug('Last access updated');
     } catch(e) {
-      console.error('ERROR SAVING ULTIMO ACCESO:', e);
+      this.logger.error('Error saving last access', e);
       throw e;
     }
 
@@ -95,8 +97,8 @@ export class AuthService {
       null,
       ip,
     );
-    console.log('AUDIT SAVED');
-    } catch(e) { console.error('ERROR AUDIT:', e); throw e; }
+    this.logger.debug('Login audit registered');
+    } catch(e) { this.logger.error('Error registering audit', e); throw e; }
 
     // Generar JWT
     const payload = {
