@@ -89,7 +89,7 @@ const MOCK_PACIENTES: Paciente[] = [
 ];
 
 export const patientsService = {
-  async obtenerPacientes(token: string, filtros?: FiltrosPacientes) {
+  async obtenerPacientes(_token: string, filtros?: FiltrosPacientes) {
     // TODO: Reemplazar con llamada real a /api/pacientes
     // const response = await fetch(`${API_BASE}/pacientes`, { ... });
 
