@@ -5,16 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TokenRevocadoEntity } from '../../entities';
+import { TokenRevocadoService } from '../services/token-revocado.service';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    @InjectRepository(TokenRevocadoEntity)
-    private tokenRevocadoRepository: Repository<TokenRevocadoEntity>,
+    private tokenRevocadoService: TokenRevocadoService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -28,9 +25,7 @@ export class JwtGuard implements CanActivate {
     try {
       const payload = this.jwtService.verify(token);
 
-      const esRevocado = await this.tokenRevocadoRepository.findOne({
-        where: { token },
-      });
+      const esRevocado = await this.tokenRevocadoService.verificarTokenRevocado(token);
 
       if (esRevocado) {
         throw new UnauthorizedException('Token ha sido revocado');
