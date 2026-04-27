@@ -61,13 +61,19 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     try {
       const response = await fetch('https://adultos-mayores-backend.onrender.com/api/ubicacion/regiones');
       if (!response.ok) {
-        console.warn('API no disponible, usando datos mock');
+        console.warn('API no disponible (status ' + response.status + '), usando datos mock');
         setRegiones(mockRegiones);
         return;
       }
       const data = await response.json();
-      console.log('Regiones cargadas:', data);
-      setRegiones(data);
+      console.log('Datos API:', data);
+      if (Array.isArray(data) && data.length > 0) {
+        console.log('Regiones cargadas del API:', data);
+        setRegiones(data);
+      } else {
+        console.warn('API retornó datos vacíos, usando mock');
+        setRegiones(mockRegiones);
+      }
     } catch (error) {
       console.error('Error cargando regiones, usando mock:', error);
       setRegiones(mockRegiones);
