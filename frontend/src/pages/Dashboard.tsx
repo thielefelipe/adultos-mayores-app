@@ -111,7 +111,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
   if (vista === 'usuarios') {
     return (
-      <div style={{ minHeight: '100vh', background: '#FAF7F2' }}>
+      <div style={{ flex: 1, width: '100%', background: '#FAF7F2', display: 'flex', flexDirection: 'column' }}>
         <nav style={{
           background: '#003D82',
           padding: '12px 24px',
@@ -150,11 +150,12 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
   return (
     <div style={{
-      minHeight: '100vh',
+      flex: 1,
+      width: '100%',
       background: '#FAF7F2',
       fontFamily: "'Open Sans', sans-serif",
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
     }}>
       {/* Header */}
       <header style={{

@@ -13,9 +13,12 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
 
   return (
     <div style={{
-      minHeight: '100vh',
-      background: '#FFFFFF',
-      fontFamily: "'Open Sans', sans-serif"
+      flex: 1,
+      width: '100%',
+      background: '#FAF7F2',
+      fontFamily: "'Open Sans', sans-serif",
+      display: 'flex',
+      flexDirection: 'column',
     }}>
       {/* Header */}
       <header style={{
