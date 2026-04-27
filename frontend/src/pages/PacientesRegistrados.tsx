@@ -68,8 +68,14 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
       const data = await response.json();
       console.log('Datos API:', data);
       if (Array.isArray(data) && data.length > 0) {
-        console.log('Regiones cargadas del API:', data);
-        setRegiones(data);
+        const formattedRegiones = data.map((region: string | {id: string, nombre: string}, index: number) => {
+          if (typeof region === 'string') {
+            return { id: String(index), nombre: region };
+          }
+          return region;
+        });
+        console.log('Regiones formateadas:', formattedRegiones);
+        setRegiones(formattedRegiones);
       } else {
         console.warn('API retornó datos vacíos, usando mock');
         setRegiones(mockRegiones);
@@ -103,7 +109,18 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
         return;
       }
       const data = await response.json();
-      setProvincias(data);
+      if (Array.isArray(data) && data.length > 0) {
+        const formatted = data.map((prov: string | {id: string, nombre: string}, index: number) => {
+          if (typeof prov === 'string') {
+            return { id: String(index), nombre: prov };
+          }
+          return prov;
+        });
+        setProvincias(formatted);
+      } else {
+        const mock = mockProvincias[region] || [];
+        setProvincias(mock);
+      }
     } catch (error) {
       const mock = mockProvincias[region] || [];
       console.error('Error cargando provincias, usando mock:', error);
@@ -137,7 +154,18 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
         return;
       }
       const data = await response.json();
-      setComunas(data);
+      if (Array.isArray(data) && data.length > 0) {
+        const formatted = data.map((comuna: string | {id: string, nombre: string}, index: number) => {
+          if (typeof comuna === 'string') {
+            return { id: String(index), nombre: comuna };
+          }
+          return comuna;
+        });
+        setComunas(formatted);
+      } else {
+        const mock = mockComunas[provincia] || [];
+        setComunas(mock);
+      }
     } catch (error) {
       const mock = mockComunas[provincia] || [];
       console.error('Error cargando comunas, usando mock:', error);
