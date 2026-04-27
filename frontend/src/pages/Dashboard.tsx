@@ -449,6 +449,124 @@ export function Dashboard({ onLogout }: DashboardProps) {
             </button>
           </div>
 
+          {/* Card: Reportes */}
+          <div style={{
+            background: '#FFFFFF',
+            borderRadius: 8,
+            padding: '24px',
+            border: '1px solid #E0E0E0',
+            boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
+            cursor: 'pointer',
+            transition: 'transform .18s, box-shadow .18s',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 36, marginBottom: 16, color: '#0066CC' }}>
+                📊
+              </div>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                Reportes
+              </div>
+              <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
+                Genera y descarga reportes de pacientes y actividades.
+              </div>
+            </div>
+            <button
+              style={{
+                marginTop: 16,
+                background: '#0066CC',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '10px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: 600,
+                width: '100%',
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+              }}
+            >
+              Ver Reportes →
+            </button>
+          </div>
+
+          {/* Card: Análisis */}
+          <div style={{
+            background: '#FFFFFF',
+            borderRadius: 8,
+            padding: '24px',
+            border: '1px solid #E0E0E0',
+            boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
+            cursor: 'pointer',
+            transition: 'transform .18s, box-shadow .18s',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 36, marginBottom: 16, color: '#0066CC' }}>
+                📈
+              </div>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                Análisis de Datos
+              </div>
+              <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
+                Analiza estadísticas y tendencias del sistema.
+              </div>
+            </div>
+            <button
+              style={{
+                marginTop: 16,
+                background: '#0066CC',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '10px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: 600,
+                width: '100%',
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+              }}
+            >
+              Ver Análisis →
+            </button>
+          </div>
+
           </div>
         </div>
 
