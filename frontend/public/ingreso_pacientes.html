@@ -408,6 +408,15 @@
     </div>
   </div>
   <div class="header-actions">
+    <div style="display: flex; align-items: center; gap: .75rem; color: white; font-size: .85rem;">
+      <span>Operador:</span>
+      <select id="operadorSelect" onchange="cambiarOperador()" style="padding: .4rem .6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: white; font-family: 'DM Sans', sans-serif; font-size: .85rem; cursor: pointer;">
+        <option value="">Seleccionar operador…</option>
+        <option value="camilo-1">Camilo Oviedo</option>
+        <option value="ana-2">Ana Rodríguez</option>
+        <option value="carlos-3">Carlos López</option>
+      </select>
+    </div>
     <button class="btn btn-ghost btn-sm" onclick="exportarDatos()">⬇ Exportar CSV</button>
     <button class="btn btn-primary" onclick="abrirModal()">+ Nuevo Adulto Mayor</button>
   </div>
@@ -445,6 +454,9 @@
       <button class="modal-close" onclick="cerrarModal()">✕</button>
     </div>
     <div class="modal-body">
+      <!-- Campo oculto para operador -->
+      <input type="hidden" id="f_operador_id">
+      <input type="hidden" id="f_operador_nombre">
 
       <!-- TABS -->
       <div class="form-tabs">
@@ -1002,14 +1014,45 @@ function recalcular() {
   el.textContent = sc !== null ? `${sem.emoji} ${sc}/100 — ${sem.label}` : '⚪ Sin datos suficientes';
 }
 
+function cambiarOperador() {
+  const select = document.getElementById('operadorSelect');
+  const val = select.value;
+  localStorage.setItem('operador_actual', val);
+  renderAll();
+}
+
 function abrirModal(id = null) {
+  const operador = localStorage.getItem('operador_actual') || '';
+  if (!operador && !id) {
+    toast('⚠️ Debes seleccionar un operador primero');
+    return;
+  }
+
   editandoId = id;
   limpiarFormulario();
+
+  // Si es nueva creación, establecer operador actual
+  if (id === null) {
+    const operadorSelect = document.getElementById('operadorSelect');
+    if (operadorSelect.value) {
+      const [opId, opNum] = operadorSelect.value.split('-');
+      document.getElementById('f_operador_id').value = operadorSelect.value;
+      document.getElementById('f_operador_nombre').value = operadorSelect.options[operadorSelect.selectedIndex].text;
+    }
+  }
+
   document.getElementById('modalTitle').textContent = id ? 'Editar Adulto Mayor' : 'Nuevo Adulto Mayor';
   cambiarTab(0, document.querySelector('.form-tab'));
   if (id !== null) {
     const p = pacientes.find(x => x.id === id);
-    if (p) cargarFormulario(p);
+    if (p) {
+      // Verificar que el operador actual es el que registró el paciente
+      if (p.operador_id !== operador) {
+        toast('⚠️ No tienes permiso para editar este paciente');
+        return;
+      }
+      cargarFormulario(p);
+    }
   }
   document.getElementById('modalOverlay').classList.add('open');
   document.getElementById('liveScore').style.display = 'none';
@@ -1032,6 +1075,8 @@ function cambiarTab(idx, btn) {
 
 function leerFormulario() {
   return {
+    operador_id: document.getElementById('f_operador_id').value,
+    operador_nombre: document.getElementById('f_operador_nombre').value,
     rut: document.getElementById('f_rut').value.trim(),
     dv: document.getElementById('f_dv').value.trim(),
     nombre: document.getElementById('f_nombre').value.trim(),
@@ -1101,7 +1146,7 @@ function cargarFormulario(p) {
 }
 
 function limpiarFormulario() {
-  ['rut','dv','nombre','sexo','edad','telefono','region','provincia','comuna_personal','direccion','escolaridad','pueblo','rsh',
+  ['operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','region','provincia','comuna_personal','direccion','escolaridad','pueblo','rsh',
    'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
    'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
    'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
@@ -1134,8 +1179,21 @@ function guardarPaciente() {
 }
 
 function eliminarPaciente(id) {
+  const operador = localStorage.getItem('operador_actual') || '';
+  const p = pacientes.find(x => x.id === id);
+
+  if (!p) {
+    toast('⚠️ Registro no encontrado');
+    return;
+  }
+
+  if (p.operador_id !== operador) {
+    toast('⚠️ No tienes permiso para eliminar este paciente');
+    return;
+  }
+
   if (!confirm('¿Eliminar este registro?')) return;
-  pacientes = pacientes.filter(p => p.id !== id);
+  pacientes = pacientes.filter(x => x.id !== id);
   guardar();
   renderAll();
   renderMain();
@@ -1144,8 +1202,17 @@ function eliminarPaciente(id) {
 
 function renderSidebar(lista) {
   const el = document.getElementById('patientList');
-  if (!lista.length) { el.innerHTML = '<div class="empty-list">No hay registros.<br>Agrega el primero.</div>'; return; }
-  el.innerHTML = lista.map(p => {
+  const operador = localStorage.getItem('operador_actual') || '';
+
+  // Filtrar por operador actual
+  const filtrados = operador ? lista.filter(p => p.operador_id === operador) : [];
+
+  if (!filtrados.length) {
+    el.innerHTML = '<div class="empty-list">No hay registros para este operador.<br>Agrega el primero.</div>';
+    return;
+  }
+
+  el.innerHTML = filtrados.map(p => {
     const sc = score(p);
     const sem = semaforo(sc);
     const initials = (p.nombre||'?').split(' ').slice(0,2).map(w=>w[0]).join('');
@@ -1164,7 +1231,12 @@ function renderSidebar(lista) {
 
 function renderMain() {
   const main = document.getElementById('mainContent');
-  if (!pacientes.length) {
+  const operador = localStorage.getItem('operador_actual') || '';
+
+  // Filtrar pacientes por operador actual
+  const pacientesOperador = operador ? pacientes.filter(p => p.operador_id === operador) : [];
+
+  if (!pacientesOperador.length) {
     main.innerHTML = `<div class="empty-main">
       <div class="empty-icon">👴🏻</div>
       <div class="empty-title">Bienvenido al sistema</div>
@@ -1173,24 +1245,25 @@ function renderMain() {
     </div>`;
     return;
   }
-  const scores = pacientes.map(p => score(p));
+
+  const scores = pacientesOperador.map(p => score(p));
   const totalV = scores.filter(s => s !== null && s >= 80).length;
   const totalA = scores.filter(s => s !== null && s >= 50 && s < 80).length;
   const totalR = scores.filter(s => s !== null && s < 50).length;
   const totalSin = scores.filter(s => s === null).length;
-  const conSeg = pacientes.filter(p => getPeriodos(p).length > 0).length;
-  const mejoras = pacientes.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt > ps[0].punt; }).length;
-  const deterioros = pacientes.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt < ps[0].punt; }).length;
+  const conSeg = pacientesOperador.filter(p => getPeriodos(p).length > 0).length;
+  const mejoras = pacientesOperador.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt > ps[0].punt; }).length;
+  const deterioros = pacientesOperador.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt < ps[0].punt; }).length;
 
   main.innerHTML = `
     <div class="section-header">
-      <div class="section-title">Panel General <span>${pacientes.length} personas registradas</span></div>
+      <div class="section-title">Panel General <span>${pacientesOperador.length} personas registradas</span></div>
       <button class="btn btn-primary btn-sm" onclick="abrirModal()">+ Nuevo</button>
     </div>
     <div class="dashboard-grid">
       <div class="stat-card">
         <div class="stat-label">Total registros</div>
-        <div class="stat-value">${pacientes.length}</div>
+        <div class="stat-value">${pacientesOperador.length}</div>
         <div class="stat-sub">adultos mayores</div>
       </div>
       <div class="stat-card stat-verde">
@@ -1252,7 +1325,7 @@ function renderMain() {
           </tr>
         </thead>
         <tbody>
-          ${pacientes.map(p => {
+          ${pacientesOperador.map(p => {
             const sc = score(p);
             const sem = semaforo(sc);
             const badgeClass = sem.color === 'verde' ? 'score-verde' : sem.color === 'ambar' ? 'score-ambar' : sem.color === 'rojo' ? 'score-rojo' : 'score-gray';
