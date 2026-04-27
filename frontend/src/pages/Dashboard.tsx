@@ -187,7 +187,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
       </header>
 
       {/* Contenido */}
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px' }}>
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px 80px 24px' }}>
         <h2 style={{
           fontSize: 32,
           fontWeight: 700,
