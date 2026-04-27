@@ -11,8 +11,6 @@ import { PacientesModule } from './pacientes/pacientes.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { UbicacionModule } from './ubicacion/ubicacion.module';
 import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
-import { TokenRevocadoService } from './auth/services/token-revocado.service';
-import { JwtGuard } from './auth/guards/jwt.guard';
 
 @Module({
   imports: [
@@ -36,7 +34,7 @@ import { JwtGuard } from './auth/guards/jwt.guard';
         ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
       }),
     }),
-    TypeOrmModule.forFeature([UsuarioEntity, TokenRevocadoEntity]),
+    TypeOrmModule.forFeature([UsuarioEntity]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -55,6 +53,6 @@ import { JwtGuard } from './auth/guards/jwt.guard';
     UbicacionModule,
   ],
   controllers: [AppController],
-  providers: [AppService, CrearAdminSeeder, TokenRevocadoService, JwtGuard],
+  providers: [AppService, CrearAdminSeeder],
 })
 export class AppModule {}
