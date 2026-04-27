@@ -53,6 +53,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authService.clearAuth();
     // Limpiar la vista guardada del Dashboard para que siempre comience en 'inicio'
     localStorage.removeItem('dashboardVista');
+    // Limpiar el hash de la URL para que no se restaure la última vista
+    window.location.hash = '';
   };
 
   return (
