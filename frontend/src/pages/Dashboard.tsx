@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { AdminUsuarios } from '../components/AdminUsuarios';
 import { GestorOperadores } from './GestorOperadores';
+import { PacientesRegistrados } from './PacientesRegistrados';
 import { usuariosService, type Usuario } from '../services/usuariosService';
+import { patientsService } from '../services/patientsService';
 
 interface DashboardProps {
   onLogout: () => void;
@@ -15,10 +17,11 @@ export function Dashboard({ onLogout }: DashboardProps) {
   localStorage.removeItem('dashboardVista');
 
   // Siempre comenzar en 'inicio' al cargar el Dashboard
-  const [vista, setVistaState] = useState<'inicio' | 'usuarios' | 'gestorOperadores'>('inicio');
+  const [vista, setVistaState] = useState<'inicio' | 'usuarios' | 'gestorOperadores' | 'pacientes'>('inicio');
+  const [pacientesCount, setPacientesCount] = useState(0);
 
   // Wrapper para setVista que también guarda en localStorage y en el historial del navegador
-  const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores') => {
+  const setVista = (nuevaVista: 'inicio' | 'usuarios' | 'gestorOperadores' | 'pacientes') => {
     localStorage.setItem('dashboardVista', nuevaVista);
     setVistaState(nuevaVista);
     // Actualizar la URL usando hash para que funcione con Render
@@ -27,6 +30,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
       hash = '#/admin/usuarios';
     } else if (nuevaVista === 'gestorOperadores') {
       hash = '#/admin/gestoroperadores';
+    } else if (nuevaVista === 'pacientes') {
+      hash = '#/admin/pacientes';
     }
     window.location.hash = hash;
   };
@@ -63,21 +68,24 @@ export function Dashboard({ onLogout }: DashboardProps) {
       return;
     }
 
-    const cargarUsuariosActivos = async () => {
+    const cargarDatos = async () => {
       try {
         const usuarios = await usuariosService.obtenerActivos(token);
         const filtrados = usuarios.filter(u => u.rol === 'operador' || u.rol === 'analista');
         setUsuariosActivos(filtrados);
+
+        const pacientesTotal = await patientsService.obtenerTotal(token);
+        setPacientesCount(pacientesTotal);
       } catch (error) {
-        console.error('Error al cargar usuarios activos:', error);
+        console.error('Error al cargar datos:', error);
       }
     };
 
     // Enviar heartbeat inmediatamente
     usuariosService.enviarHeartbeat(token).catch(err => console.error('Error en heartbeat:', err));
 
-    // Cargar usuarios activos
-    cargarUsuariosActivos();
+    // Cargar datos
+    cargarDatos();
 
     // Enviar heartbeat cada 30 segundos
     const heartbeatInterval = setInterval(() => {
@@ -103,6 +111,15 @@ export function Dashboard({ onLogout }: DashboardProps) {
   if (vista === 'gestorOperadores') {
     return (
       <GestorOperadores
+        onVolver={() => setVista('inicio')}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (vista === 'pacientes') {
+    return (
+      <PacientesRegistrados
         onVolver={() => setVista('inicio')}
         onLogout={handleLogout}
       />
@@ -312,6 +329,64 @@ export function Dashboard({ onLogout }: DashboardProps) {
             </div>
             <button
               onClick={() => setVista('gestorOperadores')}
+              style={{
+                background: '#0066CC',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '10px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: 600,
+                width: '100%',
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+              }}
+            >
+              Ver todos →
+            </button>
+          </div>
+
+          {/* Card: Pacientes Registrados */}
+          <div style={{
+            background: '#FFFFFF',
+            borderRadius: 8,
+            padding: '24px',
+            border: '1px solid #E0E0E0',
+            boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
+            transition: 'transform .18s, box-shadow .18s',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                Pacientes Registrados
+              </div>
+              <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
+                {pacientesCount}
+              </div>
+              <div style={{ color: '#999999', fontSize: 12, marginBottom: 20 }}>
+                Registrados en el sistema
+              </div>
+            </div>
+            <button
+              onClick={() => setVista('pacientes')}
               style={{
                 background: '#0066CC',
                 color: '#FFFFFF',
