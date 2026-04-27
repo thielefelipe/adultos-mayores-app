@@ -34,7 +34,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
         ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
       }),
     }),
-    TypeOrmModule.forFeature([UsuarioEntity]),
+    TypeOrmModule.forFeature([UsuarioEntity, TokenRevocadoEntity]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
