@@ -21,18 +21,21 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST', 'localhost'),
-        port: configService.get('DB_PORT', 5432),
-        username: configService.get('DB_USERNAME', 'admin'),
-        password: configService.get('DB_PASSWORD', 'admin'),
-        database: configService.get('DB_NAME', 'centros_diurnos_db'),
-        entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
-        synchronize: true,
-        logging: configService.get('NODE_ENV') === 'development',
-        ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const isProduction = configService.get('NODE_ENV') === 'production';
+        return {
+          type: 'postgres',
+          host: configService.get('DB_HOST', 'localhost'),
+          port: configService.get('DB_PORT', 5432),
+          username: configService.get('DB_USERNAME', 'admin'),
+          password: configService.get('DB_PASSWORD', 'admin'),
+          database: configService.get('DB_NAME', 'centros_diurnos_db'),
+          entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
+          synchronize: !isProduction, // ⚠️ NUNCA sincronizar en producción
+          logging: !isProduction,
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
+        };
+      },
     }),
     TypeOrmModule.forFeature([UsuarioEntity]),
     JwtModule.registerAsync({
