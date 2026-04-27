@@ -22,9 +22,12 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
   // Cargar regiones en el inicio
   useEffect(() => {
-    cargarRegiones();
-    cargarOperadores();
-    cargarPacientes();
+    console.log('PacientesRegistrados mounted, token:', token);
+    if (token) {
+      cargarRegiones();
+      cargarOperadores();
+      cargarPacientes();
+    }
   }, [token]);
 
   // Cargar pacientes cuando cambien filtros
@@ -49,32 +52,90 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   }, [provinciaSeleccionada, regionSeleccionada]);
 
   const cargarRegiones = async () => {
+    const mockRegiones = [
+      { id: '1', nombre: 'Región Metropolitana' },
+      { id: '2', nombre: 'Región de Valparaíso' },
+      { id: '3', nombre: 'Región del Biobío' }
+    ];
+
     try {
       const response = await fetch('https://adultos-mayores-backend.onrender.com/api/ubicacion/regiones');
+      if (!response.ok) {
+        console.warn('API no disponible, usando datos mock');
+        setRegiones(mockRegiones);
+        return;
+      }
       const data = await response.json();
+      console.log('Regiones cargadas:', data);
       setRegiones(data);
     } catch (error) {
-      console.error('Error cargando regiones:', error);
+      console.error('Error cargando regiones, usando mock:', error);
+      setRegiones(mockRegiones);
     }
   };
 
   const cargarProvincias = async (region: string) => {
+    const mockProvincias: Record<string, {id: string, nombre: string}[]> = {
+      'Región Metropolitana': [
+        { id: '1', nombre: 'Santiago' },
+        { id: '2', nombre: 'Cordillera' }
+      ],
+      'Región de Valparaíso': [
+        { id: '3', nombre: 'Valparaíso' }
+      ],
+      'Región del Biobío': [
+        { id: '4', nombre: 'Concepción' }
+      ]
+    };
+
     try {
       const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/ubicacion/provincias?region=${encodeURIComponent(region)}`);
+      if (!response.ok) {
+        const mock = mockProvincias[region] || [];
+        console.warn('API no disponible, usando datos mock');
+        setProvincias(mock);
+        return;
+      }
       const data = await response.json();
       setProvincias(data);
     } catch (error) {
-      console.error('Error cargando provincias:', error);
+      const mock = mockProvincias[region] || [];
+      console.error('Error cargando provincias, usando mock:', error);
+      setProvincias(mock);
     }
   };
 
   const cargarComunas = async (region: string, provincia: string) => {
+    const mockComunas: Record<string, {id: string, nombre: string}[]> = {
+      'Santiago': [
+        { id: '1', nombre: 'Santiago' },
+        { id: '2', nombre: 'Providencia' }
+      ],
+      'Cordillera': [
+        { id: '3', nombre: 'San Bernardo' }
+      ],
+      'Valparaíso': [
+        { id: '4', nombre: 'Valparaíso' }
+      ],
+      'Concepción': [
+        { id: '5', nombre: 'Concepción' }
+      ]
+    };
+
     try {
       const response = await fetch(`https://adultos-mayores-backend.onrender.com/api/ubicacion/comunas?region=${encodeURIComponent(region)}&provincia=${encodeURIComponent(provincia)}`);
+      if (!response.ok) {
+        const mock = mockComunas[provincia] || [];
+        console.warn('API no disponible, usando datos mock');
+        setComunas(mock);
+        return;
+      }
       const data = await response.json();
       setComunas(data);
     } catch (error) {
-      console.error('Error cargando comunas:', error);
+      const mock = mockComunas[provincia] || [];
+      console.error('Error cargando comunas, usando mock:', error);
+      setComunas(mock);
     }
   };
 
