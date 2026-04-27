@@ -321,14 +321,20 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
               </label>
               <select
                 value={regionSeleccionada}
-                onChange={(e) => handleRegionChange(e.target.value)}
+                onChange={(e) => {
+                  console.log('Selected región:', e.target.value);
+                  handleRegionChange(e.target.value);
+                }}
                 style={{
                   width: '100%',
                   padding: '10px',
                   border: '1px solid #E0E0E0',
                   borderRadius: 6,
                   fontSize: 14,
-                  fontFamily: 'Open Sans'
+                  fontFamily: 'Open Sans',
+                  cursor: 'pointer',
+                  backgroundColor: '#FFFFFF',
+                  appearance: 'auto'
                 }}
               >
                 <option value="">Seleccionar región...</option>
