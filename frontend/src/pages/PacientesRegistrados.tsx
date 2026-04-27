@@ -23,8 +23,8 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   // Cargar regiones en el inicio
   useEffect(() => {
     console.log('PacientesRegistrados mounted, token:', token);
+    cargarRegiones();
     if (token) {
-      cargarRegiones();
       cargarOperadores();
       cargarPacientes();
     }

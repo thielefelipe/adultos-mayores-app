@@ -44,6 +44,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
         setVistaState('usuarios');
       } else if (hash.includes('admin/gestoroperadores')) {
         setVistaState('gestorOperadores');
+      } else if (hash.includes('admin/pacientes')) {
+        setVistaState('pacientes');
       } else {
         setVistaState('inicio');
       }
@@ -55,6 +57,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
       setVistaState('usuarios');
     } else if (currentHash.includes('admin/gestoroperadores')) {
       setVistaState('gestorOperadores');
+    } else if (currentHash.includes('admin/pacientes')) {
+      setVistaState('pacientes');
     }
 
     window.addEventListener('hashchange', handleHashChange);
