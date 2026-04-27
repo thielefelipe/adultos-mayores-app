@@ -113,12 +113,12 @@ export const patientsService = {
     return resultado;
   },
 
-  async obtenerTotal(token: string): Promise<number> {
+  async obtenerTotal(_token: string): Promise<number> {
     // TODO: Reemplazar con llamada real a /api/pacientes/total
     return MOCK_PACIENTES.length;
   },
 
-  async obtenerOperadores(token: string) {
+  async obtenerOperadores(_token: string) {
     // TODO: Reemplazar con llamada real a /api/operadores
     return [
       { id: '1', nombre: 'Carlos López' },

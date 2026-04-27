@@ -94,7 +94,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
     // Recargar usuarios activos cada 10 segundos
     const reloadInterval = setInterval(() => {
-      cargarUsuariosActivos();
+      cargarDatos();
     }, 10000);
 
     return () => {
