@@ -491,6 +491,34 @@
             <label>Teléfono</label>
             <input type="text" id="f_telefono" placeholder="975252578">
           </div>
+          <div class="field" style="grid-column: span 2; border-top: 1px solid var(--sand); padding-top: 1.25rem; margin-top: .5rem;">
+            <label style="margin-bottom: 1rem; display: block; border-bottom: 2px solid var(--terra); padding-bottom: .5rem;">📍 Ubicación y Domicilio</label>
+          </div>
+          <div class="field">
+            <label>Región</label>
+            <select id="f_region">
+              <option value="">Seleccionar…</option>
+              <option>Los Ríos</option>
+              <option>Los Lagos</option>
+              <option>Aysén</option>
+              <option>Magallanes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Provincia</label>
+            <input type="text" id="f_provincia" placeholder="Ej: Valdivia">
+          </div>
+          <div class="field">
+            <label>Comuna</label>
+            <input type="text" id="f_comuna_personal" placeholder="Ej: Contulmo">
+          </div>
+          <div class="field">
+            <label>Dirección de Domicilio</label>
+            <input type="text" id="f_direccion" placeholder="Calle, número y referencias">
+          </div>
+          <div class="field" style="grid-column: span 2; border-top: 1px solid var(--sand); padding-top: 1.25rem; margin-top: .5rem;">
+            <label style="margin-bottom: 1rem; display: block; border-bottom: 2px solid var(--terra); padding-bottom: .5rem;">📚 Información Sociodemográfica</label>
+          </div>
           <div class="field">
             <label>Escolaridad</label>
             <select id="f_escolaridad">
@@ -1010,6 +1038,10 @@ function leerFormulario() {
     sexo: document.getElementById('f_sexo').value,
     edad: document.getElementById('f_edad').value,
     telefono: document.getElementById('f_telefono').value,
+    region: document.getElementById('f_region').value,
+    provincia: document.getElementById('f_provincia').value,
+    comuna_personal: document.getElementById('f_comuna_personal').value,
+    direccion: document.getElementById('f_direccion').value,
     escolaridad: document.getElementById('f_escolaridad').value,
     pueblo: document.getElementById('f_pueblo').value,
     rsh: document.getElementById('f_rsh').value,
@@ -1069,7 +1101,7 @@ function cargarFormulario(p) {
 }
 
 function limpiarFormulario() {
-  ['rut','dv','nombre','sexo','edad','telefono','escolaridad','pueblo','rsh',
+  ['rut','dv','nombre','sexo','edad','telefono','region','provincia','comuna_personal','direccion','escolaridad','pueblo','rsh',
    'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
    'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
    'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
@@ -1294,7 +1326,7 @@ function getPeriodos(p) {
 
 function exportarDatos() {
   if (!pacientes.length) { toast('No hay datos para exportar'); return; }
-  const headers = ['Nombre','RUT','DV','Edad','Sexo','Comuna','Rural','Dependencia','Enfermedades','PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2','TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2','Puntaje_Base','Estado_Base','T1_Fecha','T1_Puntaje','T1_Barthel','T1_Minimental','T2_Fecha','T2_Puntaje','T2_Barthel','T2_Minimental','T3_Fecha','T3_Puntaje','T3_Barthel','T3_Minimental','T4_Fecha','T4_Puntaje','T4_Barthel','T4_Minimental','Diferencia_Anual','Tendencia'];
+  const headers = ['Nombre','RUT','DV','Edad','Sexo','Región','Provincia','Comuna','Dirección','Rural','Dependencia','Enfermedades','PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2','TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2','Puntaje_Base','Estado_Base','T1_Fecha','T1_Puntaje','T1_Barthel','T1_Minimental','T2_Fecha','T2_Puntaje','T2_Barthel','T2_Minimental','T3_Fecha','T3_Puntaje','T3_Barthel','T3_Minimental','T4_Fecha','T4_Puntaje','T4_Barthel','T4_Minimental','Diferencia_Anual','Tendencia'];
   const rows = pacientes.map(p => {
     const sc = score(p);
     const sem = semaforo(sc);
@@ -1303,7 +1335,7 @@ function exportarDatos() {
     const ultimo = periodos.length > 0 ? periodos[periodos.length-1].punt : '';
     const diff = (primer !== '' && ultimo !== '') ? Math.round((ultimo-primer)*10)/10 : '';
     const tend = diff !== '' ? (diff > 10 ? 'Mejora notable' : diff > 0 ? 'Mejora leve' : diff === 0 ? 'Sin cambio' : 'Deterioro') : '';
-    return [p.nombre,p.rut,p.dv,p.edad,p.sexo,p.comuna,p.rural,p.dependencia,p.enfermedades,p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,sc,sem.label,p.t1_fecha,p.t1_punt,p.t1_barthel,p.t1_mini,p.t2_fecha,p.t2_punt,p.t2_barthel,p.t2_mini,p.t3_fecha,p.t3_punt,p.t3_barthel,p.t3_mini,p.t4_fecha,p.t4_punt,p.t4_barthel,p.t4_mini,diff,tend].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+    return [p.nombre,p.rut,p.dv,p.edad,p.sexo,p.region,p.provincia,p.comuna_personal,p.direccion,p.rural,p.dependencia,p.enfermedades,p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,sc,sem.label,p.t1_fecha,p.t1_punt,p.t1_barthel,p.t1_mini,p.t2_fecha,p.t2_punt,p.t2_barthel,p.t2_mini,p.t3_fecha,p.t3_punt,p.t3_barthel,p.t3_mini,p.t4_fecha,p.t4_punt,p.t4_barthel,p.t4_mini,diff,tend].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
   });
   const csv = [headers.join(','), ...rows].join('\n');
   const a = document.createElement('a');
