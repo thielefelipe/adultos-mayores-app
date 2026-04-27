@@ -4,16 +4,14 @@ import { UsuarioEntity, TokenRevocadoEntity } from '../entities';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuditModule } from '../audit/audit.module';
-import { JwtGuard } from './guards/jwt.guard';
-import { TokenRevocadoService } from './services/token-revocado.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UsuarioEntity, TokenRevocadoEntity]),
     AuditModule,
   ],
-  providers: [AuthService, TokenRevocadoService, JwtGuard],
+  providers: [AuthService],
   controllers: [AuthController],
-  exports: [AuthService, TokenRevocadoService, JwtGuard],
+  exports: [AuthService],
 })
 export class AuthModule {}
