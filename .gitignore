@@ -6,12 +6,13 @@ node_modules/
 # Production
 /build
 /dist
+backend/dist/
 
 # Environment variables
 .env
 .env.local
-.env.production
 .env.*.local
+!frontend/.env.production
 
 # IDE
 .vscode/
