@@ -42,10 +42,12 @@ export function ModalEditarUsuario({ usuario, onConfirm, onCancel }: ModalProps)
   const [comunas, setComunas] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const formatRut = (rut: string): string => {
+    if (!rut) return '';
     const cleanRut = rut.replace(/[^0-9kK]/g, '');
-    if (cleanRut.length < 2) return cleanRut;
+    if (cleanRut.length < 8) return rut; // Si tiene menos de 8 dígitos, devuelve como está
     const body = cleanRut.slice(0, -1);
     const dv = cleanRut.slice(-1);
     const formatted = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -54,17 +56,15 @@ export function ModalEditarUsuario({ usuario, onConfirm, onCancel }: ModalProps)
 
   useEffect(() => {
     obtenerRegiones();
-    // Formatear RUT al cargar el usuario
-    if (usuario.rut) {
-      const formattedRut = formatRut(usuario.rut);
-      setFormData((prev) => ({ ...prev, rut: formattedRut }));
-    }
+    setIsInitialLoad(false);
   }, []);
 
   useEffect(() => {
     if (formData.region) {
       obtenerProvincias();
-      setFormData((prev) => ({ ...prev, provincia: '', comuna: '' }));
+      if (!isInitialLoad) {
+        setFormData((prev) => ({ ...prev, provincia: '', comuna: '' }));
+      }
     }
   }, [formData.region]);
 
