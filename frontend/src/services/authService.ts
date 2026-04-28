@@ -1,20 +1,13 @@
-const getApiUrl = () => {
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-  if (import.meta.env.DEV) {
-    return 'http://localhost:3000/api';
-  }
-  // Production
-  const host = window.location.hostname;
-  if (host.includes('localhost') || host.includes('127.0.0.1')) {
-    return 'http://localhost:3000/api';
-  }
-  // En Render, usa el dominio del backend
-  return 'https://adultos-mayores-backend.onrender.com/api';
-};
+const API_URL = (() => {
+  const isDev = import.meta.env.DEV || window.location.hostname.includes('localhost');
+  const devUrl = 'http://localhost:3000/api';
+  const prodUrl = 'https://adultos-mayores-backend.onrender.com/api';
 
-const API_URL = getApiUrl();
+  console.log(`[AUTH] Environment: ${isDev ? 'DEVELOPMENT' : 'PRODUCTION'}`);
+  console.log(`[AUTH] Using API URL: ${isDev ? devUrl : prodUrl}`);
+
+  return isDev ? devUrl : prodUrl;
+})();
 
 export interface LoginResponse {
   access_token: string;
