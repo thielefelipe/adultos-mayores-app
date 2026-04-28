@@ -84,6 +84,10 @@ export class UsuariosService {
     const usuario = await this.obtenerPorId(id);
 
     const cambios = {};
+    if (actualizarDto.rut) {
+      cambios['rut'] = actualizarDto.rut;
+      usuario.rut = actualizarDto.rut;
+    }
     if (actualizarDto.nombre) {
       cambios['nombre'] = actualizarDto.nombre;
       usuario.nombre = actualizarDto.nombre;
