@@ -149,7 +149,7 @@
   color: #0C5460;
 }
 
-.estado-badge {
+.conexion-badge {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 20px;
@@ -157,12 +157,17 @@
   font-weight: 600;
 }
 
-.estado-badge.activo {
+.conexion-badge.en-linea {
   background-color: #D4EDDA;
   color: #155724;
 }
 
-.estado-badge.inactivo {
+.conexion-badge.offline {
+  background-color: #FFF3CD;
+  color: #856404;
+}
+
+.conexion-badge.descontinuado {
   background-color: #F8D7DA;
   color: #721C24;
 }

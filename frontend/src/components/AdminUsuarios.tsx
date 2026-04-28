@@ -110,6 +110,27 @@ export function AdminUsuarios() {
     }
   };
 
+  const getEstadoConexion = (usuario: Usuario) => {
+    if (!usuario.activo) {
+      return { texto: 'Descontinuado', clase: 'descontinuado', icono: '🚫' };
+    }
+
+    if (!usuario.ultimoAcceso) {
+      return { texto: 'Nunca conectado', clase: 'offline', icono: '🔴' };
+    }
+
+    const ahora = new Date();
+    const ultimoAcceso = new Date(usuario.ultimoAcceso);
+    const minutos = (ahora.getTime() - ultimoAcceso.getTime()) / (1000 * 60);
+    const estaEnLinea = minutos < 5;
+
+    return {
+      texto: estaEnLinea ? 'En línea' : 'Offline',
+      clase: estaEnLinea ? 'en-linea' : 'offline',
+      icono: estaEnLinea ? '🟢' : '🔴'
+    };
+  };
+
   if (loading) {
     return <div className="loading">⏳ Cargando usuarios...</div>;
   }
@@ -142,7 +163,7 @@ export function AdminUsuarios() {
               <th>Usuario</th>
               <th>Nombre</th>
               <th>Rol</th>
-              <th>Estado</th>
+              <th>Conexión</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -164,9 +185,14 @@ export function AdminUsuarios() {
                     </span>
                   </td>
                   <td>
-                    <span className={`estado-badge ${usuario.activo ? 'activo' : 'inactivo'}`}>
-                      {usuario.activo ? '✅ Activo' : '❌ Inactivo'}
-                    </span>
+                    {(() => {
+                      const estado = getEstadoConexion(usuario);
+                      return (
+                        <span className={`conexion-badge ${estado.clase}`}>
+                          {estado.icono} {estado.texto}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="actions">
                     {usuario.activo ? (
