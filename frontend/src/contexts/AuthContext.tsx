@@ -14,8 +14,10 @@ interface AuthContextType {
   token: string | null;
   isAutenticado: boolean;
   isLoading: boolean;
+  sessionExpired: boolean;
   login: (usuario: Usuario, token: string) => void;
   logout: () => Promise<void>;
+  setSessionExpired: (expired: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -24,6 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => {
     const token = authService.getToken();
@@ -62,10 +65,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         usuario,
         token,
-        isAutenticado: !!token,
+        isAutenticado: !!token && !sessionExpired,
         isLoading,
+        sessionExpired,
         login,
         logout,
+        setSessionExpired,
       }}
     >
       {children}

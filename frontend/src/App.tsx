@@ -2,11 +2,12 @@ import { useAuth } from './contexts/AuthContext';
 import { Login } from './components/Login';
 import { Dashboard } from './pages/Dashboard';
 import { AnalystDashboard } from './pages/AnalystDashboard';
+import { SessionExpired } from './components/SessionExpired';
 import { DesignsViewer } from './components/DesignsViewer';
 import './App.css';
 
 function App() {
-  const { isAutenticado, isLoading, logout, usuario } = useAuth();
+  const { isAutenticado, isLoading, logout, usuario, sessionExpired, setSessionExpired } = useAuth();
   const isDesignsView = window.location.pathname === '/designs';
 
   if (isLoading && !isDesignsView) {
@@ -23,11 +24,15 @@ function App() {
   };
 
   const handleLoginSuccess = () => {
-    // El usuario ya está autenticado en el contexto
+    setSessionExpired(false);
   };
 
   if (isDesignsView) {
     return <DesignsViewer />;
+  }
+
+  if (sessionExpired) {
+    return <SessionExpired onLogin={handleLoginSuccess} />;
   }
 
   if (isAutenticado) {
