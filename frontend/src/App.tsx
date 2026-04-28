@@ -1,4 +1,5 @@
 import { useAuth } from './contexts/AuthContext';
+import { useHeartbeat } from './hooks/useHeartbeat';
 import { Login } from './components/Login';
 import { Dashboard } from './pages/Dashboard';
 import { AnalystDashboard } from './pages/AnalystDashboard';
@@ -8,6 +9,7 @@ import './App.css';
 
 function App() {
   const { isAutenticado, isLoading, logout, usuario, sessionExpired, setSessionExpired } = useAuth();
+  useHeartbeat(); // Mantener servidor activo con heartbeat cada 10 minutos
   const isDesignsView = window.location.pathname === '/designs';
 
   if (isLoading && !isDesignsView) {
