@@ -1,5 +1,20 @@
-const API_URL = import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? 'http://localhost:3000/api' : 'https://adultos-mayores-backend.onrender.com/api');
+const getApiUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (import.meta.env.DEV) {
+    return 'http://localhost:3000/api';
+  }
+  // Production
+  const host = window.location.hostname;
+  if (host.includes('localhost') || host.includes('127.0.0.1')) {
+    return 'http://localhost:3000/api';
+  }
+  // En Render, usa el dominio del backend
+  return 'https://adultos-mayores-backend.onrender.com/api';
+};
+
+const API_URL = getApiUrl();
 
 export interface LoginResponse {
   access_token: string;
