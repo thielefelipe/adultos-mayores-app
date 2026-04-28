@@ -126,4 +126,13 @@ export class UsuariosController {
       usuario.password,
     );
   }
+
+  @Post(':id/reactivar')
+  @Roles('admin')
+  async reactivar(
+    @Param('id') id: string,
+    @Request() req,
+  ) {
+    return this.usuariosService.reactivar(id, req.user.username);
+  }
 }

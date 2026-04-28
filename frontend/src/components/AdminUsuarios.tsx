@@ -100,6 +100,16 @@ export function AdminUsuarios() {
     }
   };
 
+  const handleReactivar = async (usuarioId: string) => {
+    if (!token) return;
+    try {
+      await usuariosService.reactivar(usuarioId, token);
+      cargarUsuarios();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al reactivar usuario');
+    }
+  };
+
   if (loading) {
     return <div className="loading">⏳ Cargando usuarios...</div>;
   }
@@ -132,19 +142,20 @@ export function AdminUsuarios() {
               <th>Usuario</th>
               <th>Nombre</th>
               <th>Rol</th>
+              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {usuarios.length === 0 ? (
               <tr>
-                <td colSpan={4} className="empty-message">
+                <td colSpan={5} className="empty-message">
                   No hay usuarios
                 </td>
               </tr>
             ) : (
               usuarios.map((usuario) => (
-                <tr key={usuario.id}>
+                <tr key={usuario.id} className={!usuario.activo ? 'usuario-inactivo' : ''}>
                   <td className="username">{usuario.username}</td>
                   <td>{usuario.nombre}</td>
                   <td>
@@ -152,28 +163,45 @@ export function AdminUsuarios() {
                       {usuario.rol}
                     </span>
                   </td>
+                  <td>
+                    <span className={`estado-badge ${usuario.activo ? 'activo' : 'inactivo'}`}>
+                      {usuario.activo ? '✅ Activo' : '❌ Inactivo'}
+                    </span>
+                  </td>
                   <td className="actions">
-                    <button
-                      className="btn-action btn-editar"
-                      onClick={() => handleEditar(usuario)}
-                      title="Editar usuario"
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="btn-action btn-restablecer"
-                      onClick={() => handleRestablecer(usuario.id)}
-                      title="Restablecer contraseña"
-                    >
-                      🔑
-                    </button>
-                    <button
-                      className="btn-action btn-eliminar"
-                      onClick={() => handleEliminar(usuario.id)}
-                      title="Eliminar usuario"
-                    >
-                      🗑️
-                    </button>
+                    {usuario.activo ? (
+                      <>
+                        <button
+                          className="btn-action btn-editar"
+                          onClick={() => handleEditar(usuario)}
+                          title="Editar usuario"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          className="btn-action btn-restablecer"
+                          onClick={() => handleRestablecer(usuario.id)}
+                          title="Restablecer contraseña"
+                        >
+                          🔑
+                        </button>
+                        <button
+                          className="btn-action btn-eliminar"
+                          onClick={() => handleEliminar(usuario.id)}
+                          title="Eliminar usuario"
+                        >
+                          🗑️
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        className="btn-action btn-reactivar"
+                        onClick={() => handleReactivar(usuario.id)}
+                        title="Reactivar usuario"
+                      >
+                        🔄
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))

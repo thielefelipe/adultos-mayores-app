@@ -16,8 +16,7 @@ export class UsuariosService {
 
   async obtenerTodos() {
     return this.usuarioRepository.find({
-      where: { activo: true },
-      select: ['id', 'username', 'nombre', 'rol', 'email', 'telefono', 'region', 'provincia', 'comuna', 'creado', 'ultimoAcceso'],
+      select: ['id', 'username', 'nombre', 'rol', 'email', 'telefono', 'region', 'provincia', 'comuna', 'creado', 'ultimoAcceso', 'activo'],
     });
   }
 
@@ -211,6 +210,26 @@ export class UsuariosService {
     );
 
     return { mensaje: 'Usuario eliminado correctamente' };
+  }
+
+  async reactivar(id: string, usuarioAdmin: string) {
+    const usuario = await this.usuarioRepository.findOne({ where: { id } });
+    if (!usuario) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    usuario.activo = true;
+    await this.usuarioRepository.save(usuario);
+
+    await this.auditService.registrar(
+      usuarioAdmin,
+      'REACTIVAR_USUARIO',
+      'usuario',
+      id,
+      { username: usuario.username },
+    );
+
+    return { mensaje: 'Usuario reactivado correctamente' };
   }
 
 

@@ -154,6 +154,22 @@ export const usuariosService = {
     return response.json();
   },
 
+  async reactivar(id: string, token: string) {
+    const response = await fetch(`${API_URL}/usuarios/${id}/reactivar`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.message || 'Error al reactivar usuario');
+    }
+    return response.json();
+  },
+
   exportarExcel(usuarios: Usuario[]): void {
     const datosExportacion = usuarios.map((usuario) => ({
       ID: usuario.id,

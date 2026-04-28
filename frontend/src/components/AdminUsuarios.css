@@ -149,6 +149,28 @@
   color: #0C5460;
 }
 
+.estado-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.estado-badge.activo {
+  background-color: #D4EDDA;
+  color: #155724;
+}
+
+.estado-badge.inactivo {
+  background-color: #F8D7DA;
+  color: #721C24;
+}
+
+.usuario-inactivo {
+  opacity: 0.6;
+}
+
 .actions {
   display: flex;
   gap: 8px;
@@ -174,6 +196,10 @@
 
 .btn-eliminar:hover {
   background-color: #F8D7DA;
+}
+
+.btn-reactivar:hover {
+  background-color: #D4EDDA;
 }
 
 .empty-message {
