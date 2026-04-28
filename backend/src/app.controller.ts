@@ -14,8 +14,16 @@ export class AppController {
   ) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getHello() {
+    const adminExists = await this.usuarioRepository.findOne({
+      where: { username: 'admin' },
+    });
+    return {
+      mensaje: 'API funcionando correctamente',
+      version: '1.0.0',
+      adminExists: !!adminExists,
+      timestamp: new Date().toISOString(),
+    };
   }
 
   @Post('restore-admin')
