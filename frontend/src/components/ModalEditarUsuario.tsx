@@ -43,8 +43,22 @@ export function ModalEditarUsuario({ usuario, onConfirm, onCancel }: ModalProps)
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const formatRut = (rut: string): string => {
+    const cleanRut = rut.replace(/[^0-9kK]/g, '');
+    if (cleanRut.length < 2) return cleanRut;
+    const body = cleanRut.slice(0, -1);
+    const dv = cleanRut.slice(-1);
+    const formatted = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${formatted}-${dv}`;
+  };
+
   useEffect(() => {
     obtenerRegiones();
+    // Formatear RUT al cargar el usuario
+    if (usuario.rut) {
+      const formattedRut = formatRut(usuario.rut);
+      setFormData((prev) => ({ ...prev, rut: formattedRut }));
+    }
   }, []);
 
   useEffect(() => {
@@ -114,15 +128,6 @@ export function ModalEditarUsuario({ usuario, onConfirm, onCancel }: ModalProps)
 
   if (!token) return null;
 
-  const formatRut = (rut: string): string => {
-    const cleanRut = rut.replace(/[^0-9kK]/g, '');
-    if (cleanRut.length < 2) return cleanRut;
-    const body = cleanRut.slice(0, -1);
-    const dv = cleanRut.slice(-1);
-    const formatted = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    return `${formatted}-${dv}`;
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
@@ -144,7 +149,11 @@ export function ModalEditarUsuario({ usuario, onConfirm, onCancel }: ModalProps)
     setError('');
 
     try {
-      await usuariosService.actualizar(usuario.id, formData, token);
+      const dataToSend = {
+        ...formData,
+        rut: formData.rut ? formData.rut.replace(/[^0-9kK]/g, '') : '',
+      };
+      await usuariosService.actualizar(usuario.id, dataToSend, token);
       alert(`✅ Usuario ${formData.nombre} actualizado exitosamente`);
       onConfirm();
     } catch (err) {
