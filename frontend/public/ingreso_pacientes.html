@@ -951,6 +951,24 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- MODAL: Generar Credencial después de guardar -->
+<div id="modalCredencial" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.5); z-index:200; flex-direction:column; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:32px; max-width:500px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,.2);">
+    <h2 style="font-size:22px; font-weight:700; color:#003D82; margin-bottom:8px; font-family:'Montserrat',sans-serif;">✅ Paciente registrado</h2>
+    <p style="color:#666; margin-bottom:24px; line-height:1.6;">
+      El adulto mayor ha sido registrado exitosamente en el sistema. ¿Deseas generar su credencial de acceso?
+    </p>
+    <div style="display:flex; gap:12px;">
+      <button onclick="cerrarModalCredencial()" style="flex:1; padding:12px; background:#f0f0f0; color:#333; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:background .2s;">
+        Luego
+      </button>
+      <button onclick="abrirGeneradorCredencial()" style="flex:1; padding:12px; background:#0066CC; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:opacity .2s;">
+        🎫 Generar Credencial
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 const API_URL = 'https://adultos-mayores-backend.onrender.com/api';
 
@@ -1474,6 +1492,72 @@ function renderAll() {
   renderSidebar(pacientes);
   renderMain();
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FUNCIONES PARA GENERAR CREDENCIAL
+// ═══════════════════════════════════════════════════════════════════════════════
+
+let pacienteActualParaCredencial = null;
+
+function mostrarModalCredencial(paciente) {
+  pacienteActualParaCredencial = paciente;
+  document.getElementById('modalCredencial').style.display = 'flex';
+}
+
+function cerrarModalCredencial() {
+  document.getElementById('modalCredencial').style.display = 'none';
+  pacienteActualParaCredencial = null;
+}
+
+function abrirGeneradorCredencial() {
+  if (!pacienteActualParaCredencial) return;
+
+  const p = pacienteActualParaCredencial;
+
+  // Pasar datos a través de sessionStorage
+  sessionStorage.setItem('credencial_paciente', JSON.stringify({
+    nombre: p.nombre || '',
+    rut: p.rut || '',
+    fechaNac: p.fechaNac || '',
+    telPersonal: p.telefono || '',
+    numSocio: p.id || '',
+    anioIngreso: new Date(p.fechaRegistro).getFullYear(),
+    contactoNombre: p.contacto_nombre || '',
+    contactoTel: p.contacto_telefono || '',
+  }));
+
+  // Abrir página de credencial en nueva ventana
+  window.open('credencial.html', 'credencial', 'width=1000,height=800');
+  cerrarModalCredencial();
+}
+
+// Modificar guardarPaciente para mostrar el modal
+const guardarPacienteOriginal = window.guardarPaciente;
+window.guardarPaciente = function() {
+  const datos = leerFormulario();
+  if (!datos.nombre) { toast('⚠️ El nombre es obligatorio'); return; }
+  if (!datos.rut)    { toast('⚠️ El RUT es obligatorio'); return; }
+
+  if (editandoId !== null) {
+    const idx = pacientes.findIndex(p => p.id === editandoId);
+    pacientes[idx] = { ...pacientes[idx], ...datos };
+  } else {
+    datos.id = Date.now();
+    datos.fechaRegistro = new Date().toISOString();
+    pacientes.push(datos);
+  }
+
+  guardar();
+  const esNuevo = editandoId === null;
+  cerrarModal();
+  renderAll();
+  toast('✅ Registro guardado correctamente');
+
+  // Mostrar modal de credencial solo si es nuevo registro
+  if (esNuevo) {
+    setTimeout(() => mostrarModalCredencial(datos), 500);
+  }
+};
 
 renderAll();
 </script>
