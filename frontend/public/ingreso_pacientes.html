@@ -1252,12 +1252,12 @@ function generarSemestres(año) {
   if (!container) return;
 
   const seguimientos = obtenerSeguimientos();
-  const del​Año = seguimientos.filter(s => s.año === año);
+  const delAño = seguimientos.filter(s => s.año === año);
 
   container.innerHTML = '';
 
   for (let semestre = 1; semestre <= 2; semestre++) {
-    const seg = del​Año.find(s => s.semestre === semestre) || {
+    const seg = delAño.find(s => s.semestre === semestre) || {
       año: año,
       semestre: semestre,
       fecha: '',
