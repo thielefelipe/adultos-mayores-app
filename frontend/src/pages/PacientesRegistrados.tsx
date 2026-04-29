@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { patientsService, type Paciente, type FiltrosPacientes } from '../services/patientsService';
 import { ModalAgregarPaciente } from '../components/ModalAgregarPaciente';
+import { CustomSelect } from '../components/CustomSelect';
 
 interface PacientesRegistradosProps {
   onVolver: () => void;
@@ -443,25 +444,30 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
             {/* Operador */}
             <div>
               <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
-                Operador
+                {usuario?.rol === 'admin' ? '👤 Operador (Vista Admin)' : 'Operador'}
               </label>
-              <select
-                value={filtros.operador_id || ''}
-                onChange={(e) => handleOperadorChange(e.target.value)}
-                style={{
+              {usuario?.rol === 'admin' ? (
+                <div style={{
                   width: '100%',
                   padding: '10px',
-                  border: '1px solid #E0E0E0',
+                  border: '1px solid #FFA500',
                   borderRadius: 6,
-                  fontSize: 14,
-                  fontFamily: 'Open Sans'
-                }}
-              >
-                <option value="">Todos los operadores</option>
-                {operadores.map(op => (
-                  <option key={op.id} value={op.id}>{op.nombre}</option>
-                ))}
-              </select>
+                  fontSize: 13,
+                  fontFamily: 'Open Sans',
+                  background: '#FFFACD',
+                  color: '#FF6B35',
+                  fontWeight: 600
+                }}>
+                  ⚠️ Los pacientes registrados por Admin se marcarán como "SISTEMA"
+                </div>
+              ) : (
+                <CustomSelect
+                  value={filtros.operador_id || ''}
+                  onChange={handleOperadorChange}
+                  options={operadores}
+                  placeholder="Todos los operadores"
+                />
+              )}
             </div>
           </div>
 
@@ -582,6 +588,9 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSave={handleGuardarPaciente}
+        usuario={usuario}
+        operadores={operadores}
+        token={token}
       />
     </div>
   );

@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
+import { CustomSelect } from './CustomSelect';
 
 interface ModalAgregarPacienteProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (pacienteData: any) => Promise<void>;
+  usuario?: any;
+  operadores?: { id: string; nombre: string }[];
+  token?: string;
 }
 
 export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPacienteProps) {
@@ -29,7 +33,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPa
     comuna: '',
     ruralUrbana: '',
     dependencia: '',
-    enfermedadesCronicas: ''
+    enfermedadesCronicas: '',
+    operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : ''
   });
 
   useEffect(() => {
@@ -122,7 +127,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPa
       setFormData({
         rut: '', dv: '', nombre: '', sexo: '', edad: '', telefono: '', email: '',
         escolaridad: '', puebloOriginario: '', tramosRsh: '', fechaIngreso: '',
-        region: '', provincia: '', comuna: '', ruralUrbana: '', dependencia: '', enfermedadesCronicas: ''
+        region: '', provincia: '', comuna: '', ruralUrbana: '', dependencia: '', enfermedadesCronicas: '',
+        operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : ''
       });
       onClose();
     } catch (error) {
@@ -461,6 +467,20 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPa
                 }}
               />
             </div>
+
+            {usuario?.rol !== 'admin' && (
+              <div>
+                <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+                  Operador <span style={{ color: 'red' }}>*</span>
+                </label>
+                <CustomSelect
+                  value={formData.operador_id}
+                  onChange={(value) => setFormData(prev => ({ ...prev, operador_id: value }))}
+                  options={operadores || []}
+                  required={true}
+                />
+              </div>
+            )}
 
             <div>
               <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>

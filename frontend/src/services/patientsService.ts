@@ -52,12 +52,27 @@ export const patientsService = {
     return MOCK_PACIENTES.length;
   },
 
-  async obtenerOperadores(_token: string) {
-    // TODO: Reemplazar con llamada real a /api/operadores
-    return [
-      { id: '1', nombre: 'Carlos López' },
-      { id: '2', nombre: 'Ana Rodríguez' },
-      { id: '3', nombre: 'Miguel Torres' }
-    ];
+  async obtenerOperadores(token: string) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/usuarios`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        console.warn('Error obteniendo operadores, usando datos vacíos');
+        return [];
+      }
+
+      const usuarios = await response.json();
+      // Filtrar solo operadores y analistas
+      return usuarios
+        .filter((u: any) => u.rol === 'operador' || u.rol === 'analista')
+        .map((u: any) => ({ id: u.id, nombre: u.nombre }));
+    } catch (error) {
+      console.error('Error obteniendo operadores:', error);
+      return [];
+    }
   }
 };
