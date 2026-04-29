@@ -532,6 +532,17 @@
             <input type="text" id="f_direccion" placeholder="Calle, número y referencias">
           </div>
           <div class="field" style="grid-column: span 2; border-top: 1px solid var(--sand); padding-top: 1.25rem; margin-top: .5rem;">
+            <label style="margin-bottom: 1rem; display: block; border-bottom: 2px solid var(--terra); padding-bottom: .5rem;">🆘 Contacto de Emergencia</label>
+          </div>
+          <div class="field">
+            <label>Nombre del Contacto</label>
+            <input type="text" id="f_contacto_nombre" placeholder="Ej: María García López">
+          </div>
+          <div class="field">
+            <label>Teléfono del Contacto</label>
+            <input type="text" id="f_contacto_telefono" placeholder="Ej: +56987654321">
+          </div>
+          <div class="field" style="grid-column: span 2; border-top: 1px solid var(--sand); padding-top: 1.25rem; margin-top: .5rem;">
             <label style="margin-bottom: 1rem; display: block; border-bottom: 2px solid var(--terra); padding-bottom: .5rem;">📚 Información Sociodemográfica</label>
           </div>
           <div class="field">
@@ -1331,6 +1342,8 @@ function leerFormulario() {
     rut: document.getElementById('f_rut').value.replace(/\D/g, '').trim(), // Remover puntos y guiones
     dv: document.getElementById('f_dv').value.trim(),
     nombre: document.getElementById('f_nombre').value.trim(),
+    contacto_nombre: document.getElementById('f_contacto_nombre').value.trim(),
+    contacto_telefono: document.getElementById('f_contacto_telefono').value.trim(),
     sexo: document.getElementById('f_sexo').value,
     edad: document.getElementById('f_edad').value,
     telefono: document.getElementById('f_telefono').value,
@@ -1400,7 +1413,7 @@ function cargarFormulario(p) {
 }
 
 function limpiarFormulario() {
-  ['operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
+  ['operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','contacto_nombre','contacto_telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
    'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
    'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
    'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
@@ -1713,15 +1726,25 @@ function cerrarModalCredencial() {
   pacienteActualParaCredencial = null;
 }
 
+function formatearRUTParaCredencial(rut) {
+  if (!rut) return '';
+  // Asegurarse de que sea solo números
+  rut = rut.replace(/\D/g, '');
+  if (rut.length <= 2) return rut;
+  if (rut.length <= 5) return rut.slice(0, 2) + '.' + rut.slice(2);
+  return rut.slice(0, 2) + '.' + rut.slice(2, 5) + '.' + rut.slice(5);
+}
+
 function abrirGeneradorCredencial() {
   if (!pacienteActualParaCredencial) return;
 
   const p = pacienteActualParaCredencial;
+  const rutFormateado = formatearRUTParaCredencial(p.rut);
 
   // Pasar datos a través de sessionStorage
   sessionStorage.setItem('credencial_paciente', JSON.stringify({
     nombre: p.nombre || '',
-    rut: p.rut || '',
+    rut: rutFormateado || '',
     fechaNac: p.fechaNac || '',
     telPersonal: p.telefono || '',
     numSocio: p.id || '',
