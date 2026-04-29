@@ -446,7 +446,7 @@
 </div>
 
 <!-- MODAL FORMULARIO -->
-<div class="modal-overlay" id="modalOverlay" onclick="cerrarModalSiAfuera(event)">
+<div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="modalTitle">Nuevo Adulto Mayor</div>
@@ -1204,10 +1204,6 @@ function abrirModal(id = null) {
 function cerrarModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   editandoId = null;
-}
-
-function cerrarModalSiAfuera(e) {
-  if (e.target === document.getElementById('modalOverlay')) cerrarModal();
 }
 
 function cambiarTab(idx, btn) {
