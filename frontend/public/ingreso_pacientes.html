@@ -1166,16 +1166,25 @@ function formatearRUT() {
 // ═══════════════════════════════════════════════════════════════════
 
 function obtenerSeguimientos() {
-  const json = document.getElementById('f_seguimientos').value;
+  const el = document.getElementById('f_seguimientos');
+  if (!el) return [];
+  const json = el.value;
   try {
     return json ? JSON.parse(json) : [];
-  } catch {
+  } catch (e) {
+    console.error('Error parsing seguimientos:', e);
     return [];
   }
 }
 
 function guardarSeguimientos(seguimientos) {
-  document.getElementById('f_seguimientos').value = JSON.stringify(seguimientos);
+  const el = document.getElementById('f_seguimientos');
+  if (!el) return;
+  try {
+    el.value = JSON.stringify(seguimientos);
+  } catch (e) {
+    console.error('Error saving seguimientos:', e);
+  }
 }
 
 function inicializarSeguimientos() {
@@ -1213,9 +1222,11 @@ function inicializarSeguimientos() {
 }
 
 function actualizarSelectAño() {
+  const select = document.getElementById('selectAño');
+  if (!select) return;
+
   const seguimientos = obtenerSeguimientos();
   const años = [...new Set(seguimientos.map(s => s.año))].sort((a, b) => b - a);
-  const select = document.getElementById('selectAño');
 
   select.innerHTML = '<option value="">Seleccionar…</option>';
   años.forEach(año => {
@@ -1227,16 +1238,21 @@ function actualizarSelectAño() {
 }
 
 function cambiarAño() {
-  const año = document.getElementById('selectAño').value;
+  const selectAño = document.getElementById('selectAño');
+  if (!selectAño) return;
+
+  const año = selectAño.value;
   if (!año) return;
 
   generarSemestres(parseInt(año));
 }
 
 function generarSemestres(año) {
+  const container = document.getElementById('semestreContainer');
+  if (!container) return;
+
   const seguimientos = obtenerSeguimientos();
   const del​Año = seguimientos.filter(s => s.año === año);
-  const container = document.getElementById('semestreContainer');
 
   container.innerHTML = '';
 
