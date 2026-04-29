@@ -471,7 +471,7 @@
         <div class="field-grid field-grid-4">
           <div class="field" style="grid-column: span 3">
             <label>RUT <span class="req">*</span></label>
-            <input type="text" id="f_rut" placeholder="15234578" maxlength="9">
+            <input type="text" id="f_rut" placeholder="12.345.678" maxlength="12" oninput="formatearRUT()">
           </div>
           <div class="field">
             <label>DV</label>
@@ -1053,6 +1053,28 @@ function componentScores(p) {
   ];
 }
 
+function formatearRUT() {
+  const rutField = document.getElementById('f_rut');
+  let valor = rutField.value.replace(/\D/g, ''); // Remover caracteres no numéricos
+
+  if (valor.length === 0) {
+    rutField.value = '';
+    return;
+  }
+
+  // Limitar a 8 dígitos máximo
+  valor = valor.slice(0, 8);
+
+  // Formatear como XX.XXX.XXX
+  if (valor.length <= 2) {
+    rutField.value = valor;
+  } else if (valor.length <= 5) {
+    rutField.value = valor.slice(0, 2) + '.' + valor.slice(2);
+  } else {
+    rutField.value = valor.slice(0, 2) + '.' + valor.slice(2, 5) + '.' + valor.slice(5);
+  }
+}
+
 function recalcular() {
   const tmp = leerFormulario();
   const sc = score(tmp);
@@ -1127,7 +1149,7 @@ function leerFormulario() {
   return {
     operador_id: document.getElementById('f_operador_id').value,
     operador_nombre: document.getElementById('f_operador_nombre').value,
-    rut: document.getElementById('f_rut').value.trim(),
+    rut: document.getElementById('f_rut').value.replace(/\D/g, '').trim(), // Remover puntos y guiones
     dv: document.getElementById('f_dv').value.trim(),
     nombre: document.getElementById('f_nombre').value.trim(),
     sexo: document.getElementById('f_sexo').value,
@@ -1192,6 +1214,8 @@ function cargarFormulario(p) {
     const el = document.getElementById('f_' + k);
     if (el) el.value = p[k] || '';
   });
+  // Formatear el RUT después de cargar
+  setTimeout(() => formatearRUT(), 0);
   recalcular();
 }
 
