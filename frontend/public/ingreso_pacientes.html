@@ -945,9 +945,12 @@
       </div>
 
     </div><!-- modal-body -->
-    <div class="modal-footer">
+    <div class="modal-footer" id="modalFooter">
       <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="guardarPaciente()">💾 Guardar registro</button>
+      <div style="flex: 1;"></div>
+      <button class="btn btn-ghost" id="btnAnterior" onclick="irTabAnterior()" style="display: none;">← Anterior</button>
+      <button class="btn btn-primary" id="btnSiguiente" onclick="irTabSiguiente()">Siguiente →</button>
+      <button class="btn btn-primary" id="btnGuardar" onclick="guardarPaciente()" style="display: none;">💾 Guardar registro</button>
     </div>
   </div><!-- modal -->
 </div><!-- modal-overlay -->
@@ -1258,6 +1261,67 @@ function cambiarTab(idx, btn) {
   document.querySelectorAll('.tab-content').forEach((el,i) => el.style.display = i === idx ? '' : 'none');
   document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+
+  // Actualizar botones del footer según la pestaña
+  actualizarBotonesFooter(idx);
+}
+
+function actualizarBotonesFooter(tabIdx) {
+  const btnAnterior = document.getElementById('btnAnterior');
+  const btnSiguiente = document.getElementById('btnSiguiente');
+  const btnGuardar = document.getElementById('btnGuardar');
+
+  // Mostrar/ocultar botones según la pestaña
+  if (tabIdx === 0) {
+    // Primer tab: solo mostrar Siguiente
+    btnAnterior.style.display = 'none';
+    btnSiguiente.style.display = 'block';
+    btnGuardar.style.display = 'none';
+  } else if (tabIdx === 4) {
+    // Último tab: mostrar Anterior y Guardar
+    btnAnterior.style.display = 'block';
+    btnSiguiente.style.display = 'none';
+    btnGuardar.style.display = 'block';
+  } else {
+    // Tabs intermedios: mostrar Anterior y Siguiente
+    btnAnterior.style.display = 'block';
+    btnSiguiente.style.display = 'block';
+    btnGuardar.style.display = 'none';
+  }
+}
+
+function irTabSiguiente() {
+  const tabs = document.querySelectorAll('.form-tab');
+  let currentIdx = 0;
+
+  // Encontrar la pestaña activa actual
+  tabs.forEach((tab, idx) => {
+    if (tab.classList.contains('active')) {
+      currentIdx = idx;
+    }
+  });
+
+  // Ir al siguiente tab si no estamos en el último
+  if (currentIdx < tabs.length - 1) {
+    cambiarTab(currentIdx + 1, tabs[currentIdx + 1]);
+  }
+}
+
+function irTabAnterior() {
+  const tabs = document.querySelectorAll('.form-tab');
+  let currentIdx = 0;
+
+  // Encontrar la pestaña activa actual
+  tabs.forEach((tab, idx) => {
+    if (tab.classList.contains('active')) {
+      currentIdx = idx;
+    }
+  });
+
+  // Ir al tab anterior si no estamos en el primero
+  if (currentIdx > 0) {
+    cambiarTab(currentIdx - 1, tabs[currentIdx - 1]);
+  }
 }
 
 function leerFormulario() {
