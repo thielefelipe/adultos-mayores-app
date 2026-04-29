@@ -1179,28 +1179,36 @@ function guardarSeguimientos(seguimientos) {
 }
 
 function inicializarSeguimientos() {
-  const ahora = new Date();
-  const año = ahora.getFullYear();
-  let seguimientos = obtenerSeguimientos();
+  try {
+    const ahora = new Date();
+    const año = ahora.getFullYear();
+    let seguimientos = obtenerSeguimientos();
 
-  // Si no existe seguimiento para este año, crear el Semestre 1
-  const tieneAño = seguimientos.some(s => s.año === año);
-  if (!tieneAño) {
-    seguimientos.push({
-      año: año,
-      semestre: 1,
-      fecha: `${año}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`,
-      puntaje: '',
-      barthel: '',
-      minimental: ''
-    });
-    guardarSeguimientos(seguimientos);
-  }
+    // Si no existe seguimiento para este año, crear el Semestre 1
+    const tieneAño = seguimientos.some(s => s.año === año);
+    if (!tieneAño) {
+      seguimientos.push({
+        año: año,
+        semestre: 1,
+        fecha: `${año}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`,
+        puntaje: '',
+        barthel: '',
+        minimental: ''
+      });
+      guardarSeguimientos(seguimientos);
+    }
 
-  actualizarSelectAño();
-  if (seguimientos.length > 0) {
-    document.getElementById('selectAño').value = año;
-    cambiarAño();
+    // Solo actualizar UI si los elementos existen
+    const selectAño = document.getElementById('selectAño');
+    if (selectAño) {
+      actualizarSelectAño();
+      if (seguimientos.length > 0) {
+        selectAño.value = año;
+        cambiarAño();
+      }
+    }
+  } catch (e) {
+    console.error('Error en inicializarSeguimientos:', e);
   }
 }
 
@@ -1384,13 +1392,18 @@ function abrirModal(id = null) {
   editandoId = id;
   limpiarFormulario();
 
-  // Si es nueva creación, establecer operador actual
+  // Si es nueva creación, establecer operador actual e inicializar seguimientos
   if (id === null) {
     const operadorSelect = document.getElementById('operadorSelect');
     if (operadorSelect.value) {
       const [opId, opNum] = operadorSelect.value.split('-');
       document.getElementById('f_operador_id').value = operadorSelect.value;
       document.getElementById('f_operador_nombre').value = operadorSelect.options[operadorSelect.selectedIndex].text;
+    }
+    // Ensure f_seguimientos has valid JSON
+    const f_seg = document.getElementById('f_seguimientos');
+    if (!f_seg.value || f_seg.value.trim() === '') {
+      f_seg.value = '[]';
     }
   }
 
@@ -1406,9 +1419,6 @@ function abrirModal(id = null) {
       }
       cargarFormulario(p);
     }
-  } else {
-    // Initialize seguimientos for new patient (after modal is open)
-    setTimeout(() => inicializarSeguimientos(), 50);
   }
   document.getElementById('modalOverlay').classList.add('open');
   document.getElementById('liveScore').style.display = 'none';
@@ -1423,6 +1433,11 @@ function cambiarTab(idx, btn) {
   document.querySelectorAll('.tab-content').forEach((el,i) => el.style.display = i === idx ? '' : 'none');
   document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+
+  // Inicializar seguimientos cuando se abre TAB 3 (Seguimiento)
+  if (idx === 2) {
+    setTimeout(() => inicializarSeguimientos(), 10);
+  }
 
   // Actualizar botones del footer según la pestaña
   actualizarBotonesFooter(idx);
