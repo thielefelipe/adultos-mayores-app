@@ -972,6 +972,12 @@ async function cargarOperadores() {
       select.remove(1);
     }
 
+    // Agregar opción SISTEMA
+    const sistemOption = document.createElement('option');
+    sistemOption.value = 'sistema';
+    sistemOption.textContent = 'SISTEMA';
+    select.appendChild(sistemOption);
+
     // Agregar operadores
     operadores.forEach(op => {
       const option = document.createElement('option');
