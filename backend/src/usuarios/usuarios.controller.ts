@@ -47,7 +47,7 @@ export class UsuariosController {
   @Get('operadores')
   async obtenerOperadores() {
     const usuarios = await this.usuariosService.obtenerTodos();
-    return usuarios.filter(u => (u.rol === 'operador' || u.rol === 'analista') && u.activo);
+    return usuarios.filter(u => u.rol === 'operador' && u.activo);
   }
 
   @Post('cambiar-contrasena')
