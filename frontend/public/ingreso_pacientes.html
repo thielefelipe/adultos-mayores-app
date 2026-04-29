@@ -507,17 +507,15 @@
           </div>
           <div class="field">
             <label>Región</label>
-            <select id="f_region">
+            <select id="f_region" onchange="cargarProvincias()">
               <option value="">Seleccionar…</option>
-              <option>Los Ríos</option>
-              <option>Los Lagos</option>
-              <option>Aysén</option>
-              <option>Magallanes</option>
             </select>
           </div>
           <div class="field">
             <label>Provincia</label>
-            <input type="text" id="f_provincia" placeholder="Ej: Valdivia">
+            <select id="f_provincia">
+              <option value="">Seleccionar región primero…</option>
+            </select>
           </div>
           <div class="field">
             <label>Comuna</label>
@@ -1003,8 +1001,81 @@ async function cargarOperadores() {
   }
 }
 
+// Cargar regiones desde la API
+async function cargarRegiones() {
+  try {
+    const response = await fetch(`${API_URL}/ubicacion/regiones`);
+    if (!response.ok) throw new Error('Error al cargar regiones');
+
+    const regiones = await response.json();
+    const select = document.getElementById('f_region');
+
+    // Limpiar opciones excepto la primera (Seleccionar…)
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+
+    // Agregar regiones
+    regiones.forEach(region => {
+      const option = document.createElement('option');
+      option.value = region;
+      option.textContent = region;
+      select.appendChild(option);
+    });
+
+    console.log('✅ Regiones cargadas:', regiones.length);
+  } catch (error) {
+    console.error('Error cargando regiones:', error);
+    // Agregar regiones por defecto si falla la API
+    const regiones = ['Los Ríos', 'Los Lagos', 'Aysén', 'Magallanes'];
+    const select = document.getElementById('f_region');
+    regiones.forEach(region => {
+      const option = document.createElement('option');
+      option.value = region;
+      option.textContent = region;
+      select.appendChild(option);
+    });
+  }
+}
+
+// Cargar provincias según región seleccionada
+async function cargarProvincias() {
+  const region = document.getElementById('f_region').value;
+  if (!region) {
+    const select = document.getElementById('f_provincia');
+    select.innerHTML = '<option value="">Seleccionar…</option>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/ubicacion/provincias?region=${encodeURIComponent(region)}`);
+    if (!response.ok) throw new Error('Error al cargar provincias');
+
+    const provincias = await response.json();
+    const select = document.getElementById('f_provincia');
+    select.innerHTML = '<option value="">Seleccionar…</option>';
+
+    provincias.forEach(provincia => {
+      const option = document.createElement('option');
+      option.value = provincia;
+      option.textContent = provincia;
+      select.appendChild(option);
+    });
+
+    console.log('✅ Provincias cargadas:', provincias.length);
+  } catch (error) {
+    console.error('Error cargando provincias:', error);
+    // Si falla, mostrar un placeholder
+    const select = document.getElementById('f_provincia');
+    select.innerHTML = '<option value="">Cargar región primero…</option>';
+  }
+}
+
 // Cargar operadores al iniciar
-document.addEventListener('DOMContentLoaded', cargarOperadores);
+document.addEventListener('DOMContentLoaded', () => {
+  cargarOperadores();
+  cargarRegiones();
+});
 
 function guardar() {
   localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
