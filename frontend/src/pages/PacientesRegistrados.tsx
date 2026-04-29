@@ -288,7 +288,35 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
           ← Inicio
         </button>
 
-        <span style={{ fontSize: 28, marginLeft: '8px' }}>MC</span>
+        <button
+          onClick={onVolver}
+          title="Volver al Dashboard"
+          style={{
+            background: 'none',
+            border: 'none',
+            fontSize: 28,
+            fontWeight: 700,
+            color: '#FFFFFF',
+            cursor: 'pointer',
+            marginLeft: '8px',
+            padding: '4px 8px',
+            borderRadius: '6px',
+            transition: 'all 0.3s',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.2)';
+            (e.currentTarget as HTMLElement).style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.background = 'none';
+            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+          }}
+        >
+          MC
+        </button>
         <div>
           <div style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 17 }}>
             Pacientes Registrados
