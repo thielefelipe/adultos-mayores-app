@@ -871,74 +871,27 @@
       <!-- TAB 3: Seguimiento Periódico -->
       <div class="form-body tab-content" id="tab3" style="display:none">
         <div style="background:var(--azul-bg);border:1px solid #c0d4f5;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--azul)">
-          <strong>📅 Seguimiento periódico</strong> — Registra los puntajes ponderados en cada período para hacer comparaciones a lo largo del tiempo.
-        </div>
-        <div class="field-grid" style="grid-template-columns:1fr 1fr;gap:1.25rem">
-
-          <!-- T1 -->
-          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
-            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0066CC;margin-bottom:.85rem">🗓 1er Trimestre</div>
-            <div class="field-grid field-grid-2" style="gap:.75rem">
-              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t1_fecha"></div>
-              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t1_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()" readonly style="background:#f5f5f5; cursor:not-allowed;"></div>
-              <div class="field"><label>Barthel</label><input type="number" id="f_t1_barthel" placeholder="0-100" min="0" max="100" readonly style="background:#f5f5f5; cursor:not-allowed;"></div>
-              <div class="field"><label>Minimental</label><input type="number" id="f_t1_mini" placeholder="0-30" min="0" max="30" readonly style="background:#f5f5f5; cursor:not-allowed;"></div>
-            </div>
-          </div>
-
-          <!-- T2 -->
-          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
-            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0066CC;margin-bottom:.85rem">🗓 2do Trimestre</div>
-            <div class="field-grid field-grid-2" style="gap:.75rem">
-              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t2_fecha"></div>
-              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t2_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()"></div>
-              <div class="field"><label>Barthel</label><input type="number" id="f_t2_barthel" placeholder="0-100" min="0" max="100"></div>
-              <div class="field"><label>Minimental</label><input type="number" id="f_t2_mini" placeholder="0-30" min="0" max="30"></div>
-            </div>
-          </div>
-
-          <!-- T3 -->
-          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
-            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0066CC;margin-bottom:.85rem">🗓 3er Trimestre</div>
-            <div class="field-grid field-grid-2" style="gap:.75rem">
-              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t3_fecha"></div>
-              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t3_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()"></div>
-              <div class="field"><label>Barthel</label><input type="number" id="f_t3_barthel" placeholder="0-100" min="0" max="100"></div>
-              <div class="field"><label>Minimental</label><input type="number" id="f_t3_mini" placeholder="0-30" min="0" max="30"></div>
-            </div>
-          </div>
-
-          <!-- T4 -->
-          <div style="background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)">
-            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0066CC;margin-bottom:.85rem">🗓 4to Trimestre</div>
-            <div class="field-grid field-grid-2" style="gap:.75rem">
-              <div class="field"><label>Fecha evaluación</label><input type="date" id="f_t4_fecha"></div>
-              <div class="field"><label>Puntaje ponderado</label><input type="number" id="f_t4_punt" placeholder="0-100" min="0" max="100" oninput="recalcularSeg()"></div>
-              <div class="field"><label>Barthel</label><input type="number" id="f_t4_barthel" placeholder="0-100" min="0" max="100"></div>
-              <div class="field"><label>Minimental</label><input type="number" id="f_t4_mini" placeholder="0-30" min="0" max="30"></div>
-            </div>
-          </div>
+          <strong>📅 Seguimiento periódico</strong> — Registra los puntajes de cada semestre por año para hacer comparaciones a lo largo del tiempo.
         </div>
 
-        <!-- Resumen en vivo -->
-        <div id="segResumen" style="display:none;margin-top:1.25rem;background:var(--deep);border-radius:12px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
-          <div>
-            <div style="font-size:.7rem;color:var(--clay);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Puntaje inicial</div>
-            <div id="seg_inicial" style="font-family:'DM Serif Display',serif;font-size:2rem;color:white">—</div>
+        <!-- Selector de Año -->
+        <div style="margin-bottom:1.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <label style="font-size:.78rem;font-weight:600;color:var(--terra);letter-spacing:.03em;display:block;margin-bottom:.5rem;">Seleccionar Año</label>
+            <select id="selectAño" onchange="cambiarAño()" style="width:100%;padding:.6rem .85rem;border:1.5px solid var(--sand);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--ink);background:white;cursor:pointer;">
+              <option value="">Seleccionar…</option>
+            </select>
           </div>
-          <div style="font-size:2rem;color:var(--clay)">→</div>
-          <div>
-            <div style="font-size:.7rem;color:var(--clay);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Puntaje actual</div>
-            <div id="seg_final" style="font-family:'DM Serif Display',serif;font-size:2rem;color:white">—</div>
-          </div>
-          <div style="flex:1;min-width:120px;text-align:center">
-            <div style="font-size:.7rem;color:var(--clay);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Diferencia</div>
-            <div id="seg_diff" style="font-family:'DM Serif Display',serif;font-size:2.5rem">—</div>
-          </div>
-          <div style="flex:1;min-width:120px;text-align:center">
-            <div id="seg_tendencia" style="font-size:1.1rem;font-weight:700;color:white">—</div>
-          </div>
+          <button class="btn btn-primary" onclick="agregarNuevoAño()" style="margin-top:1.5rem;padding:.5rem 1.1rem;font-size:.82rem;">➕ Nuevo Año</button>
         </div>
+
+        <!-- Contenedor de Semestres -->
+        <div id="semestreContainer" class="field-grid" style="grid-template-columns:1fr 1fr;gap:1.25rem">
+          <!-- Los semestres se generan dinámicamente aquí -->
+        </div>
+
+        <!-- Campo oculto para almacenar seguimientos en JSON -->
+        <input type="hidden" id="f_seguimientos" value="[]">
       </div>
 
       <!-- TAB 4: Notas -->
@@ -1208,42 +1161,196 @@ function formatearRUT() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// FUNCIONES PARA SEGUIMIENTO POR AÑO Y SEMESTRE
+// ═══════════════════════════════════════════════════════════════════
+
+function obtenerSeguimientos() {
+  const json = document.getElementById('f_seguimientos').value;
+  try {
+    return json ? JSON.parse(json) : [];
+  } catch {
+    return [];
+  }
+}
+
+function guardarSeguimientos(seguimientos) {
+  document.getElementById('f_seguimientos').value = JSON.stringify(seguimientos);
+}
+
+function inicializarSeguimientos() {
+  const ahora = new Date();
+  const año = ahora.getFullYear();
+  let seguimientos = obtenerSeguimientos();
+
+  // Si no existe seguimiento para este año, crear el Semestre 1
+  const tieneAño = seguimientos.some(s => s.año === año);
+  if (!tieneAño) {
+    seguimientos.push({
+      año: año,
+      semestre: 1,
+      fecha: `${año}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`,
+      puntaje: '',
+      barthel: '',
+      minimental: ''
+    });
+    guardarSeguimientos(seguimientos);
+  }
+
+  actualizarSelectAño();
+  if (seguimientos.length > 0) {
+    document.getElementById('selectAño').value = año;
+    cambiarAño();
+  }
+}
+
+function actualizarSelectAño() {
+  const seguimientos = obtenerSeguimientos();
+  const años = [...new Set(seguimientos.map(s => s.año))].sort((a, b) => b - a);
+  const select = document.getElementById('selectAño');
+
+  select.innerHTML = '<option value="">Seleccionar…</option>';
+  años.forEach(año => {
+    const option = document.createElement('option');
+    option.value = año;
+    option.textContent = `Año ${año}`;
+    select.appendChild(option);
+  });
+}
+
+function cambiarAño() {
+  const año = document.getElementById('selectAño').value;
+  if (!año) return;
+
+  generarSemestres(parseInt(año));
+}
+
+function generarSemestres(año) {
+  const seguimientos = obtenerSeguimientos();
+  const del​Año = seguimientos.filter(s => s.año === año);
+  const container = document.getElementById('semestreContainer');
+
+  container.innerHTML = '';
+
+  for (let semestre = 1; semestre <= 2; semestre++) {
+    const seg = del​Año.find(s => s.semestre === semestre) || {
+      año: año,
+      semestre: semestre,
+      fecha: '',
+      puntaje: '',
+      barthel: '',
+      minimental: ''
+    };
+
+    const semLabel = semestre === 1 ? '1er Semestre' : '2do Semestre';
+    const divSemestre = document.createElement('div');
+    divSemestre.style.cssText = 'background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)';
+    divSemestre.innerHTML = `
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0066CC;margin-bottom:.85rem">🗓 ${semLabel}</div>
+      <div class="field-grid field-grid-2" style="gap:.75rem">
+        <div class="field">
+          <label>Fecha evaluación</label>
+          <input type="date" class="seg-fecha" data-año="${año}" data-semestre="${semestre}" value="${seg.fecha}">
+        </div>
+        <div class="field">
+          <label>Puntaje ponderado</label>
+          <input type="number" class="seg-puntaje" data-año="${año}" data-semestre="${semestre}" placeholder="0-100" min="0" max="100" value="${seg.puntaje}" readonly style="background:#f5f5f5;cursor:not-allowed;">
+        </div>
+        <div class="field">
+          <label>Barthel</label>
+          <input type="number" class="seg-barthel" data-año="${año}" data-semestre="${semestre}" placeholder="0-100" min="0" max="100" value="${seg.barthel}" readonly style="background:#f5f5f5;cursor:not-allowed;">
+        </div>
+        <div class="field">
+          <label>Minimental</label>
+          <input type="number" class="seg-minimental" data-año="${año}" data-semestre="${semestre}" placeholder="0-30" min="0" max="30" value="${seg.minimental}" readonly style="background:#f5f5f5;cursor:not-allowed;">
+        </div>
+      </div>
+    `;
+
+    container.appendChild(divSemestre);
+  }
+
+  // Agregar event listeners
+  document.querySelectorAll('.seg-fecha').forEach(el => {
+    el.addEventListener('change', guardarSegmento);
+  });
+}
+
+function guardarSegmento(e) {
+  const año = parseInt(e.target.dataset.año);
+  const semestre = parseInt(e.target.dataset.semestre);
+  const seguimientos = obtenerSeguimientos();
+  let seg = seguimientos.find(s => s.año === año && s.semestre === semestre);
+
+  if (!seg) {
+    seg = { año, semestre, fecha: '', puntaje: '', barthel: '', minimental: '' };
+    seguimientos.push(seg);
+  }
+
+  if (e.target.classList.contains('seg-fecha')) seg.fecha = e.target.value;
+
+  guardarSeguimientos(seguimientos);
+}
+
+function agregarNuevoAño() {
+  const ahora = new Date();
+  const próximoAño = ahora.getFullYear() + 1;
+  const seguimientos = obtenerSeguimientos();
+
+  if (!seguimientos.some(s => s.año === próximoAño)) {
+    seguimientos.push({
+      año: próximoAño,
+      semestre: 1,
+      fecha: '',
+      puntaje: '',
+      barthel: '',
+      minimental: ''
+    });
+    guardarSeguimientos(seguimientos);
+    actualizarSelectAño();
+    document.getElementById('selectAño').value = próximoAño;
+    cambiarAño();
+  }
+}
+
 function sincronizarT1() {
-  // Obtener valores de los instrumentos de la 1ª y 2ª evaluación
+  // Obtener el año seleccionado en el formulario
+  const selectAño = document.getElementById('selectAño');
+  if (!selectAño || !selectAño.value) return;
+
+  const año = parseInt(selectAño.value);
   const barthel2 = document.getElementById('f_barthel2').value;
   const barthel1 = document.getElementById('f_barthel1').value;
   const mini2 = document.getElementById('f_mini2').value;
   const mini1 = document.getElementById('f_mini1').value;
 
-  // Llenar automáticamente los campos del 1ER TRIMESTRE
-  // Usar el valor de la 2ª evaluación si existe, sino usar el de la 1ª
-  if (barthel2) {
-    document.getElementById('f_t1_barthel').value = barthel2;
-  } else if (barthel1) {
-    document.getElementById('f_t1_barthel').value = barthel1;
+  // Obtener o crear seguimiento del semestre 1
+  const seguimientos = obtenerSeguimientos();
+  let seg = seguimientos.find(s => s.año === año && s.semestre === 1);
+  if (!seg) {
+    seg = { año, semestre: 1, fecha: '', puntaje: '', barthel: '', minimental: '' };
+    seguimientos.push(seg);
   }
 
-  if (mini2) {
-    document.getElementById('f_t1_mini').value = mini2;
-  } else if (mini1) {
-    document.getElementById('f_t1_mini').value = mini1;
-  }
+  // Sincronizar valores
+  seg.barthel = barthel2 || barthel1;
+  seg.minimental = mini2 || mini1;
 
-  // Establecer fecha actual si está vacía
-  if (!document.getElementById('f_t1_fecha').value) {
+  // Establecer fecha si está vacía
+  if (!seg.fecha) {
     const hoy = new Date();
-    const año = hoy.getFullYear();
-    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-    const día = String(hoy.getDate()).padStart(2, '0');
-    document.getElementById('f_t1_fecha').value = `${año}-${mes}-${día}`;
+    seg.fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
   }
 
-  // Calcular puntaje ponderado automáticamente
+  // Calcular puntaje
   const tmp = leerFormulario();
   const sc = score(tmp);
   if (sc !== null) {
-    document.getElementById('f_t1_punt').value = sc;
+    seg.puntaje = sc;
   }
+
+  guardarSeguimientos(seguimientos);
+  generarSemestres(año);
 }
 
 function recalcular() {
@@ -1285,6 +1392,8 @@ function abrirModal(id = null) {
       document.getElementById('f_operador_id').value = operadorSelect.value;
       document.getElementById('f_operador_nombre').value = operadorSelect.options[operadorSelect.selectedIndex].text;
     }
+    // Initialize seguimientos for new patient
+    inicializarSeguimientos();
   }
 
   document.getElementById('modalTitle').textContent = id ? 'Editar Adulto Mayor' : 'Nuevo Adulto Mayor';
@@ -1424,30 +1533,25 @@ function leerFormulario() {
     eq2: document.getElementById('f_eq2').value,
     notas: document.getElementById('f_notas').value,
     plan: document.getElementById('f_plan').value,
-    t1_fecha: document.getElementById('f_t1_fecha').value,
-    t1_punt: document.getElementById('f_t1_punt').value,
-    t1_barthel: document.getElementById('f_t1_barthel').value,
-    t1_mini: document.getElementById('f_t1_mini').value,
-    t2_fecha: document.getElementById('f_t2_fecha').value,
-    t2_punt: document.getElementById('f_t2_punt').value,
-    t2_barthel: document.getElementById('f_t2_barthel').value,
-    t2_mini: document.getElementById('f_t2_mini').value,
-    t3_fecha: document.getElementById('f_t3_fecha').value,
-    t3_punt: document.getElementById('f_t3_punt').value,
-    t3_barthel: document.getElementById('f_t3_barthel').value,
-    t3_mini: document.getElementById('f_t3_mini').value,
-    t4_fecha: document.getElementById('f_t4_fecha').value,
-    t4_punt: document.getElementById('f_t4_punt').value,
-    t4_barthel: document.getElementById('f_t4_barthel').value,
-    t4_mini: document.getElementById('f_t4_mini').value,
+    f_seguimientos: document.getElementById('f_seguimientos').value,
   };
 }
 
 function cargarFormulario(p) {
   Object.keys(p).forEach(k => {
+    // Skip f_seguimientos as it's handled separately
+    if (k === 'f_seguimientos') return;
+
     const el = document.getElementById('f_' + k);
     if (el) el.value = p[k] || '';
   });
+
+  // Handle f_seguimientos JSON field
+  if (p.f_seguimientos) {
+    document.getElementById('f_seguimientos').value = p.f_seguimientos;
+    inicializarSeguimientos();
+  }
+
   // Formatear el RUT después de cargar
   setTimeout(() => formatearRUT(), 0);
   recalcular();
@@ -1459,10 +1563,7 @@ function limpiarFormulario() {
    'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
    'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
    'tug1','tug2','mini1','mini2','yesa1','yesa2','eq1','eq2','notas','plan',
-   't1_fecha','t1_punt','t1_barthel','t1_mini',
-   't2_fecha','t2_punt','t2_barthel','t2_mini',
-   't3_fecha','t3_punt','t3_barthel','t3_mini',
-   't4_fecha','t4_punt','t4_barthel','t4_mini',
+   'seguimientos'
   ].forEach(k => { const el = document.getElementById('f_'+k); if(el) el.value = ''; });
   const sr = document.getElementById('segResumen');
   if (sr) sr.style.display = 'none';
@@ -1690,24 +1791,28 @@ function recalcularSeg() {
 
 function getPeriodos(p) {
   const periodos = [];
-  for (let t = 1; t <= 4; t++) {
-    const punt = p[`t${t}_punt`];
-    const fecha = p[`t${t}_fecha`];
-    if (punt !== '' && punt !== undefined && !isNaN(Number(punt))) {
-      periodos.push({
-        label: `T${t}`, fecha: fecha || `Trimestre ${t}`,
-        punt: Number(punt),
-        barthel: p[`t${t}_barthel`] !== '' ? Number(p[`t${t}_barthel`]) : null,
-        mini: p[`t${t}_mini`] !== '' ? Number(p[`t${t}_mini`]) : null,
-      });
-    }
+  try {
+    const seguimientos = p.f_seguimientos ? JSON.parse(p.f_seguimientos) : [];
+    seguimientos.forEach(seg => {
+      if (seg.puntaje !== '' && seg.puntaje !== undefined && !isNaN(Number(seg.puntaje))) {
+        periodos.push({
+          label: `${seg.año}-S${seg.semestre}`,
+          fecha: seg.fecha || `${seg.año} Semestre ${seg.semestre}`,
+          punt: Number(seg.puntaje),
+          barthel: seg.barthel !== '' ? Number(seg.barthel) : null,
+          mini: seg.minimental !== '' ? Number(seg.minimental) : null,
+        });
+      }
+    });
+  } catch (e) {
+    console.error('Error parsing seguimientos:', e);
   }
   return periodos;
 }
 
 function exportarDatos() {
   if (!pacientes.length) { toast('No hay datos para exportar'); return; }
-  const headers = ['Nombre','RUT','DV','Edad','Sexo','Región','Provincia','Comuna','Dirección','Rural','Dependencia','Enfermedades','PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2','TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2','Puntaje_Base','Estado_Base','T1_Fecha','T1_Puntaje','T1_Barthel','T1_Minimental','T2_Fecha','T2_Puntaje','T2_Barthel','T2_Minimental','T3_Fecha','T3_Puntaje','T3_Barthel','T3_Minimental','T4_Fecha','T4_Puntaje','T4_Barthel','T4_Minimental','Diferencia_Anual','Tendencia'];
+  const headers = ['Nombre','RUT','DV','Edad','Sexo','Región','Provincia','Comuna','Dirección','Rural','Dependencia','Enfermedades','PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2','TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2','Puntaje_Base','Estado_Base','Seguimientos_JSON','Diferencia_Anual','Tendencia'];
   const rows = pacientes.map(p => {
     const sc = score(p);
     const sem = semaforo(sc);
@@ -1716,7 +1821,7 @@ function exportarDatos() {
     const ultimo = periodos.length > 0 ? periodos[periodos.length-1].punt : '';
     const diff = (primer !== '' && ultimo !== '') ? Math.round((ultimo-primer)*10)/10 : '';
     const tend = diff !== '' ? (diff > 10 ? 'Mejora notable' : diff > 0 ? 'Mejora leve' : diff === 0 ? 'Sin cambio' : 'Deterioro') : '';
-    return [p.nombre,p.rut,p.dv,p.edad,p.sexo,p.region,p.provincia,p.comuna_personal,p.direccion,p.rural,p.dependencia,p.enfermedades,p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,sc,sem.label,p.t1_fecha,p.t1_punt,p.t1_barthel,p.t1_mini,p.t2_fecha,p.t2_punt,p.t2_barthel,p.t2_mini,p.t3_fecha,p.t3_punt,p.t3_barthel,p.t3_mini,p.t4_fecha,p.t4_punt,p.t4_barthel,p.t4_mini,diff,tend].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+    return [p.nombre,p.rut,p.dv,p.edad,p.sexo,p.region,p.provincia,p.comuna_personal,p.direccion,p.rural,p.dependencia,p.enfermedades,p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,sc,sem.label,p.f_seguimientos||'',diff,tend].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
   });
   const csv = [headers.join(','), ...rows].join('\n');
   const a = document.createElement('a');
