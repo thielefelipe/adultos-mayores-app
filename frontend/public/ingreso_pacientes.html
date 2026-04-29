@@ -513,13 +513,19 @@
           </div>
           <div class="field">
             <label>Provincia</label>
-            <select id="f_provincia">
+            <select id="f_provincia" onchange="cargarComunas()">
               <option value="">Seleccionar región primero…</option>
             </select>
           </div>
           <div class="field">
             <label>Comuna</label>
-            <input type="text" id="f_comuna_personal" placeholder="Ej: Contulmo">
+            <select id="f_comuna_personal">
+              <option value="">Seleccionar provincia primero…</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Sector <span style="font-size: .7rem; color: #999; font-weight: 400;">(opcional)</span></label>
+            <input type="text" id="f_sector" placeholder="Ej: Barrio Centro, Zona Sur">
           </div>
           <div class="field">
             <label>Dirección de Domicilio</label>
@@ -1044,6 +1050,9 @@ async function cargarProvincias() {
   if (!region) {
     const select = document.getElementById('f_provincia');
     select.innerHTML = '<option value="">Seleccionar…</option>';
+    // Limpiar comunas también
+    const comunaSelect = document.getElementById('f_comuna_personal');
+    comunaSelect.innerHTML = '<option value="">Seleccionar provincia primero…</option>';
     return;
   }
 
@@ -1062,12 +1071,51 @@ async function cargarProvincias() {
       select.appendChild(option);
     });
 
+    // Limpiar comunas cuando cambia región
+    const comunaSelect = document.getElementById('f_comuna_personal');
+    comunaSelect.innerHTML = '<option value="">Seleccionar provincia primero…</option>';
+
     console.log('✅ Provincias cargadas:', provincias.length);
   } catch (error) {
     console.error('Error cargando provincias:', error);
     // Si falla, mostrar un placeholder
     const select = document.getElementById('f_provincia');
     select.innerHTML = '<option value="">Cargar región primero…</option>';
+  }
+}
+
+// Cargar comunas según provincia seleccionada
+async function cargarComunas() {
+  const region = document.getElementById('f_region').value;
+  const provincia = document.getElementById('f_provincia').value;
+
+  if (!region || !provincia) {
+    const select = document.getElementById('f_comuna_personal');
+    select.innerHTML = '<option value="">Seleccionar provincia primero…</option>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/ubicacion/comunas?region=${encodeURIComponent(region)}&provincia=${encodeURIComponent(provincia)}`);
+    if (!response.ok) throw new Error('Error al cargar comunas');
+
+    const comunas = await response.json();
+    const select = document.getElementById('f_comuna_personal');
+    select.innerHTML = '<option value="">Seleccionar…</option>';
+
+    comunas.forEach(comuna => {
+      const option = document.createElement('option');
+      option.value = comuna;
+      option.textContent = comuna;
+      select.appendChild(option);
+    });
+
+    console.log('✅ Comunas cargadas:', comunas.length);
+  } catch (error) {
+    console.error('Error cargando comunas:', error);
+    // Si falla, mostrar un placeholder
+    const select = document.getElementById('f_comuna_personal');
+    select.innerHTML = '<option value="">Cargar provincia primero…</option>';
   }
 }
 
@@ -1225,6 +1273,7 @@ function leerFormulario() {
     region: document.getElementById('f_region').value,
     provincia: document.getElementById('f_provincia').value,
     comuna_personal: document.getElementById('f_comuna_personal').value,
+    sector: document.getElementById('f_sector').value,
     direccion: document.getElementById('f_direccion').value,
     escolaridad: document.getElementById('f_escolaridad').value,
     pueblo: document.getElementById('f_pueblo').value,
@@ -1287,7 +1336,7 @@ function cargarFormulario(p) {
 }
 
 function limpiarFormulario() {
-  ['operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','region','provincia','comuna_personal','direccion','escolaridad','pueblo','rsh',
+  ['operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
    'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
    'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
    'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
