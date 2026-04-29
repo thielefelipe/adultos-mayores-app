@@ -52,7 +52,7 @@ export class UsuariosController {
     // Formatear admins para que se vea claro
     return resultados.map(u => ({
       ...u,
-      textDisplay: u.rol === 'admin' ? `${u.nombre || u.username} (Admin)` : (u.nombre || u.username)
+      textDisplay: u.rol === 'admin' ? 'Administrador (Admin)' : (u.nombre || u.username)
     }));
   }
 
