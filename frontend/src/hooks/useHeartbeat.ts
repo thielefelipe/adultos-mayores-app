@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-const INACTIVIDAD_TIMEOUT = 30 * 60 * 1000; // 30 minutos
+const INACTIVIDAD_TIMEOUT = 5 * 60 * 1000; // 5 minutos
 
 export function useHeartbeat() {
   const { token, setSessionExpired, logout } = useAuth();
