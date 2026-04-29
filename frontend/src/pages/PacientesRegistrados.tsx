@@ -258,16 +258,34 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
         gap: '14px',
         boxShadow: '0px 2px 8px rgba(0,0,0,0.1)'
       }}>
-        <button onClick={onVolver} style={{
-          background: 'rgba(255,255,255,.15)',
-          color: '#FFFFFF',
-          border: '1px solid rgba(255,255,255,.3)',
-          padding: '6px 14px',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontSize: '13px',
-          fontWeight: 600
-        }}>← Volver</button>
+        <button
+          onClick={onVolver}
+          title="Volver al Dashboard"
+          style={{
+            background: '#0066CC',
+            color: '#FFFFFF',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: 700,
+            transition: 'all 0.3s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.background = '#004999';
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.background = '#0066CC';
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+          }}
+        >
+          ← Volver al Dashboard
+        </button>
 
         <span style={{ fontSize: 28 }}>MC</span>
         <div>
