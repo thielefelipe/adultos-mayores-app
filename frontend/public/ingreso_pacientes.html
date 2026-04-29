@@ -1392,8 +1392,6 @@ function abrirModal(id = null) {
       document.getElementById('f_operador_id').value = operadorSelect.value;
       document.getElementById('f_operador_nombre').value = operadorSelect.options[operadorSelect.selectedIndex].text;
     }
-    // Initialize seguimientos for new patient
-    inicializarSeguimientos();
   }
 
   document.getElementById('modalTitle').textContent = id ? 'Editar Adulto Mayor' : 'Nuevo Adulto Mayor';
@@ -1408,6 +1406,9 @@ function abrirModal(id = null) {
       }
       cargarFormulario(p);
     }
+  } else {
+    // Initialize seguimientos for new patient (after modal is open)
+    setTimeout(() => inicializarSeguimientos(), 50);
   }
   document.getElementById('modalOverlay').classList.add('open');
   document.getElementById('liveScore').style.display = 'none';
