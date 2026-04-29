@@ -413,7 +413,6 @@
       <span>👤 Operador:</span>
       <select id="operadorSelect" onchange="cambiarOperador()" style="padding: .4rem .6rem; border-radius: 6px; border: 1px solid var(--sand); background: white; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: .85rem; cursor: pointer;">
         <option value="">Seleccionar operador…</option>
-        <option value="sistema">SISTEMA</option>
       </select>
     </div>
     <button class="btn btn-ghost btn-sm" onclick="exportarDatos()">⬇ Exportar CSV</button>
@@ -972,17 +971,11 @@ async function cargarOperadores() {
       select.remove(1);
     }
 
-    // Agregar opción SISTEMA
-    const sistemOption = document.createElement('option');
-    sistemOption.value = 'sistema';
-    sistemOption.textContent = 'SISTEMA';
-    select.appendChild(sistemOption);
-
-    // Agregar operadores
+    // Agregar operadores y admins
     operadores.forEach(op => {
       const option = document.createElement('option');
       option.value = op.id;
-      option.textContent = op.nombre || op.username;
+      option.textContent = op.textDisplay || op.nombre || op.username;
       select.appendChild(option);
     });
 

@@ -47,7 +47,13 @@ export class UsuariosController {
   @Get('operadores')
   async obtenerOperadores() {
     const usuarios = await this.usuariosService.obtenerTodos();
-    return usuarios.filter(u => u.rol === 'operador' && u.activo);
+    // Devolver operadores y admins activos
+    const resultados = usuarios.filter(u => (u.rol === 'operador' || u.rol === 'admin') && u.activo);
+    // Formatear admins para que se vea claro
+    return resultados.map(u => ({
+      ...u,
+      textDisplay: u.rol === 'admin' ? `${u.nombre || u.username} (Admin)` : (u.nombre || u.username)
+    }));
   }
 
   @Post('cambiar-contrasena')
