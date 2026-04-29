@@ -38,14 +38,20 @@ export class UbicacionController {
 }
 
 @Controller('usuarios')
-@UseGuards(JwtGuard, RolesGuard)
 export class UsuariosController {
   constructor(
     private usuariosService: UsuariosService,
     private ubicacionService: UbicacionService,
   ) {}
 
+  @Get('operadores')
+  async obtenerOperadores() {
+    const usuarios = await this.usuariosService.obtenerTodos();
+    return usuarios.filter(u => (u.rol === 'operador' || u.rol === 'analista') && u.activo);
+  }
+
   @Post('cambiar-contrasena')
+  @UseGuards(JwtGuard, RolesGuard)
   async cambiarContrasena(@Body() cambiarDto: CambiarContrasenaDto, @Request() req) {
     return this.usuariosService.cambiarContrasena(
       req.user.sub,
@@ -55,11 +61,13 @@ export class UsuariosController {
   }
 
   @Get()
+  @UseGuards(JwtGuard, RolesGuard)
   async obtenerTodos() {
     return this.usuariosService.obtenerTodos();
   }
 
   @Get('activos')
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async obtenerActivos() {
     const usuarios = await this.usuariosService.obtenerTodosConUltimoAcceso();

@@ -963,11 +963,10 @@ let editandoId = null;
 // Cargar operadores reales desde la API
 async function cargarOperadores() {
   try {
-    const response = await fetch(`${API_URL}/usuarios`);
+    const response = await fetch(`${API_URL}/usuarios/operadores`);
     if (!response.ok) throw new Error('Error al cargar operadores');
 
-    const usuarios = await response.json();
-    const operadores = usuarios.filter(u => u.rol === 'operador' || u.rol === 'analista');
+    const operadores = await response.json();
 
     const select = document.getElementById('operadorSelect');
     // Limpiar opciones excepto la primera (Seleccionar operador…)
