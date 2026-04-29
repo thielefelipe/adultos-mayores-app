@@ -590,7 +590,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
         onSave={handleGuardarPaciente}
         usuario={usuario}
         operadores={operadores}
-        token={token}
+        token={token || undefined}
       />
     </div>
   );

@@ -10,7 +10,7 @@ interface ModalAgregarPacienteProps {
   token?: string;
 }
 
-export function ModalAgregarPaciente({ isOpen, onClose, onSave }: ModalAgregarPacienteProps) {
+export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operadores, token }: ModalAgregarPacienteProps) {
   const [loading, setLoading] = useState(false);
   const [regiones, setRegiones] = useState<{ id: string; nombre: string }[]>([]);
   const [provincias, setProvincias] = useState<{ id: string; nombre: string }[]>([]);
