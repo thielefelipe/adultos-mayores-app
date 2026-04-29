@@ -955,8 +955,42 @@
 <div class="toast" id="toast"></div>
 
 <script>
+const API_URL = 'https://adultos-mayores-backend.onrender.com/api';
+
 let pacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
 let editandoId = null;
+
+// Cargar operadores reales desde la API
+async function cargarOperadores() {
+  try {
+    const response = await fetch(`${API_URL}/usuarios`);
+    if (!response.ok) throw new Error('Error al cargar operadores');
+
+    const usuarios = await response.json();
+    const operadores = usuarios.filter(u => u.rol === 'operador' || u.rol === 'analista');
+
+    const select = document.getElementById('operadorSelect');
+    // Limpiar opciones excepto la primera (Seleccionar operador…)
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+
+    // Agregar operadores
+    operadores.forEach(op => {
+      const option = document.createElement('option');
+      option.value = op.id;
+      option.textContent = op.nombre || op.username;
+      select.appendChild(option);
+    });
+
+    console.log('✅ Operadores cargados:', operadores.length);
+  } catch (error) {
+    console.error('Error cargando operadores:', error);
+  }
+}
+
+// Cargar operadores al iniciar
+document.addEventListener('DOMContentLoaded', cargarOperadores);
 
 function guardar() {
   localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
