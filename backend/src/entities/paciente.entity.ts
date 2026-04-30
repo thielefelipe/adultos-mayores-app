@@ -33,6 +33,13 @@ export class PacienteEntity {
   @Column({ type: 'varchar', length: 50, nullable: true })
   rsh?: string;
 
+  // ── Período (Año y Semestre) ──
+  @Column({ type: 'integer', nullable: true })
+  anio?: number;
+
+  @Column({ type: 'integer', nullable: true })
+  semestre?: number; // 1 o 2
+
   // ── Atención/Admisión ──
   @Column({ type: 'date', nullable: true })
   f_ingreso?: Date;

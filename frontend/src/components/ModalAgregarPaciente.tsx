@@ -26,6 +26,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
     escolaridad: '',
     puebloOriginario: '',
     tramosRsh: '',
+    anio: new Date().getFullYear().toString(),
+    semestre: '1',
     fechaIngreso: '',
     region: '',
     provincia: '',
@@ -125,7 +127,9 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
       await onSave(formData);
       setFormData({
         rut: '', dv: '', nombre: '', sexo: '', edad: '', telefono: '', email: '',
-        escolaridad: '', puebloOriginario: '', tramosRsh: '', fechaIngreso: '',
+        escolaridad: '', puebloOriginario: '', tramosRsh: '',
+        anio: new Date().getFullYear().toString(), semestre: '1',
+        fechaIngreso: '',
         region: '', provincia: '', comuna: '', ruralUrbana: '', dependencia: '', enfermedadesCronicas: '',
         operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : ''
       });
@@ -186,6 +190,64 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
 
         {/* Form */}
         <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
+          {/* Período */}
+          <h3 style={{ color: '#003D82', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
+            📅 Período
+          </h3>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+            gap: 16,
+            marginBottom: 24
+          }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+                Año <span style={{ color: 'red' }}>*</span>
+              </label>
+              <input
+                type="number"
+                name="anio"
+                value={formData.anio}
+                onChange={handleChange}
+                min={2000}
+                max={new Date().getFullYear() + 1}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: 6,
+                  fontSize: 14
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+                Semestre <span style={{ color: 'red' }}>*</span>
+              </label>
+              <select
+                name="semestre"
+                value={formData.semestre}
+                onChange={handleChange}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: 6,
+                  fontSize: 14,
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="">Selecciona semestre</option>
+                <option value="1">Semestre 1 (Enero - Junio)</option>
+                <option value="2">Semestre 2 (Julio - Diciembre)</option>
+              </select>
+            </div>
+          </div>
+
           {/* Datos Personales */}
           <h3 style={{ color: '#003D82', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
             📋 Datos Personales
