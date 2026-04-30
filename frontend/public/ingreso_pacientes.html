@@ -4,6 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Línea Base — Centros Diurnos 2025</title>
+<script>
+  // Validación de autenticación al cargar
+  function checkAuthentication() {
+    const token = localStorage.getItem('token');
+    const usuario = localStorage.getItem('usuario');
+
+    // Si no hay token o usuario, redirigir al login
+    if (!token || !usuario) {
+      window.location.href = '/';
+      return;
+    }
+
+    // Verificar si el token está expirado (decodificando JWT)
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = '/';
+        return;
+      }
+
+      const decoded = JSON.parse(atob(parts[1]));
+      const expirationTime = decoded.exp * 1000;
+      const currentTime = Date.now();
+
+      if (currentTime > expirationTime) {
+        // Token expirado
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = '/';
+      }
+    } catch (e) {
+      // Error al decodificar - redirigir a login
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/';
+    }
+  }
+
+  // Ejecutar validación inmediatamente
+  checkAuthentication();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   :root {
