@@ -500,30 +500,6 @@
       <input type="hidden" id="f_operador_id">
       <input type="hidden" id="f_operador_nombre">
 
-      <!-- PERÍODO (AÑO Y SEMESTRE) -->
-      <div style="background: var(--azul-bg); padding: 1.25rem; border-radius: 10px; margin-bottom: 1.5rem; border: 2px solid var(--azul);">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <div>
-            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
-              📅 Año
-            </label>
-            <select id="f_anio" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
-              <option value="">Seleccionar año…</option>
-            </select>
-          </div>
-          <div>
-            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
-              📆 Semestre
-            </label>
-            <select id="f_semestre" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
-              <option value="">Seleccionar semestre…</option>
-              <option value="1">Semestre 1 (Enero - Junio)</option>
-              <option value="2">Semestre 2 (Julio - Diciembre)</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
       <!-- TABS -->
       <div class="form-tabs">
         <button class="form-tab active" onclick="cambiarTab(0, this)">📋 Datos Personales</button>
@@ -759,6 +735,30 @@
 
       <!-- TAB 2: Instrumentos VGI -->
       <div class="form-body tab-content" id="tab2" style="display:none">
+
+        <!-- PERÍODO (AÑO Y SEMESTRE) -->
+        <div style="background: var(--azul-bg); padding: 1.25rem; border-radius: 10px; margin-bottom: 2rem; border: 2px solid var(--azul);">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
+                📅 Año
+              </label>
+              <select id="f_anio" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
+                <option value="">Seleccionar año…</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
+                📆 Semestre
+              </label>
+              <select id="f_semestre" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
+                <option value="">Seleccionar semestre…</option>
+                <option value="1">Semestre 1 (Enero - Junio)</option>
+                <option value="2">Semestre 2 (Julio - Diciembre)</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
         <!-- Barthel -->
         <div class="instrument-block">
