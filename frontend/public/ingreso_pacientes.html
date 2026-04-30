@@ -751,7 +751,7 @@
               <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
                 📆 Semestre
               </label>
-              <select id="f_semestre" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
+              <select id="f_semestre" onchange="controlarVGIPorSemestre()" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
                 <option value="">Seleccionar semestre…</option>
                 <option value="1">Semestre 1 (Enero - Junio)</option>
                 <option value="2">Semestre 2 (Julio - Diciembre)</option>
@@ -1065,6 +1065,46 @@ function llenarAnios() {
 
     select.appendChild(option);
   }
+}
+
+// Controlar visibilidad de campos VGI según semestre
+function controlarVGIPorSemestre() {
+  const semestreSelect = document.getElementById('f_semestre');
+  const semestre = semestreSelect.value;
+
+  // Encontrar todos los campos VGI (1ª y 2ª)
+  const vgiFields = document.querySelectorAll('.vgi-pair');
+
+  vgiFields.forEach((pair) => {
+    // Obtener los labels para identificar 1ª o 2ª VGI
+    const labels = pair.querySelectorAll('label');
+    let es1aVGI = false, es2aVGI = false;
+
+    labels.forEach(label => {
+      if (label.textContent.includes('1ª VGI')) es1aVGI = true;
+      if (label.textContent.includes('2ª VGI')) es2aVGI = true;
+    });
+
+    // Mostrar/ocultar según semestre seleccionado
+    if (semestre === '1') {
+      // Semestre 1: mostrar solo 1ª VGI
+      if (es1aVGI) {
+        pair.style.display = 'grid';
+      } else if (es2aVGI) {
+        pair.style.display = 'none';
+      }
+    } else if (semestre === '2') {
+      // Semestre 2: mostrar solo 2ª VGI
+      if (es1aVGI) {
+        pair.style.display = 'none';
+      } else if (es2aVGI) {
+        pair.style.display = 'grid';
+      }
+    } else {
+      // Sin semestre: mostrar todos
+      pair.style.display = 'grid';
+    }
+  });
 }
 
 // Cargar regiones desde la API
@@ -1502,6 +1542,7 @@ function abrirModal(id = null) {
     editandoId = id;
     limpiarFormulario();
     llenarAnios(); // Llenar dropdown de años
+    controlarVGIPorSemestre(); // Aplicar filtro de VGI
 
     // Si es nueva creación, establecer operador actual
     if (id === null) {
