@@ -22,6 +22,8 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   const [filtros, setFiltros] = useState<FiltrosPacientes>({});
   const [regionSeleccionada, setRegionSeleccionada] = useState('');
   const [provinciaSeleccionada, setProvinciaSeleccionada] = useState('');
+  const [anioSeleccionado, setAnioSeleccionado] = useState<number>(new Date().getFullYear());
+  const [semestreSeleccionado, setSemestreSeleccionado] = useState<number | ''> ('');
 
   // Cargar regiones en el inicio
   useEffect(() => {
@@ -207,6 +209,8 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     setProvinciaSeleccionada('');
     setProvincias([]);
     setComunas([]);
+    setAnioSeleccionado(new Date().getFullYear());
+    setSemestreSeleccionado('');
   };
 
   const handleRegionChange = (value: string) => {
@@ -225,6 +229,18 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
   const handleOperadorChange = (value: string) => {
     setFiltros({ ...filtros, operador_id: value || undefined });
+  };
+
+  const handleAnioChange = (value: string) => {
+    const anio = value ? parseInt(value) : undefined;
+    setAnioSeleccionado(anio || new Date().getFullYear());
+    setFiltros({ ...filtros, anio });
+  };
+
+  const handleSemestreChange = (value: string) => {
+    const semestre = value ? parseInt(value) : undefined;
+    setSemestreSeleccionado(value ? parseInt(value) : '');
+    setFiltros({ ...filtros, semestre });
   };
 
   const handleGuardarPaciente = async (pacienteData: any) => {
@@ -515,6 +531,57 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                   placeholder="Todos los operadores"
                 />
               )}
+            </div>
+
+            {/* Año */}
+            <div>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+                📅 Año
+              </label>
+              <select
+                value={anioSeleccionado}
+                onChange={(e) => handleAnioChange(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: 6,
+                  fontSize: 14,
+                  fontFamily: 'Open Sans',
+                  cursor: 'pointer',
+                  backgroundColor: '#FFFFFF'
+                }}
+              >
+                {[...Array(6)].map((_, i) => {
+                  const year = new Date().getFullYear() - i;
+                  return <option key={year} value={year}>{year}</option>;
+                })}
+              </select>
+            </div>
+
+            {/* Semestre */}
+            <div>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+                📆 Semestre
+              </label>
+              <select
+                value={semestreSeleccionado}
+                onChange={(e) => handleSemestreChange(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: 6,
+                  fontSize: 14,
+                  fontFamily: 'Open Sans',
+                  cursor: 'pointer',
+                  backgroundColor: '#FFFFFF'
+                }}
+              >
+                <option value="">Todos los semestres</option>
+                <option value="1">Semestre 1 (Enero - Junio)</option>
+                <option value="2">Semestre 2 (Julio - Diciembre)</option>
+              </select>
             </div>
           </div>
 

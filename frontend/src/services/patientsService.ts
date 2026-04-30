@@ -17,6 +17,8 @@ export interface FiltrosPacientes {
   provincia?: string;
   comuna?: string;
   operador_id?: string;
+  anio?: number;
+  semestre?: number;
 }
 
 // Mock data - sera reemplazado por API real cuando esté disponible
