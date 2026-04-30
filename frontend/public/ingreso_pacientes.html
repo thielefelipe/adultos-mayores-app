@@ -500,6 +500,30 @@
       <input type="hidden" id="f_operador_id">
       <input type="hidden" id="f_operador_nombre">
 
+      <!-- PERÍODO (AÑO Y SEMESTRE) -->
+      <div style="background: var(--azul-bg); padding: 1.25rem; border-radius: 10px; margin-bottom: 1.5rem; border: 2px solid var(--azul);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
+              📅 Año
+            </label>
+            <select id="f_anio" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
+              <option value="">Seleccionar año…</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
+              📆 Semestre
+            </label>
+            <select id="f_semestre" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
+              <option value="">Seleccionar semestre…</option>
+              <option value="1">Semestre 1 (Enero - Junio)</option>
+              <option value="2">Semestre 2 (Julio - Diciembre)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- TABS -->
       <div class="form-tabs">
         <button class="form-tab active" onclick="cambiarTab(0, this)">📋 Datos Personales</button>
@@ -1017,6 +1041,32 @@ async function cargarOperadores() {
   }
 }
 
+// Llenar dropdown de años
+function llenarAnios() {
+  const select = document.getElementById('f_anio');
+  const anioActual = new Date().getFullYear();
+
+  // Limpiar opciones excepto la primera
+  while (select.options.length > 1) {
+    select.remove(1);
+  }
+
+  // Agregar últimos 6 años (desde 6 años atrás hasta 1 año adelante)
+  for (let i = 6; i >= -1; i--) {
+    const anio = anioActual - i;
+    const option = document.createElement('option');
+    option.value = anio;
+    option.textContent = anio.toString();
+
+    // Seleccionar el año actual por defecto
+    if (anio === anioActual) {
+      option.selected = true;
+    }
+
+    select.appendChild(option);
+  }
+}
+
 // Cargar regiones desde la API
 async function cargarRegiones() {
   try {
@@ -1451,6 +1501,7 @@ function abrirModal(id = null) {
 
     editandoId = id;
     limpiarFormulario();
+    llenarAnios(); // Llenar dropdown de años
 
     // Si es nueva creación, establecer operador actual
     if (id === null) {
@@ -1571,6 +1622,8 @@ function irTabAnterior() {
 
 function leerFormulario() {
   return {
+    anio: parseInt(document.getElementById('f_anio').value) || new Date().getFullYear(),
+    semestre: parseInt(document.getElementById('f_semestre').value) || null,
     operador_id: document.getElementById('f_operador_id').value,
     operador_nombre: document.getElementById('f_operador_nombre').value,
     rut: document.getElementById('f_rut').value.replace(/\D/g, '').trim(), // Remover puntos y guiones
@@ -1643,7 +1696,7 @@ function cargarFormulario(p) {
 
 function limpiarFormulario() {
   try {
-    ['operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','contacto_nombre','contacto_telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
+    ['anio','semestre','operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','contacto_nombre','contacto_telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
      'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
      'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
      'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
