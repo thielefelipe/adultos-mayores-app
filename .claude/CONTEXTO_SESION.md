@@ -1,6 +1,6 @@
 # Contexto de Sesión - Adultos Mayores App
 
-## Estado Actual (24 Abril 2026)
+## Estado Actual (30 Abril 2026)
 
 ### 🎯 Objetivo Principal
 Migrar de SQLite a PostgreSQL y unificar el diseño de la aplicación con paleta de colores "Tierra".
@@ -87,8 +87,20 @@ c60117c - Fix: Cambiar datetime a timestamp para compatibilidad con PostgreSQL
 4. El diseño es 100% consistente en toda la app (login, dashboard, modales, formularios)
 5. El frontend ahora apunta correctamente al backend en Render (no a localhost)
 
+#### 5. **Validación de Sesión Expirada** (30 Abril 2026)
+- **Problema**: Token se restauraba de localStorage sin validar expiración
+- **Solución**: 
+  - Frontend valida localmente si token expiró (decodificando JWT)
+  - Frontend valida con servidor usando endpoint `/auth/validate`
+  - Si token está expirado o rechazado, usuario ve login
+- **Cambios**:
+  - `AuthContext.tsx`: Agregada función `isTokenExpired()` y validación al inicializar
+  - `authService.ts`: Agregado método `validateToken()`
+  - `auth.controller.ts`: Agregado endpoint GET `/auth/validate`
+
 ### ✔️ Próximos Pasos (si hay problemas)
 1. Verificar logs en Render si hay errores
 2. Asegurar que el admin user existe en la BD
 3. Verificar CORS si hay errores de conexión frontend-backend
 4. Considerar upgrade de plan PostgreSQL si se llena el storage
+5. Si sesión no expira: verificar que JWT_EXPIRE esté configurado en backend (default: 24h)

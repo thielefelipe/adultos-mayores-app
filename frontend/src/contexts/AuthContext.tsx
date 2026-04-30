@@ -22,6 +22,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+// Función para decodificar JWT y verificar expiración
+function isTokenExpired(token: string): boolean {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return true;
+
+    const decoded = JSON.parse(atob(parts[1]));
+    const expirationTime = decoded.exp * 1000; // convertir a milisegundos
+    const currentTime = Date.now();
+
+    return currentTime > expirationTime;
+  } catch {
+    return true; // Si no se puede decodificar, considerar como expirado
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -29,15 +45,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [sessionExpired, setSessionExpired] = useState(false);
 
   useEffect(() => {
-    const token = authService.getToken();
-    const usuario = authService.getUsuario();
+    const initializeAuth = async () => {
+      const storedToken = authService.getToken();
+      const storedUsuario = authService.getUsuario();
 
-    if (token && usuario) {
-      setToken(token);
-      setUsuario(usuario);
-    }
+      if (storedToken && storedUsuario) {
+        // Verificar si el token ha expirado localmente
+        if (isTokenExpired(storedToken)) {
+          console.log('🔒 Token expirado detectado localmente');
+          authService.clearAuth();
+          setIsLoading(false);
+          return;
+        }
 
-    setIsLoading(false);
+        // Verificar con el servidor si el token sigue siendo válido
+        try {
+          const isValid = await authService.validateToken(storedToken);
+          if (isValid) {
+            setToken(storedToken);
+            setUsuario(storedUsuario);
+          } else {
+            console.log('🔒 Token rechazado por el servidor');
+            authService.clearAuth();
+          }
+        } catch (error) {
+          console.log('🔒 Error validando token con servidor:', error);
+          authService.clearAuth();
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    initializeAuth();
   }, []);
 
   const login = (nuevoUsuario: Usuario, nuevoToken: string) => {

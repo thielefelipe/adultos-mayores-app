@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Req, HttpCode, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
@@ -17,6 +17,13 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto, @Req() req: Request) {
     const ip = req.ip || req.socket?.remoteAddress || 'unknown';
     return this.authService.login(loginDto, ip);
+  }
+
+  @Get('validate')
+  @UseGuards(JwtGuard)
+  @HttpCode(200)
+  async validate() {
+    return { valid: true, mensaje: 'Token válido' };
   }
 
   @Post('logout')

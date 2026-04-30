@@ -70,4 +70,21 @@ export const authService = {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
   },
+
+  async validateToken(token: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_URL}/auth/validate`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.error('Error validando token:', error);
+      return false;
+    }
+  },
 };
