@@ -585,6 +585,36 @@
             <label>Teléfono del Contacto</label>
             <input type="text" id="f_contacto_telefono" placeholder="Ej: +56987654321">
           </div>
+          <div class="field">
+            <label>Relación con el Paciente</label>
+            <select id="f_contacto_relacion" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
+              <option value="">Seleccionar relación…</option>
+              <optgroup label="Relaciones Directas">
+                <option>Esposo/Esposa</option>
+                <option>Pareja</option>
+                <option>Padre/Madre</option>
+                <option>Hijo/Hija</option>
+              </optgroup>
+              <optgroup label="Relaciones Indirectas">
+                <option>Hermano/Hermana</option>
+                <option>Abuelo/Abuela</option>
+                <option>Nieto/Nieta</option>
+                <option>Tío/Tía</option>
+                <option>Sobrino/Sobrina</option>
+                <option>Primo/Prima</option>
+                <option>Yerno/Nuera</option>
+                <option>Suegro/Suegra</option>
+              </optgroup>
+              <optgroup label="Otros Vínculos">
+                <option>Cuidador/Cuidadora</option>
+                <option>Amigo/Amiga</option>
+                <option>Vecino/Vecina</option>
+                <option>Trabajador Social</option>
+                <option>Representante Legal</option>
+                <option>Otro</option>
+              </optgroup>
+            </select>
+          </div>
           <div class="field" style="grid-column: span 2; border-top: 1px solid var(--sand); padding-top: 1.25rem; margin-top: .5rem;">
             <label style="margin-bottom: 1rem; display: block; border-bottom: 2px solid var(--terra); padding-bottom: .5rem;">📚 Información Sociodemográfica</label>
           </div>
@@ -1770,6 +1800,7 @@ function leerFormulario() {
     nombre: document.getElementById('f_nombre').value.trim(),
     contacto_nombre: document.getElementById('f_contacto_nombre').value.trim(),
     contacto_telefono: document.getElementById('f_contacto_telefono').value.trim(),
+    contacto_relacion: document.getElementById('f_contacto_relacion').value,
     sexo: document.getElementById('f_sexo').value,
     edad: document.getElementById('f_edad').value,
     telefono: document.getElementById('f_telefono').value,
