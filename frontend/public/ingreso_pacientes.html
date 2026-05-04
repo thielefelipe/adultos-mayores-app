@@ -2184,10 +2184,15 @@ function renderSidebar(lista) {
   // Mostrar sidebar en vista operador
   if (aside) aside.style.display = 'block';
 
+  const usuarioJSON = localStorage.getItem('usuario');
+  const usuario = usuarioJSON ? JSON.parse(usuarioJSON) : {};
   const operador = localStorage.getItem('operador_actual') || '';
 
-  // Filtrar por operador actual
-  const filtrados = operador ? lista.filter(p => p.operador_id === operador) : [];
+  // Filtrar pacientes: admin ve todos, operador ve solo los suyos
+  let filtrados = lista;
+  if (usuario.rol !== 'admin' && operador) {
+    filtrados = lista.filter(p => p.operador_id === operador);
+  }
 
   if (!filtrados.length) {
     el.innerHTML = '<div class="empty-list">No hay registros para este operador.<br>Agrega el primero.</div>';
@@ -2213,10 +2218,15 @@ function renderSidebar(lista) {
 
 function renderMain() {
   const main = document.getElementById('mainContent');
+  const usuarioJSON = localStorage.getItem('usuario');
+  const usuario = usuarioJSON ? JSON.parse(usuarioJSON) : {};
   const operador = localStorage.getItem('operador_actual') || '';
 
-  // Filtrar pacientes por operador actual
-  const pacientesOperador = operador ? pacientes.filter(p => p.operador_id === operador) : [];
+  // Filtrar pacientes: admin ve todos, operador ve solo los suyos
+  let pacientesOperador = pacientes;
+  if (usuario.rol !== 'admin' && operador) {
+    pacientesOperador = pacientes.filter(p => p.operador_id === operador);
+  }
 
   if (!pacientesOperador.length) {
     main.innerHTML = `<div class="empty-main">
