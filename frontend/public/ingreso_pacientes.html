@@ -1072,39 +1072,59 @@ function controlarVGIPorSemestre() {
   const semestreSelect = document.getElementById('f_semestre');
   const semestre = semestreSelect.value;
 
-  // Encontrar todos los campos VGI (1ª y 2ª)
+  // Mostrar siempre ambas VGIs (1ª y 2ª)
+  const vgiFields = document.querySelectorAll('.vgi-pair');
+  vgiFields.forEach((pair) => {
+    pair.style.display = 'grid';
+  });
+
+  // Actualizar etiquetas de VGI según semestre seleccionado
+  actualizarEtiquetasVGI(semestre);
+
+  // Cargar datos previos si están disponibles
+  cargarDatosVGIAnterior(semestre);
+}
+
+function actualizarEtiquetasVGI(semestre) {
   const vgiFields = document.querySelectorAll('.vgi-pair');
 
   vgiFields.forEach((pair) => {
-    // Obtener los labels para identificar 1ª o 2ª VGI
-    const labels = pair.querySelectorAll('label');
-    let es1aVGI = false, es2aVGI = false;
+    const campos1 = pair.querySelectorAll('.field');
+    if (campos1.length >= 2) {
+      const label1 = campos1[0].querySelector('label');
+      const label2 = campos1[1].querySelector('label');
 
-    labels.forEach(label => {
-      if (label.textContent.includes('1ª VGI')) es1aVGI = true;
-      if (label.textContent.includes('2ª VGI')) es2aVGI = true;
-    });
+      if (label1 && label2) {
+        const originalText1 = label1.textContent.replace(/\(Inicio del semestre\)|\(Fin del semestre\)/g, '').trim();
+        const originalText2 = label2.textContent.replace(/\(Inicio del semestre\)|\(Fin del semestre\)/g, '').trim();
 
-    // Mostrar/ocultar según semestre seleccionado
-    if (semestre === '1') {
-      // Semestre 1: mostrar solo 1ª VGI
-      if (es1aVGI) {
-        pair.style.display = 'grid';
-      } else if (es2aVGI) {
-        pair.style.display = 'none';
+        if (semestre === '1') {
+          label1.textContent = originalText1 + ' (Inicio del semestre)';
+          label2.textContent = originalText2 + ' (Fin del semestre)';
+        } else if (semestre === '2') {
+          label1.textContent = originalText1 + ' (Inicio del semestre)';
+          label2.textContent = originalText2 + ' (Fin del semestre)';
+        }
       }
-    } else if (semestre === '2') {
-      // Semestre 2: mostrar solo 2ª VGI
-      if (es1aVGI) {
-        pair.style.display = 'none';
-      } else if (es2aVGI) {
-        pair.style.display = 'grid';
-      }
-    } else {
-      // Sin semestre: mostrar todos
-      pair.style.display = 'grid';
     }
   });
+}
+
+function cargarDatosVGIAnterior(semestre) {
+  // Si estamos editando un paciente, cargar sus datos VGI previos
+  if (editandoId && pacientes) {
+    const paciente = pacientes.find(p => p.id === editandoId);
+    if (paciente && paciente.vgi && paciente.vgi[semestre]) {
+      const datosVGI = paciente.vgi[semestre];
+      // Cargar datos en los campos correspondientes
+      Object.keys(datosVGI).forEach(key => {
+        const campo = document.getElementById(key);
+        if (campo) {
+          campo.value = datosVGI[key];
+        }
+      });
+    }
+  }
 }
 
 // Cargar regiones desde la API
@@ -1394,32 +1414,68 @@ function generarSemestres(año) {
       año: año,
       semestre: semestre,
       fecha: '',
-      puntaje: '',
-      barthel: '',
-      minimental: ''
+      vgi1: { barthel: '', pfeiffer: '', lawton: '', tug: '', mini: '', yesa: '' },
+      vgi2: { barthel: '', pfeiffer: '', lawton: '', tug: '', mini: '', yesa: '' }
     };
 
-    const semLabel = semestre === 1 ? '1er Semestre' : '2do Semestre';
+    const semLabel = semestre === 1 ? '1er Semestre (Enero - Junio)' : '2do Semestre (Julio - Diciembre)';
     const divSemestre = document.createElement('div');
-    divSemestre.style.cssText = 'background:var(--warm);border-radius:10px;padding:1.1rem;border:1.5px solid var(--sand)';
+    divSemestre.className = 'semester-card';
+    divSemestre.style.cssText = 'background:white;border-radius:10px;padding:1.5rem;border:2px solid var(--azul-bg);box-shadow:var(--shadow)';
+
+    // Calcular promedios
+    const prom = calcularPromediosSemestre(seg);
+
     divSemestre.innerHTML = `
-      <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0066CC;margin-bottom:.85rem">🗓 ${semLabel}</div>
-      <div class="field-grid field-grid-2" style="gap:.75rem">
-        <div class="field">
-          <label>Fecha evaluación</label>
-          <input type="date" class="seg-fecha" data-año="${año}" data-semestre="${semestre}" value="${seg.fecha}">
+      <div style="font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--azul);margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem">
+        <span>${semestre === 1 ? '📅' : '📆'}</span> ${semLabel}
+      </div>
+
+      <!-- Comparativa 1ª vs 2ª VGI -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+        <div style="background:var(--verde-bg);border:1px solid var(--verde-bd);border-radius:8px;padding:1rem">
+          <div style="font-size:.7rem;font-weight:600;color:var(--verde);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">▶ Inicio del Semestre (1ª VGI)</div>
+          <div style="font-size:2rem;font-weight:700;color:var(--verde);font-family:'DM Serif Display',serif">${prom.vgi1.promedio !== null ? prom.vgi1.promedio.toFixed(1) : '—'}</div>
+          <div style="font-size:.75rem;color:var(--verde);margin-top:.25rem">Promedio general</div>
         </div>
-        <div class="field">
-          <label>Puntaje ponderado</label>
-          <input type="number" class="seg-puntaje" data-año="${año}" data-semestre="${semestre}" placeholder="0-100" min="0" max="100" value="${seg.puntaje}" readonly style="background:#f5f5f5;cursor:not-allowed;">
+
+        <div style="background:#FFF8E6;border:1px solid var(--ambar-bd);border-radius:8px;padding:1rem">
+          <div style="font-size:.7rem;font-weight:600;color:var(--ambar);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">⏹ Fin del Semestre (2ª VGI)</div>
+          <div style="font-size:2rem;font-weight:700;color:var(--ambar);font-family:'DM Serif Display',serif">${prom.vgi2.promedio !== null ? prom.vgi2.promedio.toFixed(1) : '—'}</div>
+          <div style="font-size:.75rem;color:var(--ambar);margin-top:.25rem">Promedio general</div>
         </div>
-        <div class="field">
-          <label>Barthel</label>
-          <input type="number" class="seg-barthel" data-año="${año}" data-semestre="${semestre}" placeholder="0-100" min="0" max="100" value="${seg.barthel}" readonly style="background:#f5f5f5;cursor:not-allowed;">
+      </div>
+
+      <!-- Progreso/Cambio -->
+      <div style="background:var(--azul-bg);border:1px solid #c0d4f5;border-radius:8px;padding:1rem;margin-bottom:1.5rem">
+        <div style="font-size:.7rem;font-weight:600;color:var(--azul);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">📈 Progreso del Semestre</div>
+        <div style="display:flex;align-items:baseline;gap:.75rem">
+          <div style="font-size:1.8rem;font-weight:700;color:var(--azul);font-family:'DM Serif Display',serif">
+            ${prom.diferencia !== null ? (prom.diferencia > 0 ? '+' : '') + prom.diferencia.toFixed(1) : '—'}
+          </div>
+          <div style="font-size:.85rem;color:#666">
+            ${prom.tendencia ? prom.tendencia : 'Sin datos comparables'}
+          </div>
         </div>
+      </div>
+
+      <!-- Detalle por Instrumento -->
+      <div style="background:#f9f9f9;border-radius:8px;padding:1rem">
+        <div style="font-size:.7rem;font-weight:600;color:var(--terra);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem">Resultados por Instrumento</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;font-size:.8rem">
+          <div><strong style="color:var(--deep)">Barthel:</strong> ${prom.vgi1.barthel !== null ? prom.vgi1.barthel : '—'} → ${prom.vgi2.barthel !== null ? prom.vgi2.barthel : '—'}</div>
+          <div><strong style="color:var(--deep)">Pfeiffer:</strong> ${prom.vgi1.pfeiffer !== null ? prom.vgi1.pfeiffer : '—'} → ${prom.vgi2.pfeiffer !== null ? prom.vgi2.pfeiffer : '—'}</div>
+          <div><strong style="color:var(--deep)">Lawton:</strong> ${prom.vgi1.lawton !== null ? prom.vgi1.lawton : '—'} → ${prom.vgi2.lawton !== null ? prom.vgi2.lawton : '—'}</div>
+          <div><strong style="color:var(--deep)">TUG:</strong> ${prom.vgi1.tug !== null ? prom.vgi1.tug : '—'} → ${prom.vgi2.tug !== null ? prom.vgi2.tug : '—'}</div>
+          <div><strong style="color:var(--deep)">Mini Mental:</strong> ${prom.vgi1.mini !== null ? prom.vgi1.mini : '—'} → ${prom.vgi2.mini !== null ? prom.vgi2.mini : '—'}</div>
+          <div><strong style="color:var(--deep)">Yesavage:</strong> ${prom.vgi1.yesa !== null ? prom.vgi1.yesa : '—'} → ${prom.vgi2.yesa !== null ? prom.vgi2.yesa : '—'}</div>
+        </div>
+      </div>
+
+      <div class="field-grid field-grid-1" style="margin-top:1.5rem;border-top:1px solid var(--sand);padding-top:1rem">
         <div class="field">
-          <label>Minimental</label>
-          <input type="number" class="seg-minimental" data-año="${año}" data-semestre="${semestre}" placeholder="0-30" min="0" max="30" value="${seg.minimental}" readonly style="background:#f5f5f5;cursor:not-allowed;">
+          <label style="font-size:.8rem">📝 Fecha de evaluación del semestre</label>
+          <input type="date" class="seg-fecha" data-año="${año}" data-semestre="${semestre}" value="${seg.fecha || ''}" style="font-size:.9rem">
         </div>
       </div>
     `;
@@ -1431,6 +1487,48 @@ function generarSemestres(año) {
   document.querySelectorAll('.seg-fecha').forEach(el => {
     el.addEventListener('change', guardarSegmento);
   });
+}
+
+function calcularPromediosSemestre(seg) {
+  const resultado = {
+    vgi1: { barthel: null, pfeiffer: null, lawton: null, tug: null, mini: null, yesa: null, promedio: null },
+    vgi2: { barthel: null, pfeiffer: null, lawton: null, tug: null, mini: null, yesa: null, promedio: null },
+    diferencia: null,
+    tendencia: ''
+  };
+
+  // Si el segmento tiene datos VGI
+  if (seg.vgi1) {
+    const v1 = Object.values(seg.vgi1).filter(v => v !== '' && v !== null && !isNaN(v)).map(Number);
+    if (v1.length > 0) {
+      resultado.vgi1.promedio = v1.reduce((a, b) => a + b) / v1.length;
+      resultado.vgi1 = { ...resultado.vgi1, ...seg.vgi1 };
+    }
+  }
+
+  if (seg.vgi2) {
+    const v2 = Object.values(seg.vgi2).filter(v => v !== '' && v !== null && !isNaN(v)).map(Number);
+    if (v2.length > 0) {
+      resultado.vgi2.promedio = v2.reduce((a, b) => a + b) / v2.length;
+      resultado.vgi2 = { ...resultado.vgi2, ...seg.vgi2 };
+    }
+  }
+
+  // Calcular diferencia y tendencia
+  if (resultado.vgi1.promedio !== null && resultado.vgi2.promedio !== null) {
+    resultado.diferencia = resultado.vgi2.promedio - resultado.vgi1.promedio;
+    if (resultado.diferencia > 2) {
+      resultado.tendencia = '✅ Mejora significativa';
+    } else if (resultado.diferencia > 0) {
+      resultado.tendencia = '↗ Leve mejora';
+    } else if (resultado.diferencia > -2) {
+      resultado.tendencia = '↘ Leve declive';
+    } else {
+      resultado.tendencia = '⚠️ Declive significativo';
+    }
+  }
+
+  return resultado;
 }
 
 function guardarSegmento(e) {
@@ -1717,8 +1815,8 @@ function leerFormulario() {
 
 function cargarFormulario(p) {
   Object.keys(p).forEach(k => {
-    // Skip f_seguimientos as it's handled separately
-    if (k === 'f_seguimientos') return;
+    // Skip fields that need special handling
+    if (k === 'f_seguimientos' || k === 'vgi') return;
 
     const el = document.getElementById('f_' + k);
     if (el) el.value = p[k] || '';
@@ -1728,6 +1826,36 @@ function cargarFormulario(p) {
   if (p.f_seguimientos) {
     document.getElementById('f_seguimientos').value = p.f_seguimientos;
     inicializarSeguimientos();
+  }
+
+  // Cargar datos VGI si existen
+  if (p.vgi) {
+    const semestre = document.getElementById('f_semestre').value;
+    if (semestre && p.vgi[semestre]) {
+      const vgiData = p.vgi[semestre];
+
+      // Cargar 1ª VGI
+      if (vgiData.vgi1) {
+        document.getElementById('f_barthel1').value = vgiData.vgi1.barthel || '';
+        document.getElementById('f_pfeiffer1').value = vgiData.vgi1.pfeiffer || '';
+        document.getElementById('f_lawton1').value = vgiData.vgi1.lawton || '';
+        document.getElementById('f_tug1').value = vgiData.vgi1.tug || '';
+        document.getElementById('f_mini1').value = vgiData.vgi1.mini || '';
+        document.getElementById('f_yesa1').value = vgiData.vgi1.yesa || '';
+        document.getElementById('f_eq1').value = vgiData.vgi1.eq || '';
+      }
+
+      // Cargar 2ª VGI
+      if (vgiData.vgi2) {
+        document.getElementById('f_barthel2').value = vgiData.vgi2.barthel || '';
+        document.getElementById('f_pfeiffer2').value = vgiData.vgi2.pfeiffer || '';
+        document.getElementById('f_lawton2').value = vgiData.vgi2.lawton || '';
+        document.getElementById('f_tug2').value = vgiData.vgi2.tug || '';
+        document.getElementById('f_mini2').value = vgiData.vgi2.mini || '';
+        document.getElementById('f_yesa2').value = vgiData.vgi2.yesa || '';
+        document.getElementById('f_eq2').value = vgiData.vgi2.eq || '';
+      }
+    }
   }
 
   // Formatear el RUT después de cargar
@@ -1758,14 +1886,55 @@ function guardarPaciente() {
   const datos = leerFormulario();
   if (!datos.nombre) { toast('⚠️ El nombre es obligatorio'); return; }
   if (!datos.rut)    { toast('⚠️ El RUT es obligatorio'); return; }
+
+  // Organizar datos VGI por semestre
+  const semestre = datos.semestre;
+  if (semestre) {
+    // Crear estructura VGI si no existe
+    if (!datos.vgi) datos.vgi = {};
+    if (!datos.vgi[semestre]) datos.vgi[semestre] = { vgi1: {}, vgi2: {} };
+
+    // Guardar 1ª VGI (inicio del semestre)
+    datos.vgi[semestre].vgi1 = {
+      barthel: datos.barthel1 || '',
+      pfeiffer: datos.pfeiffer1 || '',
+      lawton: datos.lawton1 || '',
+      tug: datos.tug1 || '',
+      mini: datos.mini1 || '',
+      yesa: datos.yesa1 || '',
+      eq: datos.eq1 || ''
+    };
+
+    // Guardar 2ª VGI (fin del semestre)
+    datos.vgi[semestre].vgi2 = {
+      barthel: datos.barthel2 || '',
+      pfeiffer: datos.pfeiffer2 || '',
+      lawton: datos.lawton2 || '',
+      tug: datos.tug2 || '',
+      mini: datos.mini2 || '',
+      yesa: datos.yesa2 || '',
+      eq: datos.eq2 || ''
+    };
+  }
+
   if (editandoId !== null) {
     const idx = pacientes.findIndex(p => p.id === editandoId);
-    pacientes[idx] = { ...pacientes[idx], ...datos };
+    const pacienteExistente = pacientes[idx];
+
+    // Preservar VGI previo si existe
+    if (pacienteExistente.vgi && datos.vgi) {
+      datos.vgi = { ...pacienteExistente.vgi, ...datos.vgi };
+    } else if (pacienteExistente.vgi && !datos.vgi) {
+      datos.vgi = pacienteExistente.vgi;
+    }
+
+    pacientes[idx] = { ...pacienteExistente, ...datos };
   } else {
     datos.id = Date.now();
     datos.fechaRegistro = new Date().toISOString();
     pacientes.push(datos);
   }
+
   guardar();
   cerrarModal();
   renderAll();
