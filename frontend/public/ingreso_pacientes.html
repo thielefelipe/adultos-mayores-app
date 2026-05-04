@@ -454,9 +454,12 @@
   <div class="header-actions">
     <div style="display: flex; align-items: center; gap: .75rem; color: white; font-size: .85rem; margin-right: 1rem;">
       <span>👤 Operador:</span>
-      <select id="operadorSelect" onchange="cambiarOperador()" style="padding: .4rem .6rem; border-radius: 6px; border: 1px solid var(--sand); background: white; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: .85rem; cursor: pointer;">
+      <!-- Para ADMIN: Select desplegable -->
+      <select id="operadorSelect" onchange="cambiarOperador()" style="padding: .4rem .6rem; border-radius: 6px; border: 1px solid var(--sand); background: white; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: .85rem; cursor: pointer; display: none;">
         <option value="">Seleccionar operador…</option>
       </select>
+      <!-- Para OPERADOR: Nombre bloqueado -->
+      <span id="operadorNombre" style="background: rgba(255,255,255,0.15); padding: .4rem .8rem; border-radius: 6px; font-weight: 500; display: none;"></span>
     </div>
     <button class="btn btn-ghost btn-sm" onclick="exportarDatos()">⬇ Exportar CSV</button>
     <button class="btn btn-primary" onclick="abrirModal()">+ Nuevo Adulto Mayor</button>
@@ -1273,7 +1276,34 @@ async function cargarComunas() {
 document.addEventListener('DOMContentLoaded', () => {
   cargarOperadores();
   cargarRegiones();
+  configurarOperadorUI();
 });
+
+function configurarOperadorUI() {
+  try {
+    const usuarioJSON = localStorage.getItem('usuario');
+    if (!usuarioJSON) return;
+
+    const usuario = JSON.parse(usuarioJSON);
+    const operadorSelect = document.getElementById('operadorSelect');
+    const operadorNombre = document.getElementById('operadorNombre');
+
+    if (usuario.rol === 'admin') {
+      // Admin: mostrar select para elegir operador
+      if (operadorSelect) operadorSelect.style.display = 'block';
+      if (operadorNombre) operadorNombre.style.display = 'none';
+    } else if (usuario.rol === 'operador' || usuario.rol === 'analista') {
+      // Operador/Analista: mostrar solo nombre bloqueado
+      if (operadorSelect) operadorSelect.style.display = 'none';
+      if (operadorNombre) {
+        operadorNombre.style.display = 'inline-block';
+        operadorNombre.textContent = usuario.nombre || usuario.username || 'Operador';
+      }
+    }
+  } catch (e) {
+    console.error('Error configurando operador UI:', e);
+  }
+}
 
 function guardar() {
   localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
