@@ -1050,6 +1050,7 @@ const API_URL = 'https://adultos-mayores-backend.onrender.com/api';
 
 let pacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
 let editandoId = null;
+let pacientesGuardadosEnBackend = new Set(); // Rastrear qué pacientes ya fueron enviados
 
 // Cargar operadores reales desde la API
 async function cargarOperadores() {
@@ -1317,12 +1318,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function cargarPacientesDelBackend() {
   try {
-    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
     const token = localStorage.getItem('token');
 
     if (!token) return; // Sin token, no hay sesión
 
-    const response = await fetch(`${API_URL}/pacientes/obtener`, {
+    const response = await fetch(`${API_URL}/pacientes?pagina=1&limite=1000`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -1331,8 +1331,43 @@ async function cargarPacientesDelBackend() {
 
     if (response.ok) {
       const data = await response.json();
-      if (data.pacientes && Array.isArray(data.pacientes)) {
-        pacientes = data.pacientes;
+      // El backend devuelve { data: [], total, pagina, limite }
+      if (data.data && Array.isArray(data.data)) {
+        pacientes = data.data.map(p => ({
+          id: p.id,
+          nombre: p.nombre,
+          rut: p.rut,
+          dv: p.dv,
+          edad: p.edad,
+          sexo: p.sexo,
+          region: p.region,
+          provincia: p.provincia,
+          comuna_personal: p.comuna,
+          operador_id: p.createdBy || '',
+          fechaRegistro: p.createdAt,
+          barthel1: p.barthel1,
+          barthel2: p.barthel2,
+          pfeiffer1: p.pfeiffer1,
+          pfeiffer2: p.pfeiffer2,
+          lawton1: p.lawton1,
+          lawton2: p.lawton2,
+          tug1: p.tug1,
+          tug2: p.tug2,
+          mini1: p.mini1,
+          mini2: p.mini2,
+          yesa1: p.yesa1,
+          yesa2: p.yesa2,
+          eq1: p.eq1,
+          eq2: p.eq2,
+          dependencia: p.dependencia,
+          enfermedades: p.enfermedades,
+          pai: p.pai,
+          f_seguimientos: p.f_seguimientos || '[]'
+        }));
+
+        // Marcar todos los pacientes del backend como ya guardados
+        pacientes.forEach(p => pacientesGuardadosEnBackend.add(p.id));
+
         localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
         renderAll();
       }
@@ -1391,25 +1426,61 @@ function guardar() {
 
 async function guardarEnBackend() {
   try {
-    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
     const token = localStorage.getItem('token');
 
     if (!token) return; // Sin token, no hay sesión
 
-    const response = await fetch(`${API_URL}/pacientes/guardar`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        operador_id: usuario.username || usuario.id || usuario.nombre,
-        pacientes: pacientes
-      })
-    });
+    // Enviar solo pacientes nuevos (que no hayan sido guardados en el backend)
+    for (const paciente of pacientes) {
+      if (pacientesGuardadosEnBackend.has(paciente.id)) {
+        continue; // Ya fue guardado, omitir
+      }
 
-    if (!response.ok) {
-      console.error('Error al guardar en backend:', response.status);
+      // Preparar datos para el backend
+      const datosBackend = {
+        rut: paciente.rut,
+        dv: paciente.dv,
+        nombre: paciente.nombre,
+        sexo: paciente.sexo,
+        edad: paciente.edad,
+        telefono: paciente.telefono,
+        comuna: paciente.comuna_personal,
+        region: paciente.region,
+        provincia: paciente.provincia,
+        dependencia: paciente.dependencia,
+        enfermedades: paciente.enfermedades,
+        pai: paciente.pai,
+        barthel1: paciente.barthel1,
+        barthel2: paciente.barthel2,
+        pfeiffer1: paciente.pfeiffer1,
+        pfeiffer2: paciente.pfeiffer2,
+        lawton1: paciente.lawton1,
+        lawton2: paciente.lawton2,
+        tug1: paciente.tug1,
+        tug2: paciente.tug2,
+        mini1: paciente.mini1,
+        mini2: paciente.mini2,
+        yesa1: paciente.yesa1,
+        yesa2: paciente.yesa2,
+        eq1: paciente.eq1,
+        eq2: paciente.eq2
+      };
+
+      const response = await fetch(`${API_URL}/pacientes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(datosBackend)
+      });
+
+      if (response.ok) {
+        pacientesGuardadosEnBackend.add(paciente.id); // Marcar como guardado
+        console.log('Paciente guardado en backend:', paciente.nombre);
+      } else {
+        console.error('Error al guardar paciente en backend:', response.status);
+      }
     }
   } catch (e) {
     console.error('Error enviando datos al backend:', e);
