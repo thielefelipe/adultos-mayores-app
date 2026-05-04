@@ -1715,13 +1715,27 @@ function abrirModal(id = null) {
 
     // Si es nueva creación, establecer operador actual
     if (id === null) {
+      const opIdEl = document.getElementById('f_operador_id');
+      const opNameEl = document.getElementById('f_operador_nombre');
+
+      // Intentar obtener del dropdown (para admin)
       const operadorSelect = document.getElementById('operadorSelect');
       if (operadorSelect && operadorSelect.value) {
-        const [opId, opNum] = operadorSelect.value.split('-');
-        const opIdEl = document.getElementById('f_operador_id');
-        const opNameEl = document.getElementById('f_operador_nombre');
         if (opIdEl) opIdEl.value = operadorSelect.value;
         if (opNameEl) opNameEl.value = operadorSelect.options[operadorSelect.selectedIndex].text;
+      } else {
+        // Si no hay dropdown o está vacío, usar operador_actual de localStorage
+        const operadorActual = localStorage.getItem('operador_actual') || '';
+        const usuarioJSON = localStorage.getItem('usuario');
+        let operadorNombre = '';
+        if (usuarioJSON) {
+          try {
+            const usuario = JSON.parse(usuarioJSON);
+            operadorNombre = usuario.nombre || usuario.username || operadorActual;
+          } catch (e) {}
+        }
+        if (opIdEl) opIdEl.value = operadorActual;
+        if (opNameEl) opNameEl.value = operadorNombre || operadorActual;
       }
     }
 
