@@ -1293,12 +1293,14 @@ function configurarOperadorUI() {
       if (operadorSelect) operadorSelect.style.display = 'block';
       if (operadorNombre) operadorNombre.style.display = 'none';
     } else if (usuario.rol === 'operador' || usuario.rol === 'analista') {
-      // Operador/Analista: mostrar solo nombre bloqueado
+      // Operador/Analista: mostrar solo nombre bloqueado y asignar automáticamente
       if (operadorSelect) operadorSelect.style.display = 'none';
       if (operadorNombre) {
         operadorNombre.style.display = 'inline-block';
         operadorNombre.textContent = usuario.nombre || usuario.username || 'Operador';
       }
+      // Asignar automáticamente operador_actual para operadores no-admin
+      localStorage.setItem('operador_actual', usuario.username || usuario.id || usuario.nombre || '');
     }
   } catch (e) {
     console.error('Error configurando operador UI:', e);
