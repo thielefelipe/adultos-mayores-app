@@ -774,193 +774,391 @@
       <!-- TAB 2: Instrumentos VGI -->
       <div class="form-body tab-content" id="tab2" style="display:none">
 
-        <!-- PERÍODO (AÑO Y SEMESTRE) -->
+        <!-- SELECTOR DE FECHA INICIAL -->
         <div style="background: var(--azul-bg); padding: 1.25rem; border-radius: 10px; margin-bottom: 2rem; border: 2px solid var(--azul);">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div>
-              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
-                📅 Año
-              </label>
-              <select id="f_anio" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
-                <option value="">Seleccionar año…</option>
-              </select>
-            </div>
-            <div>
-              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
-                📆 Semestre
-              </label>
-              <select id="f_semestre" onchange="controlarVGIPorSemestre()" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem; cursor: pointer;">
-                <option value="">Seleccionar semestre…</option>
-                <option value="1">Semestre 1 (Enero - Junio)</option>
-                <option value="2">Semestre 2 (Julio - Diciembre)</option>
-              </select>
-            </div>
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--deep); font-size: 0.9rem;">
+              📅 Fecha de Evaluación Inicial <span style="color: red;">*</span>
+            </label>
+            <input type="date" id="f_vgi_fecha_inicial" onchange="calcularFechasVGI()" style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-size: 0.95rem;">
+            <div style="font-size: 0.8rem; color: var(--azul); margin-top: 0.5rem;">Se calcularán automáticamente las fechas de seguimiento (6 meses y 1 año)</div>
           </div>
         </div>
 
-        <!-- Barthel -->
-        <div class="instrument-block">
-          <div class="instrument-header">
-            <div class="instrument-icon">🦽</div>
-            <div>
-              <div class="instrument-name">Índice de Barthel</div>
-              <div class="instrument-desc">Funcionalidad en AVD · 0-100 pts · Mayor = mejor</div>
-            </div>
+        <!-- TABS PARA LAS 3 EVALUACIONES -->
+        <div id="vgiSubtabs" style="display: none; margin-bottom: 1.5rem;">
+          <div style="display: flex; gap: 0.75rem; border-bottom: 2px solid var(--sand); margin-bottom: 1rem; flex-wrap: wrap;">
+            <button type="button" class="vgi-subtab active" data-eval="1" onclick="cambiarVGITab(1, this)" style="padding: 0.75rem 1.25rem; border: none; background: none; cursor: pointer; font-weight: 600; color: var(--terra); border-bottom: 3px solid var(--terra); margin-bottom: -2px; font-size: 0.9rem;">
+              📍 Inicial <span id="vgi_fecha_1" style="font-size: 0.8rem; color: var(--clay); display: block; font-weight: 400;">—</span>
+            </button>
+            <button type="button" class="vgi-subtab" data-eval="2" onclick="cambiarVGITab(2, this)" style="padding: 0.75rem 1.25rem; border: none; background: none; cursor: pointer; font-weight: 600; color: #999; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.9rem;">
+              📊 6 meses <span id="vgi_fecha_2" style="font-size: 0.8rem; color: #999; display: block; font-weight: 400;">—</span>
+            </button>
+            <button type="button" class="vgi-subtab" data-eval="3" onclick="cambiarVGITab(3, this)" style="padding: 0.75rem 1.25rem; border: none; background: none; cursor: pointer; font-weight: 600; color: #999; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.9rem;">
+              ✅ Final (1 año) <span id="vgi_fecha_3" style="font-size: 0.8rem; color: #999; display: block; font-weight: 400;">—</span>
+            </button>
           </div>
-          <div class="vgi-pair">
-            <div class="field">
-              <label>1ª VGI (Puntaje Barthel)</label>
-              <input type="number" id="f_barthel1" placeholder="0-100" min="0" max="100" oninput="recalcular()">
-              <div class="field-hint">0 = dependencia total · 100 = independiente</div>
-            </div>
-            <div class="field">
-              <label>2ª VGI (Puntaje Barthel)</label>
-              <input type="number" id="f_barthel2" placeholder="0-100" min="0" max="100" oninput="recalcular()">
-            </div>
-          </div>
-        </div>
 
-        <!-- Pfeiffer -->
-        <div class="instrument-block">
-          <div class="instrument-header">
-            <div class="instrument-icon">🧠</div>
-            <div>
-              <div class="instrument-name">Test de Pfeiffer</div>
-              <div class="instrument-desc">Estado cognitivo · 0-10 errores · Menor = mejor</div>
+          <!-- Evaluación 1 -->
+          <div id="vgi-eval-1" class="vgi-eval-content">
+            <!-- Barthel -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🦽</div>
+                <div>
+                  <div class="instrument-name">Índice de Barthel</div>
+                  <div class="instrument-desc">Funcionalidad en AVD · 0-100 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje Barthel</label>
+                <input type="number" id="f_barthel1" placeholder="0-100" min="0" max="100" oninput="recalcular()">
+                <div class="field-hint">0 = dependencia total · 100 = independiente</div>
+              </div>
             </div>
-          </div>
-          <div class="vgi-pair">
-            <div class="field">
-              <label>1ª VGI (N° errores)</label>
-              <input type="number" id="f_pfeiffer1" placeholder="0-10" min="0" max="10" oninput="recalcular()">
-              <div class="field-hint">0-2: Normal · 3-4: Leve · 5-7: Moderado · 8-10: Severo</div>
-            </div>
-            <div class="field">
-              <label>2ª VGI (N° errores)</label>
-              <input type="number" id="f_pfeiffer2" placeholder="0-10" min="0" max="10" oninput="recalcular()">
-            </div>
-          </div>
-        </div>
 
-        <!-- Lawton -->
-        <div class="instrument-block">
-          <div class="instrument-header">
-            <div class="instrument-icon">🏠</div>
-            <div>
-              <div class="instrument-name">Escala de Lawton y Brody</div>
-              <div class="instrument-desc">Actividades instrumentales · 0-8 pts · Mayor = mejor</div>
+            <!-- Pfeiffer -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🧠</div>
+                <div>
+                  <div class="instrument-name">Test de Pfeiffer</div>
+                  <div class="instrument-desc">Estado cognitivo · 0-10 errores · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>N° errores</label>
+                <input type="number" id="f_pfeiffer1" placeholder="0-10" min="0" max="10" oninput="recalcular()">
+                <div class="field-hint">0-2: Normal · 3-4: Leve · 5-7: Moderado · 8-10: Severo</div>
+              </div>
             </div>
-          </div>
-          <div class="vgi-pair">
-            <div class="field">
-              <label>1ª VGI (Puntaje)</label>
-              <input type="number" id="f_lawton1" placeholder="0-8" min="0" max="8" oninput="recalcular()">
-              <div class="field-hint">8 = sin dependencia · 0 = dependencia total</div>
-            </div>
-            <div class="field">
-              <label>2ª VGI (Puntaje)</label>
-              <input type="number" id="f_lawton2" placeholder="0-8" min="0" max="8" oninput="recalcular()">
-            </div>
-          </div>
-        </div>
 
-        <!-- TUG -->
-        <div class="instrument-block">
-          <div class="instrument-header">
-            <div class="instrument-icon">⏱️</div>
-            <div>
-              <div class="instrument-name">Timed Up and Go (TUG)</div>
-              <div class="instrument-desc">Riesgo de caída · Segundos · Menor = mejor</div>
+            <!-- Lawton -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🏠</div>
+                <div>
+                  <div class="instrument-name">Escala de Lawton y Brody</div>
+                  <div class="instrument-desc">Actividades instrumentales · 0-8 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_lawton1" placeholder="0-8" min="0" max="8" oninput="recalcular()">
+                <div class="field-hint">8 = sin dependencia · 0 = dependencia total</div>
+              </div>
             </div>
-          </div>
-          <div class="vgi-pair">
-            <div class="field">
-              <label>1ª VGI (segundos)</label>
-              <input type="number" id="f_tug1" placeholder="segundos" min="0" step="0.1" oninput="recalcular()">
-              <div class="field-hint">&lt;10 seg: Bajo riesgo · 10-20: Moderado · &gt;20: Alto riesgo</div>
-            </div>
-            <div class="field">
-              <label>2ª VGI (segundos)</label>
-              <input type="number" id="f_tug2" placeholder="segundos" min="0" step="0.1" oninput="recalcular()">
-            </div>
-          </div>
-        </div>
 
-        <!-- Minimental -->
-        <div class="instrument-block">
-          <div class="instrument-header">
-            <div class="instrument-icon">🔢</div>
-            <div>
-              <div class="instrument-name">Mini Mental State (MMSE)</div>
-              <div class="instrument-desc">Deterioro cognitivo · 0-30 pts · Mayor = mejor</div>
+            <!-- TUG -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">⏱️</div>
+                <div>
+                  <div class="instrument-name">Timed Up and Go (TUG)</div>
+                  <div class="instrument-desc">Riesgo de caída · Segundos · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Segundos</label>
+                <input type="number" id="f_tug1" placeholder="segundos" min="0" step="0.1" oninput="recalcular()">
+                <div class="field-hint">&lt;10 seg: Bajo riesgo · 10-20: Moderado · &gt;20: Alto riesgo</div>
+              </div>
             </div>
-          </div>
-          <div class="vgi-pair">
-            <div class="field">
-              <label>1ª VGI (Puntaje)</label>
-              <input type="number" id="f_mini1" placeholder="0-30" min="0" max="30" oninput="recalcular()">
-              <div class="field-hint">≥25: Normal · 18-24: Leve · &lt;18: Mod/Severo</div>
-            </div>
-            <div class="field">
-              <label>2ª VGI (Puntaje)</label>
-              <input type="number" id="f_mini2" placeholder="0-30" min="0" max="30" oninput="recalcular()">
-            </div>
-          </div>
-        </div>
 
-        <!-- Yesavage -->
-        <div class="instrument-block">
-          <div class="instrument-header">
-            <div class="instrument-icon">💭</div>
-            <div>
-              <div class="instrument-name">Escala de Yesavage (GDS)</div>
-              <div class="instrument-desc">Depresión geriátrica · 0-15 pts · Menor = mejor</div>
+            <!-- Minimental -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🔢</div>
+                <div>
+                  <div class="instrument-name">Mini Mental State (MMSE)</div>
+                  <div class="instrument-desc">Deterioro cognitivo · 0-30 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_mini1" placeholder="0-30" min="0" max="30" oninput="recalcular()">
+                <div class="field-hint">≥25: Normal · 18-24: Leve · &lt;18: Mod/Severo</div>
+              </div>
             </div>
-          </div>
-          <div class="vgi-pair">
-            <div class="field">
-              <label>1ª VGI (Puntaje)</label>
-              <input type="number" id="f_yesa1" placeholder="0-15" min="0" max="15" oninput="recalcular()">
-              <div class="field-hint">0-5: Sin depresión · 6-10: Moderada · 11-15: Severa</div>
-            </div>
-            <div class="field">
-              <label>2ª VGI (Puntaje)</label>
-              <input type="number" id="f_yesa2" placeholder="0-15" min="0" max="15" oninput="recalcular()">
-            </div>
-          </div>
-        </div>
 
-        <!-- EQ-5D -->
-        <div class="instrument-block">
-          <div class="instrument-header">
-            <div class="instrument-icon">❤️</div>
-            <div>
-              <div class="instrument-name">Autopercepción de Salud (EQ-5D)</div>
-              <div class="instrument-desc">Percepción subjetiva de salud</div>
+            <!-- Yesavage -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">💭</div>
+                <div>
+                  <div class="instrument-name">Escala de Yesavage (GDS)</div>
+                  <div class="instrument-desc">Depresión geriátrica · 0-15 pts · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_yesa1" placeholder="0-15" min="0" max="15" oninput="recalcular()">
+                <div class="field-hint">0-5: Sin depresión · 6-10: Moderada · 11-15: Severa</div>
+              </div>
+            </div>
+
+            <!-- EQ-5D -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">❤️</div>
+                <div>
+                  <div class="instrument-name">Autopercepción de Salud (EQ-5D)</div>
+                  <div class="instrument-desc">Percepción subjetiva de salud</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Percepción de Salud</label>
+                <select id="f_eq1" onchange="recalcular()">
+                  <option value="">Seleccionar…</option>
+                  <option>Muy buena</option>
+                  <option>Buena</option>
+                  <option>Más o menos</option>
+                  <option>Mala</option>
+                  <option>Muy mala</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div class="vgi-pair">
-            <div class="field">
-              <label>1ª VGI</label>
-              <select id="f_eq1" onchange="recalcular()">
-                <option value="">Seleccionar…</option>
-                <option>Muy buena</option>
-                <option>Buena</option>
-                <option>Más o menos</option>
-                <option>Mala</option>
-                <option>Muy mala</option>
-              </select>
+
+          <!-- Evaluación 2 (6 meses) -->
+          <div id="vgi-eval-2" class="vgi-eval-content" style="display: none;">
+            <!-- Barthel -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🦽</div>
+                <div>
+                  <div class="instrument-name">Índice de Barthel</div>
+                  <div class="instrument-desc">Funcionalidad en AVD · 0-100 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje Barthel</label>
+                <input type="number" id="f_barthel2" placeholder="0-100" min="0" max="100" oninput="recalcular()">
+                <div class="field-hint">0 = dependencia total · 100 = independiente</div>
+              </div>
             </div>
-            <div class="field">
-              <label>2ª VGI</label>
-              <select id="f_eq2" onchange="recalcular()">
-                <option value="">Seleccionar…</option>
-                <option>Muy buena</option>
-                <option>Buena</option>
-                <option>Más o menos</option>
-                <option>Mala</option>
-                <option>Muy mala</option>
-              </select>
+
+            <!-- Pfeiffer -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🧠</div>
+                <div>
+                  <div class="instrument-name">Test de Pfeiffer</div>
+                  <div class="instrument-desc">Estado cognitivo · 0-10 errores · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>N° errores</label>
+                <input type="number" id="f_pfeiffer2" placeholder="0-10" min="0" max="10" oninput="recalcular()">
+                <div class="field-hint">0-2: Normal · 3-4: Leve · 5-7: Moderado · 8-10: Severo</div>
+              </div>
+            </div>
+
+            <!-- Lawton -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🏠</div>
+                <div>
+                  <div class="instrument-name">Escala de Lawton y Brody</div>
+                  <div class="instrument-desc">Actividades instrumentales · 0-8 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_lawton2" placeholder="0-8" min="0" max="8" oninput="recalcular()">
+                <div class="field-hint">8 = sin dependencia · 0 = dependencia total</div>
+              </div>
+            </div>
+
+            <!-- TUG -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">⏱️</div>
+                <div>
+                  <div class="instrument-name">Timed Up and Go (TUG)</div>
+                  <div class="instrument-desc">Riesgo de caída · Segundos · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Segundos</label>
+                <input type="number" id="f_tug2" placeholder="segundos" min="0" step="0.1" oninput="recalcular()">
+                <div class="field-hint">&lt;10 seg: Bajo riesgo · 10-20: Moderado · &gt;20: Alto riesgo</div>
+              </div>
+            </div>
+
+            <!-- Minimental -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🔢</div>
+                <div>
+                  <div class="instrument-name">Mini Mental State (MMSE)</div>
+                  <div class="instrument-desc">Deterioro cognitivo · 0-30 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_mini2" placeholder="0-30" min="0" max="30" oninput="recalcular()">
+                <div class="field-hint">≥25: Normal · 18-24: Leve · &lt;18: Mod/Severo</div>
+              </div>
+            </div>
+
+            <!-- Yesavage -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">💭</div>
+                <div>
+                  <div class="instrument-name">Escala de Yesavage (GDS)</div>
+                  <div class="instrument-desc">Depresión geriátrica · 0-15 pts · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_yesa2" placeholder="0-15" min="0" max="15" oninput="recalcular()">
+                <div class="field-hint">0-5: Sin depresión · 6-10: Moderada · 11-15: Severa</div>
+              </div>
+            </div>
+
+            <!-- EQ-5D -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">❤️</div>
+                <div>
+                  <div class="instrument-name">Autopercepción de Salud (EQ-5D)</div>
+                  <div class="instrument-desc">Percepción subjetiva de salud</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Percepción de Salud</label>
+                <select id="f_eq2" onchange="recalcular()">
+                  <option value="">Seleccionar…</option>
+                  <option>Muy buena</option>
+                  <option>Buena</option>
+                  <option>Más o menos</option>
+                  <option>Mala</option>
+                  <option>Muy mala</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evaluación 3 (1 año) -->
+          <div id="vgi-eval-3" class="vgi-eval-content" style="display: none;">
+            <!-- Barthel -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🦽</div>
+                <div>
+                  <div class="instrument-name">Índice de Barthel</div>
+                  <div class="instrument-desc">Funcionalidad en AVD · 0-100 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje Barthel</label>
+                <input type="number" id="f_barthel3" placeholder="0-100" min="0" max="100" oninput="recalcular()">
+                <div class="field-hint">0 = dependencia total · 100 = independiente</div>
+              </div>
+            </div>
+
+            <!-- Pfeiffer -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🧠</div>
+                <div>
+                  <div class="instrument-name">Test de Pfeiffer</div>
+                  <div class="instrument-desc">Estado cognitivo · 0-10 errores · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>N° errores</label>
+                <input type="number" id="f_pfeiffer3" placeholder="0-10" min="0" max="10" oninput="recalcular()">
+                <div class="field-hint">0-2: Normal · 3-4: Leve · 5-7: Moderado · 8-10: Severo</div>
+              </div>
+            </div>
+
+            <!-- Lawton -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🏠</div>
+                <div>
+                  <div class="instrument-name">Escala de Lawton y Brody</div>
+                  <div class="instrument-desc">Actividades instrumentales · 0-8 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_lawton3" placeholder="0-8" min="0" max="8" oninput="recalcular()">
+                <div class="field-hint">8 = sin dependencia · 0 = dependencia total</div>
+              </div>
+            </div>
+
+            <!-- TUG -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">⏱️</div>
+                <div>
+                  <div class="instrument-name">Timed Up and Go (TUG)</div>
+                  <div class="instrument-desc">Riesgo de caída · Segundos · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Segundos</label>
+                <input type="number" id="f_tug3" placeholder="segundos" min="0" step="0.1" oninput="recalcular()">
+                <div class="field-hint">&lt;10 seg: Bajo riesgo · 10-20: Moderado · &gt;20: Alto riesgo</div>
+              </div>
+            </div>
+
+            <!-- Minimental -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">🔢</div>
+                <div>
+                  <div class="instrument-name">Mini Mental State (MMSE)</div>
+                  <div class="instrument-desc">Deterioro cognitivo · 0-30 pts · Mayor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_mini3" placeholder="0-30" min="0" max="30" oninput="recalcular()">
+                <div class="field-hint">≥25: Normal · 18-24: Leve · &lt;18: Mod/Severo</div>
+              </div>
+            </div>
+
+            <!-- Yesavage -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">💭</div>
+                <div>
+                  <div class="instrument-name">Escala de Yesavage (GDS)</div>
+                  <div class="instrument-desc">Depresión geriátrica · 0-15 pts · Menor = mejor</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Puntaje</label>
+                <input type="number" id="f_yesa3" placeholder="0-15" min="0" max="15" oninput="recalcular()">
+                <div class="field-hint">0-5: Sin depresión · 6-10: Moderada · 11-15: Severa</div>
+              </div>
+            </div>
+
+            <!-- EQ-5D -->
+            <div class="instrument-block">
+              <div class="instrument-header">
+                <div class="instrument-icon">❤️</div>
+                <div>
+                  <div class="instrument-name">Autopercepción de Salud (EQ-5D)</div>
+                  <div class="instrument-desc">Percepción subjetiva de salud</div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Percepción de Salud</label>
+                <select id="f_eq3" onchange="recalcular()">
+                  <option value="">Seleccionar…</option>
+                  <option>Muy buena</option>
+                  <option>Buena</option>
+                  <option>Más o menos</option>
+                  <option>Mala</option>
+                  <option>Muy mala</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -1163,6 +1361,49 @@ function cargarDatosVGIAnterior(semestre) {
         }
       });
     }
+  }
+}
+
+function calcularFechasVGI() {
+  const fechaInicial = document.getElementById('f_vgi_fecha_inicial').value;
+  if (!fechaInicial) return;
+
+  const subtabs = document.getElementById('vgiSubtabs');
+  subtabs.style.display = 'block';
+
+  const date1 = new Date(fechaInicial);
+  const date2 = new Date(date1);
+  date2.setMonth(date2.getMonth() + 6);
+  const date3 = new Date(date1);
+  date3.setMonth(date3.getMonth() + 12);
+
+  const formatDate = (d) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${day}/${m}/${y}`;
+  };
+
+  document.getElementById('vgi_fecha_1').textContent = formatDate(date1);
+  document.getElementById('vgi_fecha_2').textContent = formatDate(date2);
+  document.getElementById('vgi_fecha_3').textContent = formatDate(date3);
+
+  cambiarVGITab(1, document.querySelector('.vgi-subtab[data-eval="1"]'));
+}
+
+function cambiarVGITab(eval, btn) {
+  document.querySelectorAll('.vgi-eval-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.vgi-subtab').forEach(b => {
+    b.style.color = '#999';
+    b.style.borderBottom = '3px solid transparent';
+  });
+
+  const content = document.getElementById(`vgi-eval-${eval}`);
+  if (content) content.style.display = 'block';
+
+  if (btn) {
+    btn.style.color = 'var(--terra)';
+    btn.style.borderBottom = '3px solid var(--terra)';
   }
 }
 
@@ -2006,20 +2247,28 @@ function leerFormulario() {
     obj_pai: document.getElementById('f_obj_pai').value,
     obj_alc: document.getElementById('f_obj_alc').value,
     talleres: document.getElementById('f_talleres').value,
+    vgi_fecha_inicial: document.getElementById('f_vgi_fecha_inicial').value,
     barthel1: document.getElementById('f_barthel1').value,
     barthel2: document.getElementById('f_barthel2').value,
+    barthel3: document.getElementById('f_barthel3').value,
     pfeiffer1: document.getElementById('f_pfeiffer1').value,
     pfeiffer2: document.getElementById('f_pfeiffer2').value,
+    pfeiffer3: document.getElementById('f_pfeiffer3').value,
     lawton1: document.getElementById('f_lawton1').value,
     lawton2: document.getElementById('f_lawton2').value,
+    lawton3: document.getElementById('f_lawton3').value,
     tug1: document.getElementById('f_tug1').value,
     tug2: document.getElementById('f_tug2').value,
+    tug3: document.getElementById('f_tug3').value,
     mini1: document.getElementById('f_mini1').value,
     mini2: document.getElementById('f_mini2').value,
+    mini3: document.getElementById('f_mini3').value,
     yesa1: document.getElementById('f_yesa1').value,
     yesa2: document.getElementById('f_yesa2').value,
+    yesa3: document.getElementById('f_yesa3').value,
     eq1: document.getElementById('f_eq1').value,
     eq2: document.getElementById('f_eq2').value,
+    eq3: document.getElementById('f_eq3').value,
     notas: document.getElementById('f_notas').value,
     plan: document.getElementById('f_plan').value,
     f_seguimientos: document.getElementById('f_seguimientos').value,
@@ -2081,8 +2330,8 @@ function limpiarFormulario() {
     ['anio','semestre','operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','contacto_nombre','contacto_telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
      'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
      'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
-     'barthel1','barthel2','pfeiffer1','pfeiffer2','lawton1','lawton2',
-     'tug1','tug2','mini1','mini2','yesa1','yesa2','eq1','eq2','notas','plan',
+     'vgi_fecha_inicial','barthel1','barthel2','barthel3','pfeiffer1','pfeiffer2','pfeiffer3','lawton1','lawton2','lawton3',
+     'tug1','tug2','tug3','mini1','mini2','mini3','yesa1','yesa2','yesa3','eq1','eq2','eq3','notas','plan',
      'seguimientos'
     ].forEach(k => {
       const el = document.getElementById('f_'+k);
@@ -2090,6 +2339,8 @@ function limpiarFormulario() {
     });
     const sr = document.getElementById('segResumen');
     if (sr) sr.style.display = 'none';
+    const subtabs = document.getElementById('vgiSubtabs');
+    if (subtabs) subtabs.style.display = 'none';
   } catch (e) {
     console.error('Error en limpiarFormulario:', e);
   }
