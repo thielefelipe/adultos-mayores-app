@@ -1726,17 +1726,21 @@ function formatearRUT() {
 }
 
 function recalcular() {
-  const tmp = leerFormulario();
-  const sc = score(tmp);
-  const sem = semaforo(sc);
-  const el = document.getElementById('liveScoreBadge');
-  const wrap = document.getElementById('liveScore');
-  wrap.style.display = 'block';
-  el.className = `score-display score-${sem.color}`;
-  el.textContent = sc !== null ? `${sem.emoji} ${sc}/100 — ${sem.label}` : '⚪ Sin datos suficientes';
+  try {
+    const tmp = leerFormulario();
+    const sc = score(tmp);
+    const sem = semaforo(sc);
+    const el = document.getElementById('liveScoreBadge');
+    const wrap = document.getElementById('liveScore');
 
-  // Sincronizar datos al 1ER TRIMESTRE automáticamente
-  sincronizarT1();
+    if (wrap) wrap.style.display = 'block';
+    if (el) {
+      el.className = `score-display score-${sem.color}`;
+      el.textContent = sc !== null ? `${sem.emoji} ${sc}/100 — ${sem.label}` : '⚪ Sin datos suficientes';
+    }
+  } catch (e) {
+    console.error('Error en recalcular:', e);
+  }
 }
 
 function cambiarOperador() {
