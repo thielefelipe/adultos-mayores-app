@@ -1792,7 +1792,15 @@ function abrirModal(id = null) {
       const p = pacientes.find(x => x.id === id);
       if (p) {
         // Admin puede editar cualquier paciente, operadores solo los suyos
-        const usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : {};
+        let usuario = {};
+        try {
+          const usuarioJSON = localStorage.getItem('usuario');
+          if (usuarioJSON) {
+            usuario = JSON.parse(usuarioJSON);
+          }
+        } catch (e) {
+          console.error('Error parsing usuario:', e);
+        }
         if (usuario.rol !== 'admin' && p.operador_id !== operador) {
           toast('⚠️ No tienes permiso para editar este paciente');
           return;
