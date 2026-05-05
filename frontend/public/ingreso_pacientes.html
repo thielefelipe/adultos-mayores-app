@@ -2272,6 +2272,10 @@ function filtrarLista() {
   renderSidebar(filtrados);
 }
 
+function editarPacienteDesdeVista(id) {
+  abrirModal(id);
+}
+
 function verPaciente(id) {
   const p = pacientes.find(x => x.id === id);
   if (!p) return;
@@ -2293,7 +2297,7 @@ function verPaciente(id) {
           <p style="margin:.5rem 0 0 0;opacity:.9;font-size:.95rem">${p.edad} años • ${p.comuna || '—'} • ${p.dependencia || '—'}</p>
         </div>
         <div style="display:flex;gap:.5rem">
-          <button class="btn btn-primary btn-sm" onclick="abrirModal(${p.id})" style="background:white;color:var(--azul);border:none">✏️ Editar</button>
+          <button class="btn btn-primary btn-sm" onclick="editarPacienteDesdeVista(${p.id})" style="background:white;color:var(--azul);border:none">✏️ Editar</button>
           <button class="btn btn-primary btn-sm" onclick="renderMain()" style="background:rgba(255,255,255,.2);border:none">← Volver</button>
         </div>
       </div>
