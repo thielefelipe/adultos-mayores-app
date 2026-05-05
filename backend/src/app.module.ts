@@ -31,6 +31,8 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
           password: configService.get('DB_PASSWORD', 'admin'),
           database: configService.get('DB_NAME', 'centros_diurnos_db'),
           entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
+          migrations: ['dist/migrations/*.js'],
+          migrationsRun: true,
           synchronize: !isProduction, // ⚠️ NUNCA sincronizar en producción
           logging: !isProduction,
           ssl: isProduction ? { rejectUnauthorized: false } : false,
