@@ -1226,24 +1226,83 @@ let pacientesGuardadosEnBackend = new Set(); // Rastrear qué pacientes ya fuero
 // Cargar operadores reales desde la API
 async function cargarOperadores() {
   try {
-    const response = await fetch(`${API_URL}/usuarios/operadores`);
-    if (!response.ok) throw new Error('Error al cargar operadores');
-
-    const operadores = await response.json();
-
     const select = document.getElementById('operadorSelect');
+    if (!select) return;
+
     // Limpiar opciones excepto la primera (Seleccionar operador…)
     while (select.options.length > 1) {
       select.remove(1);
     }
 
-    // Agregar operadores y admins
+    let operadores = [];
+
+    // Intentar cargar del backend
+    try {
+      const response = await fetch(`${API_URL}/usuarios/operadores`);
+      if (response.ok) {
+        operadores = await response.json();
+      }
+    } catch (backendError) {
+      console.warn('No se pudo cargar operadores del backend, usando locales');
+    }
+
+    // Si no hay operadores del backend, usar los del usuario actual + operadores de pacientes
+    if (operadores.length === 0) {
+      try {
+        const usuarioJSON = localStorage.getItem('usuario');
+        if (usuarioJSON) {
+          const usuario = JSON.parse(usuarioJSON);
+          // Agregar el usuario admin actual
+          operadores.push({
+            id: usuario.username || usuario.id || 'admin',
+            nombre: usuario.nombre || usuario.username || 'Admin',
+            username: usuario.username || 'admin'
+          });
+        }
+      } catch (e) {
+        console.error('Error parsing usuario:', e);
+      }
+
+      // Agregar operadores únicos de los pacientes existentes
+      const operadoresUnicos = new Set();
+      pacientes.forEach(p => {
+        if (p.operador_id && p.operador_nombre) {
+          operadoresUnicos.add(JSON.stringify({ id: p.operador_id, nombre: p.operador_nombre }));
+        }
+      });
+
+      operadoresUnicos.forEach(op => {
+        try {
+          const parsed = JSON.parse(op);
+          operadores.push({ id: parsed.id, nombre: parsed.nombre });
+        } catch (e) {}
+      });
+    }
+
+    // Agregar operadores al select (eliminando duplicados)
+    const operadoresVistos = new Set();
     operadores.forEach(op => {
-      const option = document.createElement('option');
-      option.value = op.id;
-      option.textContent = op.textDisplay || op.nombre || op.username;
-      select.appendChild(option);
+      const key = op.id || op.username;
+      if (!operadoresVistos.has(key)) {
+        operadoresVistos.add(key);
+        const option = document.createElement('option');
+        option.value = op.id || op.username || op.nombre;
+        option.textContent = op.nombre || op.username || op.id;
+        select.appendChild(option);
+      }
     });
+
+    // Pre-seleccionar operador actual
+    const operadorActual = localStorage.getItem('operador_actual');
+    if (operadorActual) {
+      select.value = operadorActual;
+    } else {
+      // Si no hay operador actual, seleccionar el primero disponible (probablemente admin)
+      if (select.options.length > 1) {
+        select.selectedIndex = 1;
+        localStorage.setItem('operador_actual', select.value);
+      }
+    }
 
     console.log('✅ Operadores cargados:', operadores.length);
   } catch (error) {
