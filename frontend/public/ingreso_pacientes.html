@@ -1250,14 +1250,18 @@ async function cargarOperadores() {
     if (operadores.length === 0) {
       try {
         const usuarioJSON = localStorage.getItem('usuario');
+        console.log('Usuario JSON:', usuarioJSON);
         if (usuarioJSON) {
           const usuario = JSON.parse(usuarioJSON);
+          console.log('Usuario parseado:', usuario);
           // Agregar el usuario admin actual
+          const operadorId = usuario.username || usuario.id || 'admin';
           operadores.push({
-            id: usuario.username || usuario.id || 'admin',
+            id: operadorId,
             nombre: usuario.nombre || usuario.username || 'Admin',
-            username: usuario.username || 'admin'
+            username: operadorId
           });
+          console.log('Operador agregado:', operadores[operadores.length - 1]);
         }
       } catch (e) {
         console.error('Error parsing usuario:', e);
@@ -1265,11 +1269,13 @@ async function cargarOperadores() {
 
       // Agregar operadores únicos de los pacientes existentes
       const operadoresUnicos = new Set();
-      pacientes.forEach(p => {
-        if (p.operador_id && p.operador_nombre) {
-          operadoresUnicos.add(JSON.stringify({ id: p.operador_id, nombre: p.operador_nombre }));
-        }
-      });
+      if (pacientes && Array.isArray(pacientes)) {
+        pacientes.forEach(p => {
+          if (p.operador_id && p.operador_nombre) {
+            operadoresUnicos.add(JSON.stringify({ id: p.operador_id, nombre: p.operador_nombre }));
+          }
+        });
+      }
 
       operadoresUnicos.forEach(op => {
         try {
@@ -1293,11 +1299,23 @@ async function cargarOperadores() {
     });
 
     // Pre-seleccionar operador actual
-    const operadorActual = localStorage.getItem('operador_actual');
-    if (operadorActual) {
-      select.value = operadorActual;
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    let operadorParaSeleccionar = null;
+
+    // Si el usuario actual es admin, siempre seleccionar admin como operador predeterminado
+    if (usuario.rol === 'admin') {
+      operadorParaSeleccionar = usuario.username || 'admin';
     } else {
-      // Si no hay operador actual, seleccionar el primero disponible (probablemente admin)
+      // Si no es admin, usar el operador guardado anteriormente
+      operadorParaSeleccionar = localStorage.getItem('operador_actual');
+    }
+
+    // Aplicar la selección
+    if (operadorParaSeleccionar) {
+      select.value = operadorParaSeleccionar;
+      localStorage.setItem('operador_actual', operadorParaSeleccionar);
+    } else {
+      // Fallback: seleccionar el primer operador disponible
       if (select.options.length > 1) {
         select.selectedIndex = 1;
         localStorage.setItem('operador_actual', select.value);
