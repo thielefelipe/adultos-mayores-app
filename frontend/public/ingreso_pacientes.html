@@ -2090,12 +2090,58 @@ function eliminarPaciente(id) {
     return;
   }
 
-  if (p.operador_id !== operador) {
+  // Verificar permisos
+  let usuario = {};
+  try {
+    const usuarioJSON = localStorage.getItem('usuario');
+    if (usuarioJSON) {
+      usuario = JSON.parse(usuarioJSON);
+    }
+  } catch (e) {
+    console.error('Error parsing usuario:', e);
+  }
+
+  const esAdmin = usuario.rol === 'admin';
+  const esOwner = p.operador_id === operador;
+
+  // Solo admin o el dueño pueden eliminar
+  if (!esAdmin && !esOwner) {
     toast('⚠️ No tienes permiso para eliminar este paciente');
     return;
   }
 
-  if (!confirm('¿Eliminar este registro?')) return;
+  // Si es admin, pedir contraseña para mayor seguridad
+  if (esAdmin) {
+    const pwd = prompt(`🔐 Ingresa tu contraseña para confirmar eliminación de ${p.nombre}:`);
+    if (!pwd) return;
+
+    // Validar contraseña (se valida contra el backend)
+    const usuarioActual = usuario.username || usuario.email || 'admin';
+    fetch('/api/auth/verify-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ usuario: usuarioActual, password: pwd })
+    }).then(res => res.json()).then(data => {
+      if (data.valido) {
+        _procesoEliminacion(id);
+      } else {
+        toast('❌ Contraseña incorrecta. Eliminación cancelada.');
+      }
+    }).catch(() => {
+      // Si no hay backend, mostrar confirmación adicional
+      const confirmacion = confirm(`⚠️ ¿Estás seguro de que deseas eliminar a ${p.nombre}? Esta acción no se puede deshacer.`);
+      if (confirmacion) {
+        _procesoEliminacion(id);
+      }
+    });
+  } else {
+    // Operadores normales solo piden confirmación simple
+    if (!confirm(`¿Eliminar el registro de ${p.nombre}?`)) return;
+    _procesoEliminacion(id);
+  }
+}
+
+function _procesoEliminacion(id) {
   pacientes = pacientes.filter(x => x.id !== id);
   guardar();
   renderAll();
