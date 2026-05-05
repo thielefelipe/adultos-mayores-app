@@ -46,11 +46,30 @@ export class PacientesService {
     return resultado;
   }
 
-  async obtenerTodos(pagina: number = 1, limite: number = 20) {
+  async obtenerTodos(
+    pagina: number = 1,
+    limite: number = 20,
+    filtros?: {
+      region?: string;
+      provincia?: string;
+      comuna?: string;
+      anio?: number;
+      semestre?: number;
+      operador_id?: string;
+    },
+  ) {
     const skip = (pagina - 1) * limite;
+    const where: any = { eliminado: false };
+
+    if (filtros?.region) where.region = filtros.region;
+    if (filtros?.provincia) where.provincia = filtros.provincia;
+    if (filtros?.comuna) where.comuna = filtros.comuna;
+    if (filtros?.anio) where.anio = filtros.anio;
+    if (filtros?.semestre) where.semestre = filtros.semestre;
+    if (filtros?.operador_id) where.creadoPor = filtros.operador_id;
 
     const [pacientes, total] = await this.pacienteRepository.findAndCount({
-      where: { eliminado: false },
+      where,
       skip,
       take: limite,
       order: { fechaRegistro: 'DESC' },

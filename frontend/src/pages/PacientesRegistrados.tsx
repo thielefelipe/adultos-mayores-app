@@ -629,17 +629,18 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
               <thead>
                 <tr style={{ background: '#0066CC', borderBottom: '2px solid #0066CC' }}>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Nombre</th>
-                  <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Región / Provincia / Comuna</th>
-                  <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Operador</th>
+                  <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>RUT</th>
+                  <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Comuna</th>
+                  <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Creado Por</th>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Fecha Registro</th>
-                  <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Teléfono / Email</th>
+                  <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Teléfono</th>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Estado</th>
                 </tr>
               </thead>
               <tbody>
                 {pacientes.length === 0 ? (
                   <tr>
-                    <td colSpan={6} style={{ padding: 40, textAlign: 'center', color: '#666666' }}>
+                    <td colSpan={7} style={{ padding: 40, textAlign: 'center', color: '#666666' }}>
                       No se encontraron pacientes con los filtros seleccionados
                     </td>
                   </tr>
@@ -662,17 +663,26 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                         {paciente.nombre}
                       </td>
                       <td style={{ padding: 15, color: '#666666', fontSize: 14 }}>
-                        {paciente.region} / {paciente.provincia} / {paciente.comuna}
+                        {paciente.rut}-{paciente.dv}
                       </td>
                       <td style={{ padding: 15, color: '#666666', fontSize: 14 }}>
-                        {paciente.operador_nombre}
+                        {paciente.comuna}
+                      </td>
+                      <td style={{ padding: 15, color: '#666666', fontSize: 13, fontWeight: 500 }}>
+                        <span style={{
+                          backgroundColor: paciente.creadoPor === 'SISTEMA' ? '#FFF3CD' : '#E3F2FD',
+                          padding: '4px 8px',
+                          borderRadius: 4,
+                          color: paciente.creadoPor === 'SISTEMA' ? '#856404' : '#003D82'
+                        }}>
+                          {paciente.creadoPor}
+                        </span>
                       </td>
                       <td style={{ padding: 15, color: '#666666', fontSize: 14 }}>
                         {new Date(paciente.fecha_registro).toLocaleDateString('es-CL')}
                       </td>
                       <td style={{ padding: 15, color: '#666666', fontSize: 14 }}>
-                        <div>{paciente.telefono}</div>
-                        <div style={{ fontSize: 12, color: '#999999' }}>{paciente.email}</div>
+                        {paciente.telefono || '—'}
                       </td>
                       <td style={{ padding: 15, fontSize: 14 }}>
                         <span style={{

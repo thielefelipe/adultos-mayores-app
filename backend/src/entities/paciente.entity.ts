@@ -15,6 +15,12 @@ export class PacienteEntity {
   @Column({ type: 'varchar', length: 255 })
   nombre: string;
 
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  region?: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  provincia?: string;
+
   @Column({ type: 'varchar', length: 20, nullable: true })
   sexo?: string;
 

@@ -30,8 +30,21 @@ export class PacientesController {
   async obtenerTodos(
     @Query('pagina') pagina: number = 1,
     @Query('limite') limite: number = 20,
+    @Query('region') region?: string,
+    @Query('provincia') provincia?: string,
+    @Query('comuna') comuna?: string,
+    @Query('anio') anio?: number,
+    @Query('semestre') semestre?: number,
+    @Query('operador_id') operador_id?: string,
   ) {
-    return this.pacientesService.obtenerTodos(pagina, limite);
+    return this.pacientesService.obtenerTodos(pagina, limite, {
+      region,
+      provincia,
+      comuna,
+      anio,
+      semestre,
+      operador_id,
+    });
   }
 
   @Get('buscar')

@@ -27,6 +27,14 @@ export class CrearPacienteDto {
 
   @IsString()
   @IsOptional()
+  region?: string;
+
+  @IsString()
+  @IsOptional()
+  provincia?: string;
+
+  @IsString()
+  @IsOptional()
   sexo?: string;
 
   @IsNumber()

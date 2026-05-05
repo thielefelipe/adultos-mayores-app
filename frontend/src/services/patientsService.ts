@@ -1,6 +1,8 @@
 export interface Paciente {
   id: string;
   nombre: string;
+  rut: string;
+  dv: string;
   region: string;
   provincia: string;
   comuna: string;
@@ -10,6 +12,10 @@ export interface Paciente {
   telefono: string;
   email: string;
   estado: 'activo' | 'inactivo';
+  creadoPor: string;
+  edad?: number;
+  sexo?: string;
+  dependencia?: string;
 }
 
 export interface FiltrosPacientes {
@@ -25,28 +31,57 @@ export interface FiltrosPacientes {
 const MOCK_PACIENTES: Paciente[] = [];
 
 export const patientsService = {
-  async obtenerPacientes(_token: string, filtros?: FiltrosPacientes) {
-    // TODO: Reemplazar con llamada real a /api/pacientes
-    // const response = await fetch(`${API_BASE}/pacientes`, { ... });
+  async obtenerPacientes(token: string, filtros?: FiltrosPacientes) {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const params = new URLSearchParams();
 
-    let resultado = [...MOCK_PACIENTES];
+      if (filtros?.anio) params.append('anio', String(filtros.anio));
+      if (filtros?.semestre) params.append('semestre', String(filtros.semestre));
+      if (filtros?.region) params.append('region', filtros.region);
+      if (filtros?.provincia) params.append('provincia', filtros.provincia);
+      if (filtros?.comuna) params.append('comuna', filtros.comuna);
+      if (filtros?.operador_id) params.append('operador_id', filtros.operador_id);
 
-    if (filtros) {
-      if (filtros.region) {
-        resultado = resultado.filter(p => p.region === filtros.region);
+      const response = await fetch(`${apiUrl}/pacientes?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        console.error('Error obteniendo pacientes:', response.status);
+        return [];
       }
-      if (filtros.provincia) {
-        resultado = resultado.filter(p => p.provincia === filtros.provincia);
-      }
-      if (filtros.comuna) {
-        resultado = resultado.filter(p => p.comuna === filtros.comuna);
-      }
-      if (filtros.operador_id) {
-        resultado = resultado.filter(p => p.operador_id === filtros.operador_id);
-      }
+
+      const data = await response.json();
+
+      // Si la respuesta tiene estructura con datos/total
+      const pacientes = data.datos || data || [];
+
+      return pacientes.map((p: any) => ({
+        id: p.id,
+        nombre: p.nombre,
+        rut: p.rut,
+        dv: p.dv,
+        region: p.region || '',
+        provincia: p.provincia || '',
+        comuna: p.comuna || '',
+        operador_id: p.operador_id || '',
+        operador_nombre: p.operador_nombre || '',
+        fecha_registro: p.fechaRegistro || p.fecha_registro,
+        telefono: p.telefono || '',
+        email: p.email || '',
+        estado: p.estado === 'activo' ? 'activo' : 'inactivo',
+        creadoPor: p.creadoPor || 'No especificado',
+        edad: p.edad,
+        sexo: p.sexo,
+        dependencia: p.dependencia
+      }));
+    } catch (error) {
+      console.error('Error obteniendo pacientes:', error);
+      return [];
     }
-
-    return resultado;
   },
 
   async obtenerTotal(_token: string): Promise<number> {
