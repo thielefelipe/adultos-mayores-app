@@ -513,8 +513,7 @@
         <button class="form-tab active" onclick="cambiarTab(0, this)">📋 Datos Personales</button>
         <button class="form-tab" onclick="cambiarTab(1, this)">🏥 Atención</button>
         <button class="form-tab" onclick="cambiarTab(2, this)">📊 Instrumentos VGI</button>
-        <button class="form-tab" onclick="cambiarTab(3, this)">📅 Seguimiento</button>
-        <button class="form-tab" onclick="cambiarTab(4, this)">📝 Notas</button>
+        <button class="form-tab" onclick="cambiarTab(3, this)">📝 Notas</button>
       </div>
 
       <!-- TAB 0: Datos Personales -->
@@ -1171,34 +1170,8 @@
 
       </div>
 
-      <!-- TAB 3: Seguimiento Periódico -->
+      <!-- TAB 3: Notas -->
       <div class="form-body tab-content" id="tab3" style="display:none">
-        <div style="background:var(--azul-bg);border:1px solid #c0d4f5;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--azul)">
-          <strong>📅 Seguimiento periódico</strong> — Registra los puntajes de cada semestre por año para hacer comparaciones a lo largo del tiempo.
-        </div>
-
-        <!-- Selector de Año -->
-        <div style="margin-bottom:1.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
-          <div style="flex:1;min-width:200px">
-            <label style="font-size:.78rem;font-weight:600;color:var(--terra);letter-spacing:.03em;display:block;margin-bottom:.5rem;">Seleccionar Año</label>
-            <select id="selectAño" onchange="cambiarAño()" style="width:100%;padding:.6rem .85rem;border:1.5px solid var(--sand);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--ink);background:white;cursor:pointer;">
-              <option value="">Seleccionar…</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" onclick="agregarNuevoAño()" style="margin-top:1.5rem;padding:.5rem 1.1rem;font-size:.82rem;">➕ Nuevo Año</button>
-        </div>
-
-        <!-- Contenedor de Semestres -->
-        <div id="semestreContainer" class="field-grid" style="grid-template-columns:1fr 1fr;gap:1.25rem">
-          <!-- Los semestres se generan dinámicamente aquí -->
-        </div>
-
-        <!-- Campo oculto para almacenar seguimientos en JSON -->
-        <input type="hidden" id="f_seguimientos" value="[]">
-      </div>
-
-      <!-- TAB 4: Notas -->
-      <div class="form-body tab-content" id="tab4" style="display:none">
         <div class="field-grid">
           <div class="field">
             <label>Observaciones generales</label>
@@ -1572,8 +1545,7 @@ async function cargarPacientesDelBackend() {
           eq2: p.eq2,
           dependencia: p.dependencia,
           enfermedades: p.enfermedades,
-          pai: p.pai,
-          f_seguimientos: p.f_seguimientos || '[]'
+          pai: p.pai
         }));
 
         pacientes.forEach(p => pacientesGuardadosEnBackend.add(p.id));
@@ -1753,300 +1725,6 @@ function formatearRUT() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// FUNCIONES PARA SEGUIMIENTO POR AÑO Y SEMESTRE
-// ═══════════════════════════════════════════════════════════════════
-
-function obtenerSeguimientos() {
-  const el = document.getElementById('f_seguimientos');
-  if (!el) return [];
-  const json = el.value;
-  try {
-    return json ? JSON.parse(json) : [];
-  } catch (e) {
-    console.error('Error parsing seguimientos:', e);
-    return [];
-  }
-}
-
-function guardarSeguimientos(seguimientos) {
-  const el = document.getElementById('f_seguimientos');
-  if (!el) return;
-  try {
-    el.value = JSON.stringify(seguimientos);
-  } catch (e) {
-    console.error('Error saving seguimientos:', e);
-  }
-}
-
-function inicializarSeguimientos() {
-  try {
-    const ahora = new Date();
-    const año = ahora.getFullYear();
-    let seguimientos = obtenerSeguimientos();
-
-    // Si no existe seguimiento para este año, crear el Semestre 1
-    const tieneAño = seguimientos.some(s => s.año === año);
-    if (!tieneAño) {
-      seguimientos.push({
-        año: año,
-        semestre: 1,
-        fecha: `${año}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`,
-        puntaje: '',
-        barthel: '',
-        minimental: ''
-      });
-      guardarSeguimientos(seguimientos);
-    }
-
-    // Solo actualizar UI si los elementos existen
-    const selectAño = document.getElementById('selectAño');
-    if (selectAño) {
-      actualizarSelectAño();
-      if (seguimientos.length > 0) {
-        selectAño.value = año;
-        cambiarAño();
-      }
-    }
-  } catch (e) {
-    console.error('Error en inicializarSeguimientos:', e);
-  }
-}
-
-function actualizarSelectAño() {
-  const select = document.getElementById('selectAño');
-  if (!select) return;
-
-  const seguimientos = obtenerSeguimientos();
-  const años = [...new Set(seguimientos.map(s => s.año))].sort((a, b) => b - a);
-
-  select.innerHTML = '<option value="">Seleccionar…</option>';
-  años.forEach(año => {
-    const option = document.createElement('option');
-    option.value = año;
-    option.textContent = `Año ${año}`;
-    select.appendChild(option);
-  });
-}
-
-function cambiarAño() {
-  const selectAño = document.getElementById('selectAño');
-  if (!selectAño) return;
-
-  const año = selectAño.value;
-  if (!año) return;
-
-  generarSemestres(parseInt(año));
-}
-
-function generarSemestres(año) {
-  const container = document.getElementById('semestreContainer');
-  if (!container) return;
-
-  const seguimientos = obtenerSeguimientos();
-  const delAño = seguimientos.filter(s => s.año === año);
-
-  container.innerHTML = '';
-
-  for (let semestre = 1; semestre <= 2; semestre++) {
-    const seg = delAño.find(s => s.semestre === semestre) || {
-      año: año,
-      semestre: semestre,
-      fecha: '',
-      vgi1: { barthel: '', pfeiffer: '', lawton: '', tug: '', mini: '', yesa: '' },
-      vgi2: { barthel: '', pfeiffer: '', lawton: '', tug: '', mini: '', yesa: '' }
-    };
-
-    const semLabel = semestre === 1 ? '1er Semestre (Enero - Junio)' : '2do Semestre (Julio - Diciembre)';
-    const divSemestre = document.createElement('div');
-    divSemestre.className = 'semester-card';
-    divSemestre.style.cssText = 'background:white;border-radius:10px;padding:1.5rem;border:2px solid var(--azul-bg);box-shadow:var(--shadow)';
-
-    // Calcular promedios
-    const prom = calcularPromediosSemestre(seg);
-
-    divSemestre.innerHTML = `
-      <div style="font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--azul);margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem">
-        <span>${semestre === 1 ? '📅' : '📆'}</span> ${semLabel}
-      </div>
-
-      <!-- Comparativa 1ª vs 2ª VGI -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
-        <div style="background:var(--verde-bg);border:1px solid var(--verde-bd);border-radius:8px;padding:1rem">
-          <div style="font-size:.7rem;font-weight:600;color:var(--verde);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">▶ Inicio del Semestre (1ª VGI)</div>
-          <div style="font-size:2rem;font-weight:700;color:var(--verde);font-family:'DM Serif Display',serif">${prom.vgi1.promedio !== null ? prom.vgi1.promedio.toFixed(1) : '—'}</div>
-          <div style="font-size:.75rem;color:var(--verde);margin-top:.25rem">Promedio general</div>
-        </div>
-
-        <div style="background:#FFF8E6;border:1px solid var(--ambar-bd);border-radius:8px;padding:1rem">
-          <div style="font-size:.7rem;font-weight:600;color:var(--ambar);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">⏹ Fin del Semestre (2ª VGI)</div>
-          <div style="font-size:2rem;font-weight:700;color:var(--ambar);font-family:'DM Serif Display',serif">${prom.vgi2.promedio !== null ? prom.vgi2.promedio.toFixed(1) : '—'}</div>
-          <div style="font-size:.75rem;color:var(--ambar);margin-top:.25rem">Promedio general</div>
-        </div>
-      </div>
-
-      <!-- Progreso/Cambio -->
-      <div style="background:var(--azul-bg);border:1px solid #c0d4f5;border-radius:8px;padding:1rem;margin-bottom:1.5rem">
-        <div style="font-size:.7rem;font-weight:600;color:var(--azul);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">📈 Progreso del Semestre</div>
-        <div style="display:flex;align-items:baseline;gap:.75rem">
-          <div style="font-size:1.8rem;font-weight:700;color:var(--azul);font-family:'DM Serif Display',serif">
-            ${prom.diferencia !== null ? (prom.diferencia > 0 ? '+' : '') + prom.diferencia.toFixed(1) : '—'}
-          </div>
-          <div style="font-size:.85rem;color:#666">
-            ${prom.tendencia ? prom.tendencia : 'Sin datos comparables'}
-          </div>
-        </div>
-      </div>
-
-      <!-- Detalle por Instrumento -->
-      <div style="background:#f9f9f9;border-radius:8px;padding:1rem">
-        <div style="font-size:.7rem;font-weight:600;color:var(--terra);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem">Resultados por Instrumento</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;font-size:.8rem">
-          <div><strong style="color:var(--deep)">Barthel:</strong> ${prom.vgi1.barthel !== null ? prom.vgi1.barthel : '—'} → ${prom.vgi2.barthel !== null ? prom.vgi2.barthel : '—'}</div>
-          <div><strong style="color:var(--deep)">Pfeiffer:</strong> ${prom.vgi1.pfeiffer !== null ? prom.vgi1.pfeiffer : '—'} → ${prom.vgi2.pfeiffer !== null ? prom.vgi2.pfeiffer : '—'}</div>
-          <div><strong style="color:var(--deep)">Lawton:</strong> ${prom.vgi1.lawton !== null ? prom.vgi1.lawton : '—'} → ${prom.vgi2.lawton !== null ? prom.vgi2.lawton : '—'}</div>
-          <div><strong style="color:var(--deep)">TUG:</strong> ${prom.vgi1.tug !== null ? prom.vgi1.tug : '—'} → ${prom.vgi2.tug !== null ? prom.vgi2.tug : '—'}</div>
-          <div><strong style="color:var(--deep)">Mini Mental:</strong> ${prom.vgi1.mini !== null ? prom.vgi1.mini : '—'} → ${prom.vgi2.mini !== null ? prom.vgi2.mini : '—'}</div>
-          <div><strong style="color:var(--deep)">Yesavage:</strong> ${prom.vgi1.yesa !== null ? prom.vgi1.yesa : '—'} → ${prom.vgi2.yesa !== null ? prom.vgi2.yesa : '—'}</div>
-        </div>
-      </div>
-
-      <div class="field-grid field-grid-1" style="margin-top:1.5rem;border-top:1px solid var(--sand);padding-top:1rem">
-        <div class="field">
-          <label style="font-size:.8rem">📝 Fecha de evaluación del semestre</label>
-          <input type="date" class="seg-fecha" data-año="${año}" data-semestre="${semestre}" value="${seg.fecha || ''}" style="font-size:.9rem">
-        </div>
-      </div>
-    `;
-
-    container.appendChild(divSemestre);
-  }
-
-  // Agregar event listeners
-  document.querySelectorAll('.seg-fecha').forEach(el => {
-    el.addEventListener('change', guardarSegmento);
-  });
-}
-
-function calcularPromediosSemestre(seg) {
-  const resultado = {
-    vgi1: { barthel: null, pfeiffer: null, lawton: null, tug: null, mini: null, yesa: null, promedio: null },
-    vgi2: { barthel: null, pfeiffer: null, lawton: null, tug: null, mini: null, yesa: null, promedio: null },
-    diferencia: null,
-    tendencia: ''
-  };
-
-  // Si el segmento tiene datos VGI
-  if (seg.vgi1) {
-    const v1 = Object.values(seg.vgi1).filter(v => v !== '' && v !== null && !isNaN(v)).map(Number);
-    if (v1.length > 0) {
-      resultado.vgi1.promedio = v1.reduce((a, b) => a + b) / v1.length;
-      resultado.vgi1 = { ...resultado.vgi1, ...seg.vgi1 };
-    }
-  }
-
-  if (seg.vgi2) {
-    const v2 = Object.values(seg.vgi2).filter(v => v !== '' && v !== null && !isNaN(v)).map(Number);
-    if (v2.length > 0) {
-      resultado.vgi2.promedio = v2.reduce((a, b) => a + b) / v2.length;
-      resultado.vgi2 = { ...resultado.vgi2, ...seg.vgi2 };
-    }
-  }
-
-  // Calcular diferencia y tendencia
-  if (resultado.vgi1.promedio !== null && resultado.vgi2.promedio !== null) {
-    resultado.diferencia = resultado.vgi2.promedio - resultado.vgi1.promedio;
-    if (resultado.diferencia > 2) {
-      resultado.tendencia = '✅ Mejora significativa';
-    } else if (resultado.diferencia > 0) {
-      resultado.tendencia = '↗ Leve mejora';
-    } else if (resultado.diferencia > -2) {
-      resultado.tendencia = '↘ Leve declive';
-    } else {
-      resultado.tendencia = '⚠️ Declive significativo';
-    }
-  }
-
-  return resultado;
-}
-
-function guardarSegmento(e) {
-  const año = parseInt(e.target.dataset.año);
-  const semestre = parseInt(e.target.dataset.semestre);
-  const seguimientos = obtenerSeguimientos();
-  let seg = seguimientos.find(s => s.año === año && s.semestre === semestre);
-
-  if (!seg) {
-    seg = { año, semestre, fecha: '', puntaje: '', barthel: '', minimental: '' };
-    seguimientos.push(seg);
-  }
-
-  if (e.target.classList.contains('seg-fecha')) seg.fecha = e.target.value;
-
-  guardarSeguimientos(seguimientos);
-}
-
-function agregarNuevoAño() {
-  const ahora = new Date();
-  const próximoAño = ahora.getFullYear() + 1;
-  const seguimientos = obtenerSeguimientos();
-
-  if (!seguimientos.some(s => s.año === próximoAño)) {
-    seguimientos.push({
-      año: próximoAño,
-      semestre: 1,
-      fecha: '',
-      puntaje: '',
-      barthel: '',
-      minimental: ''
-    });
-    guardarSeguimientos(seguimientos);
-    actualizarSelectAño();
-    document.getElementById('selectAño').value = próximoAño;
-    cambiarAño();
-  }
-}
-
-function sincronizarT1() {
-  // Obtener el año seleccionado en el formulario
-  const selectAño = document.getElementById('selectAño');
-  if (!selectAño || !selectAño.value) return;
-
-  const año = parseInt(selectAño.value);
-  const barthel2 = document.getElementById('f_barthel2').value;
-  const barthel1 = document.getElementById('f_barthel1').value;
-  const mini2 = document.getElementById('f_mini2').value;
-  const mini1 = document.getElementById('f_mini1').value;
-
-  // Obtener o crear seguimiento del semestre 1
-  const seguimientos = obtenerSeguimientos();
-  let seg = seguimientos.find(s => s.año === año && s.semestre === 1);
-  if (!seg) {
-    seg = { año, semestre: 1, fecha: '', puntaje: '', barthel: '', minimental: '' };
-    seguimientos.push(seg);
-  }
-
-  // Sincronizar valores
-  seg.barthel = barthel2 || barthel1;
-  seg.minimental = mini2 || mini1;
-
-  // Establecer fecha si está vacía
-  if (!seg.fecha) {
-    const hoy = new Date();
-    seg.fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
-  }
-
-  // Calcular puntaje
-  const tmp = leerFormulario();
-  const sc = score(tmp);
-  if (sc !== null) {
-    seg.puntaje = sc;
-  }
-
-  guardarSeguimientos(seguimientos);
-  generarSemestres(año);
-}
-
 function recalcular() {
   const tmp = leerFormulario();
   const sc = score(tmp);
@@ -2142,11 +1820,6 @@ function cambiarTab(idx, btn) {
   document.querySelectorAll('.tab-content').forEach((el,i) => el.style.display = i === idx ? '' : 'none');
   document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-
-  // Inicializar seguimientos cuando se abre TAB 3 (Seguimiento)
-  if (idx === 2) {
-    setTimeout(() => inicializarSeguimientos(), 10);
-  }
 
   // Actualizar botones del footer según la pestaña
   actualizarBotonesFooter(idx);
@@ -2269,24 +1942,17 @@ function leerFormulario() {
     eq3: document.getElementById('f_eq3').value,
     notas: document.getElementById('f_notas').value,
     plan: document.getElementById('f_plan').value,
-    f_seguimientos: document.getElementById('f_seguimientos').value,
   };
 }
 
 function cargarFormulario(p) {
   Object.keys(p).forEach(k => {
     // Skip fields that need special handling
-    if (k === 'f_seguimientos' || k === 'vgi') return;
+    if (k === 'vgi') return;
 
     const el = document.getElementById('f_' + k);
     if (el) el.value = p[k] || '';
   });
-
-  // Handle f_seguimientos JSON field
-  if (p.f_seguimientos) {
-    document.getElementById('f_seguimientos').value = p.f_seguimientos;
-    inicializarSeguimientos();
-  }
 
   // Cargar datos VGI si existen
   if (p.vgi) {
@@ -2329,8 +1995,7 @@ function limpiarFormulario() {
      'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
      'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
      'vgi_fecha_inicial','barthel1','barthel2','barthel3','pfeiffer1','pfeiffer2','pfeiffer3','lawton1','lawton2','lawton3',
-     'tug1','tug2','tug3','mini1','mini2','mini3','yesa1','yesa2','yesa3','eq1','eq2','eq3','notas','plan',
-     'seguimientos'
+     'tug1','tug2','tug3','mini1','mini2','mini3','yesa1','yesa2','yesa3','eq1','eq2','eq3','notas','plan'
     ].forEach(k => {
       const el = document.getElementById('f_'+k);
       if(el) el.value = '';
@@ -2492,9 +2157,6 @@ function renderMain() {
   const totalA = scores.filter(s => s !== null && s >= 50 && s < 80).length;
   const totalR = scores.filter(s => s !== null && s < 50).length;
   const totalSin = scores.filter(s => s === null).length;
-  const conSeg = pacientesOperador.filter(p => getPeriodos(p).length > 0).length;
-  const mejoras = pacientesOperador.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt > ps[0].punt; }).length;
-  const deterioros = pacientesOperador.filter(p => { const ps = getPeriodos(p); if(ps.length<2) return false; return ps[ps.length-1].punt < ps[0].punt; }).length;
 
   main.innerHTML = `
     <div class="section-header">
@@ -2524,29 +2186,6 @@ function renderMain() {
       </div>
     </div>
 
-    ${conSeg > 0 ? `<div class="dashboard-grid" style="margin-bottom:2rem">
-      <div class="stat-card">
-        <div class="stat-label">📅 Con seguimiento</div>
-        <div class="stat-value">${conSeg}</div>
-        <div class="stat-sub">de ${pacientes.length} personas</div>
-      </div>
-      <div class="stat-card stat-verde">
-        <div class="stat-label">⬆ Con mejora</div>
-        <div class="stat-value">${mejoras}</div>
-        <div class="stat-sub">puntaje subió</div>
-      </div>
-      <div class="stat-card stat-rojo">
-        <div class="stat-label">⬇ Con deterioro</div>
-        <div class="stat-value">${deterioros}</div>
-        <div class="stat-sub">puntaje bajó</div>
-      </div>
-      <div class="stat-card stat-ambar">
-        <div class="stat-label">→ Sin cambio</div>
-        <div class="stat-value">${conSeg - mejoras - deterioros}</div>
-        <div class="stat-sub">puntaje estable</div>
-      </div>
-    </div>` : ''}
-
     <div class="section-header" style="margin-top:1.5rem">
       <div class="section-title">Listado de personas</div>
     </div>
@@ -2570,16 +2209,6 @@ function renderMain() {
             const sc = score(p);
             const sem = semaforo(sc);
             const badgeClass = sem.color === 'verde' ? 'score-verde' : sem.color === 'ambar' ? 'score-ambar' : sem.color === 'rojo' ? 'score-rojo' : 'score-gray';
-            const ps = getPeriodos(p);
-            let tendHtml = '<td style="color:#ccc;font-size:.8rem">—</td>';
-            if (ps.length >= 2) {
-              const diff = Math.round((ps[ps.length-1].punt - ps[0].punt)*10)/10;
-              const tc = diff > 0 ? 'var(--verde)' : diff < 0 ? 'var(--rojo)' : '#aaa';
-              const ta = diff > 10 ? '⬆' : diff > 0 ? '↗' : diff === 0 ? '→' : '⬇';
-              tendHtml = `<td style="font-weight:700;color:${tc};font-size:.88rem">${ta} ${diff>0?'+':''}${diff}</td>`;
-            } else if (ps.length === 1) {
-              tendHtml = `<td style="font-size:.75rem;color:#bbb">T1: ${ps[0].punt}</td>`;
-            }
             return `<tr onclick="verPaciente(${p.id})">
               <td class="td-name">${p.nombre||'—'}</td>
               <td>${p.rut||'—'}</td>
@@ -2588,7 +2217,7 @@ function renderMain() {
               <td>${p.dependencia||'—'}</td>
               <td><span style="font-weight:700; color:${sem.color === 'verde'?'var(--verde)':sem.color==='ambar'?'var(--ambar)':sem.color==='rojo'?'var(--rojo)':'#aaa'}">${sc !== null ? sc : '—'}</span></td>
               <td><span class="score-display ${badgeClass}" style="font-size:.75rem;padding:.2rem .6rem">${sem.emoji} ${sem.label}</span></td>
-              ${tendHtml}
+              <td style="color:#ccc;font-size:.8rem">—</td>
               <td onclick="event.stopPropagation()">
                 <button class="btn btn-sm btn-verde" onclick="abrirModal(${p.id})">✏️</button>
                 <button class="btn btn-sm btn-danger" onclick="eliminarPaciente(${p.id})" style="margin-left:.3rem">🗑</button>
@@ -2621,46 +2250,20 @@ function recalcularSeg() {
   }
 }
 
-function getPeriodos(p) {
-  const periodos = [];
-  try {
-    const seguimientos = p.f_seguimientos ? JSON.parse(p.f_seguimientos) : [];
-    seguimientos.forEach(seg => {
-      if (seg.puntaje !== '' && seg.puntaje !== undefined && !isNaN(Number(seg.puntaje))) {
-        periodos.push({
-          label: `${seg.año}-S${seg.semestre}`,
-          fecha: seg.fecha || `${seg.año} Semestre ${seg.semestre}`,
-          punt: Number(seg.puntaje),
-          barthel: seg.barthel !== '' ? Number(seg.barthel) : null,
-          mini: seg.minimental !== '' ? Number(seg.minimental) : null,
-        });
-      }
-    });
-  } catch (e) {
-    console.error('Error parsing seguimientos:', e);
-  }
-  return periodos;
-}
-
 function exportarDatos() {
   if (!pacientes.length) { toast('No hay datos para exportar'); return; }
-  const headers = ['Nombre','RUT','DV','Edad','Sexo','Región','Provincia','Comuna','Dirección','Rural','Dependencia','Enfermedades','PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2','TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2','Puntaje_Base','Estado_Base','Seguimientos_JSON','Diferencia_Anual','Tendencia'];
+  const headers = ['Nombre','RUT','DV','Edad','Sexo','Región','Provincia','Comuna','Dirección','Rural','Dependencia','Enfermedades','PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2','TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2','Puntaje_Base','Estado_Base'];
   const rows = pacientes.map(p => {
     const sc = score(p);
     const sem = semaforo(sc);
-    const periodos = getPeriodos(p);
-    const primer = periodos.length > 0 ? periodos[0].punt : '';
-    const ultimo = periodos.length > 0 ? periodos[periodos.length-1].punt : '';
-    const diff = (primer !== '' && ultimo !== '') ? Math.round((ultimo-primer)*10)/10 : '';
-    const tend = diff !== '' ? (diff > 10 ? 'Mejora notable' : diff > 0 ? 'Mejora leve' : diff === 0 ? 'Sin cambio' : 'Deterioro') : '';
-    return [p.nombre,p.rut,p.dv,p.edad,p.sexo,p.region,p.provincia,p.comuna_personal,p.direccion,p.rural,p.dependencia,p.enfermedades,p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,sc,sem.label,p.f_seguimientos||'',diff,tend].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+    return [p.nombre,p.rut,p.dv,p.edad,p.sexo,p.region,p.provincia,p.comuna_personal,p.direccion,p.rural,p.dependencia,p.enfermedades,p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,sc,sem.label].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
   });
   const csv = [headers.join(','), ...rows].join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,﻿' + encodeURIComponent(csv);
   a.download = 'linea_base_2025.csv';
   a.click();
-  toast('📥 CSV descargado con datos de seguimiento');
+  toast('📥 CSV descargado correctamente');
 }
 
 function filtrarLista() {
