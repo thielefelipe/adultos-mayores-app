@@ -1304,9 +1304,12 @@ async function cargarOperadores() {
     const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
     let operadorParaSeleccionar = null;
 
-    // Si el usuario actual es admin, siempre seleccionar admin como operador predeterminado
+    // Si el usuario actual es admin, buscar el operador admin en la lista
     if (usuario.rol === 'admin') {
-      operadorParaSeleccionar = usuario.username || 'admin';
+      const operadorAdmin = operadores.find(op =>
+        op.username === 'admin' || op.id === usuario.id || op.nombre === 'Administrador'
+      );
+      operadorParaSeleccionar = operadorAdmin?.id;
     } else {
       // Si no es admin, usar el operador guardado anteriormente
       operadorParaSeleccionar = localStorage.getItem('operador_actual');
