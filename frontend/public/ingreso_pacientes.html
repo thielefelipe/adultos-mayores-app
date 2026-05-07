@@ -2823,6 +2823,7 @@ function abrirGeneradorCredencial() {
   sessionStorage.setItem('credencial_paciente', JSON.stringify({
     nombre: p.nombre || '',
     rut: rutFormateado || '',
+    dv: p.dv || '',
     fechaNac: p.fechaNac || '',
     telPersonal: p.telefono || '',
     numSocio: p.id || '',
