@@ -500,7 +500,8 @@ const ITEL = `<svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)
 const IPER = `<svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
 
 // ─── Build credencial frente ─────────────────────────────────
-function buildFrente(n,rut,fn,tel,ns,ai) {
+function buildFrente(n,rut,dv,fn,tel,ns,ai) {
+  const rutCompleto = rut && dv ? `${rut}-${dv}` : rut;
   const fHTML = foto
     ? `<img id="foto-drag-img" src="${foto}" alt="Foto" draggable="false" style="object-position:${fotoX.toFixed(1)}% ${fotoY.toFixed(1)}%"><div class="drag-hint">✥ arrastrar</div>`
     : `<div class="cfoto-ph"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>FOTO</span></div>`;
@@ -516,7 +517,7 @@ function buildFrente(n,rut,fn,tel,ns,ai) {
       <div class="cfoto">${fHTML}</div>
       <div class="cdatos">
         <div class="cnombre">${n||'Nombre'}</div>
-        ${rut ?`<div class="cfila"><span class="cetiq">RUT</span><span class="cval">${rut}</span></div>`:''}
+        ${rutCompleto ?`<div class="cfila"><span class="cetiq">RUT</span><span class="cval">${rutCompleto}</span></div>`:''}
         ${fn  ?`<div class="cfila"><span class="cetiq">Fecha de nacimiento</span><span class="cval">${fn}</span></div>`:''}
         ${tel ?`<div class="cfila"><span class="cetiq">Teléfono</span><span class="cval">${tel}</span></div>`:''}
         ${ns  ?`<div class="cfila"><span class="cetiq">N° Socio</span><span class="cbadge">#${ns}</span></div>`:''}
@@ -562,7 +563,7 @@ function buildReverso(n,tel,cn,ct) {
 
 // ─── Actualizar preview ──────────────────────────────────────
 function actualizar() {
-  const n=g('nombre'),rut=g('rut'),fn=g('fechaNac'),tel=g('telPersonal'),ns=g('numSocio'),ai=g('anioIngreso'),cn=g('contactoNombre'),ct=g('contactoTel');
+  const n=g('nombre'),rut=g('rut'),dv=g('dv'),fn=g('fechaNac'),tel=g('telPersonal'),ns=g('numSocio'),ai=g('anioIngreso'),cn=g('contactoNombre'),ct=g('contactoTel');
   const hay=n||rut||fn||tel||ns||ai||cn||ct||foto;
   const c=document.getElementById('cardContainer');
   if (!hay) {
@@ -570,7 +571,7 @@ function actualizar() {
     return;
   }
   c.innerHTML=`
-    <div class="side-wrap">${buildFrente(n,rut,fn,tel,ns,ai)}<div class="clabel">⬆ Frente</div></div>
+    <div class="side-wrap">${buildFrente(n,rut,dv,fn,tel,ns,ai)}<div class="clabel">⬆ Frente</div></div>
     <div class="side-wrap">${buildReverso(n,tel,cn,ct)}<div class="clabel">⬆ Reverso</div></div>`;
 }
 
