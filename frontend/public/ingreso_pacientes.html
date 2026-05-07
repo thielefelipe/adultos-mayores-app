@@ -2460,7 +2460,7 @@ function verPaciente(id) {
           <p style="margin:.5rem 0 0 0;opacity:.9;font-size:.95rem">${p.edad} años • ${p.comuna || '—'} • ${p.dependencia || '—'}</p>
         </div>
         <div style="display:flex;gap:.5rem">
-          <button class="btn btn-primary btn-sm" onclick="mostrarModalCredencial(${JSON.stringify(p)})" style="background:#16a34a;color:white;border:none">🎫 Credencial</button>
+          <button class="btn btn-primary btn-sm" onclick="mostrarCredencialPorId(${p.id})" style="background:#16a34a;color:white;border:none">🎫 Credencial</button>
           <button class="btn btn-primary btn-sm" onclick="editarPacienteDesdeVista(${p.id})" style="background:white;color:var(--azul);border:none">✏️ Editar</button>
           <button class="btn btn-primary btn-sm" onclick="renderMain()" style="background:rgba(255,255,255,.2);border:none">← Volver</button>
         </div>
@@ -2766,6 +2766,11 @@ let pacienteActualParaCredencial = null;
 function mostrarModalCredencial(paciente) {
   pacienteActualParaCredencial = paciente;
   document.getElementById('modalCredencial').style.display = 'flex';
+}
+
+function mostrarCredencialPorId(id) {
+  const p = pacientes.find(x => x.id === id);
+  if (p) mostrarModalCredencial(p);
 }
 
 function cerrarModalCredencial() {
