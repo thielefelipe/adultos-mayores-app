@@ -545,8 +545,12 @@
             </select>
           </div>
           <div class="field">
+            <label>Fecha de Nacimiento</label>
+            <input type="date" id="f_fecha_nacimiento" onchange="calcularEdadAutomatica()">
+          </div>
+          <div class="field">
             <label>Edad</label>
-            <input type="number" id="f_edad" placeholder="75" min="60" max="120">
+            <input type="number" id="f_edad" placeholder="75" min="60" max="120" readonly style="background:#f0f0f0;cursor:default;">
           </div>
           <div class="field">
             <label>Teléfono</label>
@@ -1668,6 +1672,27 @@ function configurarOperadorUI() {
   }
 }
 
+function calcularEdadAutomatica() {
+  const fechaNacInput = document.getElementById('f_fecha_nacimiento');
+  const edadInput = document.getElementById('f_edad');
+
+  if (!fechaNacInput.value) {
+    edadInput.value = '';
+    return;
+  }
+
+  const fechaNac = new Date(fechaNacInput.value);
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - fechaNac.getFullYear();
+  const mesesDiferencia = hoy.getMonth() - fechaNac.getMonth();
+
+  if (mesesDiferencia < 0 || (mesesDiferencia === 0 && hoy.getDate() < fechaNac.getDate())) {
+    edad--;
+  }
+
+  edadInput.value = edad;
+}
+
 function guardar() {
   localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
 
@@ -2013,6 +2038,7 @@ function leerFormulario() {
     contacto_telefono: get('f_contacto_telefono').trim(),
     contacto_relacion: get('f_contacto_relacion'),
     sexo: get('f_sexo'),
+    fecha_nacimiento: get('f_fecha_nacimiento'),
     edad: get('f_edad'),
     telefono: get('f_telefono'),
     region: get('f_region'),
@@ -2108,7 +2134,7 @@ function cargarFormulario(p) {
 
 function limpiarFormulario() {
   try {
-    ['anio','semestre','operador_id','operador_nombre','rut','dv','nombre','sexo','edad','telefono','contacto_nombre','contacto_telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
+    ['anio','semestre','operador_id','operador_nombre','rut','dv','nombre','sexo','fecha_nacimiento','edad','telefono','contacto_nombre','contacto_telefono','region','provincia','comuna_personal','sector','direccion','escolaridad','pueblo','rsh',
      'f_ingreso','f_consentimiento','f_egreso','naturaleza','comuna','rural',
      'dependencia','enfermedades','pai','obj_pai','obj_alc','talleres',
      'vgi_fecha_inicial','barthel1','barthel2','barthel3','pfeiffer1','pfeiffer2','pfeiffer3','lawton1','lawton2','lawton3',
