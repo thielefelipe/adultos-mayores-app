@@ -1675,47 +1675,63 @@ function guardar() {
   guardarEnBackend();
 }
 
+function toNum(v) {
+  const n = parseFloat(v);
+  return isNaN(n) ? undefined : n;
+}
+
 async function guardarEnBackend() {
   try {
     const token = localStorage.getItem('token');
+    if (!token) return;
 
-    if (!token) return; // Sin token, no hay sesión
-
-    // Enviar solo pacientes nuevos (que no hayan sido guardados en el backend)
     for (const paciente of pacientes) {
-      if (pacientesGuardadosEnBackend.has(paciente.id)) {
-        continue; // Ya fue guardado, omitir
-      }
+      if (pacientesGuardadosEnBackend.has(paciente.id)) continue;
 
-      // Preparar datos para el backend
       const datosBackend = {
-        rut: paciente.rut,
-        dv: paciente.dv,
+        rut: paciente.rut || undefined,
+        dv: paciente.dv || undefined,
         nombre: paciente.nombre,
-        sexo: paciente.sexo,
-        edad: paciente.edad,
-        telefono: paciente.telefono,
-        comuna: paciente.comuna_personal,
-        region: paciente.region,
-        provincia: paciente.provincia,
-        dependencia: paciente.dependencia,
-        enfermedades: paciente.enfermedades,
-        pai: paciente.pai,
-        barthel1: paciente.barthel1,
-        barthel2: paciente.barthel2,
-        pfeiffer1: paciente.pfeiffer1,
-        pfeiffer2: paciente.pfeiffer2,
-        lawton1: paciente.lawton1,
-        lawton2: paciente.lawton2,
-        tug1: paciente.tug1,
-        tug2: paciente.tug2,
-        mini1: paciente.mini1,
-        mini2: paciente.mini2,
-        yesa1: paciente.yesa1,
-        yesa2: paciente.yesa2,
-        eq1: paciente.eq1,
-        eq2: paciente.eq2
+        sexo: paciente.sexo || undefined,
+        edad: toNum(paciente.edad),
+        telefono: paciente.telefono || undefined,
+        escolaridad: paciente.escolaridad || undefined,
+        pueblo: paciente.pueblo || undefined,
+        rsh: paciente.rsh || undefined,
+        f_ingreso: paciente.f_ingreso || undefined,
+        f_consentimiento: paciente.f_consentimiento || undefined,
+        f_egreso: paciente.f_egreso || undefined,
+        comuna: paciente.comuna_personal || undefined,
+        naturaleza: paciente.naturaleza || undefined,
+        rural: paciente.rural || undefined,
+        region: paciente.region || undefined,
+        provincia: paciente.provincia || undefined,
+        dependencia: paciente.dependencia || undefined,
+        enfermedades: paciente.enfermedades || undefined,
+        pai: paciente.pai || undefined,
+        obj_pai: toNum(paciente.obj_pai),
+        obj_alc: toNum(paciente.obj_alc),
+        talleres: paciente.talleres || undefined,
+        barthel1: toNum(paciente.barthel1),
+        barthel2: toNum(paciente.barthel2),
+        pfeiffer1: toNum(paciente.pfeiffer1),
+        pfeiffer2: toNum(paciente.pfeiffer2),
+        lawton1: toNum(paciente.lawton1),
+        lawton2: toNum(paciente.lawton2),
+        tug1: toNum(paciente.tug1),
+        tug2: toNum(paciente.tug2),
+        mini1: toNum(paciente.mini1),
+        mini2: toNum(paciente.mini2),
+        yesa1: toNum(paciente.yesa1),
+        yesa2: toNum(paciente.yesa2),
+        eq1: paciente.eq1 || undefined,
+        eq2: paciente.eq2 || undefined,
+        notas: paciente.notas || undefined,
+        plan: paciente.plan || undefined,
       };
+
+      // Eliminar claves undefined para que el backend no las reciba
+      Object.keys(datosBackend).forEach(k => datosBackend[k] === undefined && delete datosBackend[k]);
 
       const response = await fetch(`${API_URL}/pacientes`, {
         method: 'POST',
@@ -1727,14 +1743,17 @@ async function guardarEnBackend() {
       });
 
       if (response.ok) {
-        pacientesGuardadosEnBackend.add(paciente.id); // Marcar como guardado
+        pacientesGuardadosEnBackend.add(paciente.id);
         console.log('Paciente guardado en backend:', paciente.nombre);
       } else {
-        console.error('Error al guardar paciente en backend:', response.status);
+        const errBody = await response.text();
+        console.error('Error al guardar paciente en backend:', response.status, errBody);
+        toast('⚠️ Error al guardar en servidor (' + response.status + '). Revisa los datos.');
       }
     }
   } catch (e) {
     console.error('Error enviando datos al backend:', e);
+    toast('⚠️ Sin conexión con el servidor. Los datos quedan guardados localmente.');
   }
 }
 

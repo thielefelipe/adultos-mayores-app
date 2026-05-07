@@ -16,6 +16,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
+    transform: true,
+    transformOptions: { enableImplicitConversion: true },
   }));
 
   // Nota: El interceptor no se aplica globalmente aquí porque requiere inyectar AuthService

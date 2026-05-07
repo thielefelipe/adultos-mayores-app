@@ -17,8 +17,8 @@ export class CrearPacienteDto {
   rut: string;
 
   @IsString()
-  @IsNotEmpty()
-  dv: string;
+  @IsOptional()
+  dv?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -76,8 +76,8 @@ export class CrearPacienteDto {
   f_egreso?: Date;
 
   @IsString()
-  @IsNotEmpty()
-  comuna: string;
+  @IsOptional()
+  comuna?: string;
 
   @IsString()
   @IsOptional()
