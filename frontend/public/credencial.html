@@ -351,9 +351,10 @@ window.addEventListener("DOMContentLoaded", function() {
     <span class="slabel">Datos personales</span>
     <div class="field"><label>Nombre completo</label><input type="text" id="nombre" placeholder="María Elena González Rojas" oninput="actualizar()"></div>
     <div class="row2">
-      <div class="field"><label>RUT</label><input type="text" id="rut" placeholder="8.123.456-7" oninput="actualizar()"></div>
-      <div class="field"><label>Fecha de nacimiento</label><input type="text" id="fechaNac" placeholder="12/03/1945" oninput="actualizar()"></div>
+      <div class="field" style="flex: 3"><label>RUT</label><input type="text" id="rut" placeholder="8.123.456" oninput="actualizar()"></div>
+      <div class="field" style="flex: 1"><label>DV</label><input type="text" id="dv" placeholder="7" maxlength="1" oninput="actualizar()"></div>
     </div>
+    <div class="field"><label>Fecha de nacimiento</label><input type="text" id="fechaNac" placeholder="12/03/1945" oninput="actualizar()"></div>
     <div class="field"><label>Teléfono personal</label><input type="text" id="telPersonal" placeholder="+56 9 1234 5678" oninput="actualizar()"></div>
     <span class="slabel">Datos del centro</span>
     <div class="row2">
@@ -580,7 +581,7 @@ function generarYRegistrar() {
   const n=g('nombre');
   if (!n) { alert('Ingresa al menos el nombre.'); return; }
   actualizar();
-  const entry={id:Date.now(),nombre:n,rut:g('rut'),fechaNac:g('fechaNac'),telPersonal:g('telPersonal'),numSocio:g('numSocio'),anioIngreso:g('anioIngreso'),contactoNombre:g('contactoNombre'),contactoTel:g('contactoTel'),registrado:new Date().toLocaleString('es-CL')};
+  const entry={id:Date.now(),nombre:n,rut:g('rut'),dv:g('dv'),fechaNac:g('fechaNac'),telPersonal:g('telPersonal'),numSocio:g('numSocio'),anioIngreso:g('anioIngreso'),contactoNombre:g('contactoNombre'),contactoTel:g('contactoTel'),registrado:new Date().toLocaleString('es-CL')};
   reg.push(entry);
   localStorage.setItem('cdcReg8',JSON.stringify(reg));
   contarReg();
@@ -593,7 +594,7 @@ function generarYRegistrar() {
 function cargarEnFormulario(id) {
   const e=reg.find(r=>r.id===id); if(!e) return;
   showTab('cred');
-  ['nombre','rut','fechaNac','telPersonal','numSocio','anioIngreso','contactoNombre','contactoTel'].forEach(k=>{
+  ['nombre','rut','dv','fechaNac','telPersonal','numSocio','anioIngreso','contactoNombre','contactoTel'].forEach(k=>{
     document.getElementById(k).value = e[k]||'';
   });
   foto=null; fotoX=50; fotoY=50; fotoZoom=100;
