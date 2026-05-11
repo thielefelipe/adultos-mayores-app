@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { authService } from '../services/authService';
 
@@ -87,18 +87,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authService.setUsuario(nuevoUsuario);
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     if (token) {
       await authService.logout(token);
     }
     setUsuario(null);
     setToken(null);
     authService.clearAuth();
-    // Limpiar la vista guardada del Dashboard para que siempre comience en 'inicio'
     localStorage.removeItem('dashboardVista');
-    // Limpiar el hash de la URL para que no se restaure la última vista
     window.location.hash = '';
-  };
+  }, [token]);
 
   return (
     <AuthContext.Provider
