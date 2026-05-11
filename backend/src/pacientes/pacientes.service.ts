@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { PacienteEntity } from '../entities';
 import { CrearPacienteDto } from './dtos/crear-paciente.dto';
 import { AuditService } from '../audit/audit.service';
@@ -256,9 +256,4 @@ export class PacientesService {
 
     return csv;
   }
-}
-
-// Helper para Like queries
-function Like(pattern: string) {
-  return pattern;
 }
