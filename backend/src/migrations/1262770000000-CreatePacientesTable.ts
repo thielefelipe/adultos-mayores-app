@@ -94,6 +94,8 @@ export class CreatePacientesTable1262770000000 implements MigrationInterface {
           { name: 't4_mini', type: 'integer', isNullable: true },
           { name: 'notas', type: 'text', isNullable: true },
           { name: 'plan', type: 'text', isNullable: true },
+          { name: 'operador_id', type: 'varchar', length: '255', isNullable: true },
+          { name: 'operador_nombre', type: 'varchar', length: '255', isNullable: true },
           { name: 'creadoPor', type: 'varchar', length: '255', isNullable: false },
           {
             name: 'fechaRegistro',
