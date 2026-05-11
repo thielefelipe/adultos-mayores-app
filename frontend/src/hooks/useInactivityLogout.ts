@@ -10,10 +10,8 @@ export function useInactivityLogout() {
     if (!isAutenticado) return;
 
     let timeoutId: NodeJS.Timeout;
-    let lastActivityTime = Date.now();
 
     const resetInactivityTimer = () => {
-      lastActivityTime = Date.now();
       clearTimeout(timeoutId);
 
       timeoutId = setTimeout(() => {
