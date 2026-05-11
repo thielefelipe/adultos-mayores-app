@@ -246,13 +246,33 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   const handleGuardarPaciente = async (pacienteData: any) => {
     try {
       console.log('Guardar paciente:', pacienteData);
-      // TODO: Implementar guardado en backend
-      // Por ahora, solo mostramos un log y cerramos el modal
-      alert('Paciente guardado exitosamente (pendiente integración con backend)');
+
+      if (!token) {
+        alert('No hay sesión activa');
+        return;
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/pacientes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(pacienteData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Error al guardar paciente:', response.status, errorData);
+        alert(`Error al guardar: ${response.status}`);
+        return;
+      }
+
+      alert('Paciente guardado exitosamente');
       cargarPacientes();
     } catch (error) {
       console.error('Error al guardar paciente:', error);
-      throw error;
+      alert('Error al guardar paciente: ' + (error instanceof Error ? error.message : 'desconocido'));
     }
   };
 

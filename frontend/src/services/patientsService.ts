@@ -43,21 +43,29 @@ export const patientsService = {
       if (filtros?.comuna) params.append('comuna', filtros.comuna);
       if (filtros?.operador_id) params.append('operador_id', filtros.operador_id);
 
-      const response = await fetch(`${apiUrl}/pacientes?${params.toString()}`, {
+      const url = `${apiUrl}/pacientes?${params.toString()}`;
+      console.log('🔍 Obteniendo pacientes desde:', url);
+
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
+      console.log('📨 Respuesta del servidor:', response.status, response.statusText);
+
       if (!response.ok) {
-        console.error('Error obteniendo pacientes:', response.status);
+        const errorText = await response.text();
+        console.error('❌ Error obteniendo pacientes:', response.status, errorText);
         return [];
       }
 
       const data = await response.json();
+      console.log('📦 Datos recibidos:', data);
 
       // Si la respuesta tiene estructura con datos/total
       const pacientes = data.datos || data || [];
+      console.log('✅ Pacientes procesados:', pacientes.length);
 
       return pacientes.map((p: any) => ({
         id: p.id,
