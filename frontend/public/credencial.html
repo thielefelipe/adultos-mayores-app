@@ -5,35 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credenciales – Centro Diurno Coelemu</title>
 <script>
+  // Validación de autenticación
   (function() {
     var token = localStorage.getItem('token');
     var usuario = localStorage.getItem('usuario');
-    if (!token || !usuario) { window.location.href = '/'; return; }
-    try {
-      var decoded = JSON.parse(atob(token.split('.')[1]));
-      if (Date.now() > decoded.exp * 1000) {
-        localStorage.removeItem('token'); localStorage.removeItem('usuario');
-        window.location.href = '/'; return;
-      }
-    } catch(e) {
-      localStorage.removeItem('token'); localStorage.removeItem('usuario');
-      window.location.href = '/'; return;
+
+    if (!token || !usuario) {
+      window.location.href = '/';
+      return;
     }
-    var inactivityTimer;
-    function resetInactivityTimer() {
-      clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(function() {
+
+    try {
+      var parts = token.split('.');
+      if (parts.length !== 3) throw new Error('Token inválido');
+      var decoded = JSON.parse(atob(parts[1]));
+      var expirationTime = decoded.exp * 1000;
+      var currentTime = Date.now();
+
+      if (currentTime > expirationTime) {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
-        localStorage.removeItem('dashboardVista');
         window.location.href = '/';
-      }, 5 * 60 * 1000);
+        return;
+      }
+    } catch(e) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/';
+      return;
     }
-    ['mousedown','keydown','scroll','touchstart','click'].forEach(function(e) {
-      window.addEventListener(e, resetInactivityTimer);
-    });
-    resetInactivityTimer();
   })();
+
+  // Cierre automático por inactividad (5 minutos)
+  var inactivityTimer;
+  var INACTIVITY_TIMEOUT = 5 * 60 * 1000;
+
+  function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+      console.log('⏱️ Sesión expirada por inactividad en credencial');
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('dashboardVista');
+      window.location.href = '/';
+    }, INACTIVITY_TIMEOUT);
+  }
+
+  var events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+  events.forEach(function(event) {
+    window.addEventListener(event, resetInactivityTimer, true);
+  });
+
+  resetInactivityTimer();
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>

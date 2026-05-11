@@ -48,12 +48,13 @@
   checkAuthentication();
 
   // Cierre automático de sesión por inactividad (5 minutos)
-  let inactivityTimer;
-  const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
+  var inactivityTimer;
+  var INACTIVITY_TIMEOUT = 5 * 60 * 1000;
 
   function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(function() {
+      console.log('⏱️ Sesión expirada por inactividad en ingreso_pacientes');
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
       localStorage.removeItem('dashboardVista');
@@ -61,8 +62,9 @@
     }, INACTIVITY_TIMEOUT);
   }
 
-  ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'].forEach(function(event) {
-    window.addEventListener(event, resetInactivityTimer);
+  var events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+  events.forEach(function(event) {
+    window.addEventListener(event, resetInactivityTimer, true);
   });
 
   resetInactivityTimer();
