@@ -1,15 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
-import { PacienteEntity } from './entities';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class AppService implements OnModuleInit {
-  constructor(
-    @InjectRepository(PacienteEntity)
-    private pacienteRepository: Repository<PacienteEntity>,
-    private dataSource: DataSource,
-  ) {}
+  constructor(private dataSource: DataSource) {}
 
   async onModuleInit() {
     console.log('🔍 [APP] Iniciando verificación de esquema de base de datos...');
