@@ -46,6 +46,26 @@
 
   // Ejecutar validación inmediatamente
   checkAuthentication();
+
+  // Cierre automático de sesión por inactividad (5 minutos)
+  let inactivityTimer;
+  const INACTIVITY_TIMEOUT = 5 * 60 * 1000;
+
+  function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('dashboardVista');
+      window.location.href = '/';
+    }, INACTIVITY_TIMEOUT);
+  }
+
+  ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'].forEach(function(event) {
+    window.addEventListener(event, resetInactivityTimer);
+  });
+
+  resetInactivityTimer();
 </script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
