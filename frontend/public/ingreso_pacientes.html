@@ -1489,12 +1489,18 @@ function cambiarVGITab(eval, btn) {
 }
 
 let evalNumeroActual = null;
-function abrirModalEvaluacion(numero, fecha) {
-  evalNumeroActual = numero;
-  const modal = document.getElementById('modalEvaluacion');
-  const p = pacientes[editandoId];
+let evalPacienteIdActual = null;
 
-  if (!modal || !p) return;
+function abrirModalEvaluacion(pacienteId, numero, fecha) {
+  evalNumeroActual = numero;
+  evalPacienteIdActual = pacienteId;
+  const modal = document.getElementById('modalEvaluacion');
+  const p = pacientes.find(x => x.id === pacienteId);
+
+  if (!modal || !p) {
+    console.error('No se encontró el paciente o el modal');
+    return;
+  }
 
   const sufijo = numero === 2 ? '2' : '3';
   document.getElementById('eval-titulo').textContent = numero === 2 ? '6 Meses' : '12 Meses';
@@ -1515,12 +1521,15 @@ function abrirModalEvaluacion(numero, fecha) {
 function cerrarModalEvaluacion() {
   document.getElementById('modalEvaluacion').style.display = 'none';
   evalNumeroActual = null;
+  evalPacienteIdActual = null;
 }
 
 function guardarEvaluacion() {
-  if (evalNumeroActual === null || editandoId === null) return;
+  if (evalNumeroActual === null || evalPacienteIdActual === null) return;
 
-  const p = pacientes[editandoId];
+  const p = pacientes.find(x => x.id === evalPacienteIdActual);
+  if (!p) return;
+
   const sufijo = evalNumeroActual === 2 ? '2' : '3';
 
   p[`barthel${sufijo}`] = toNum(document.getElementById('modal-barthel').value);
@@ -1533,7 +1542,7 @@ function guardarEvaluacion() {
 
   guardar();
   cerrarModalEvaluacion();
-  renderAll();
+  verPaciente(evalPacienteIdActual);
   toast('✅ Evaluación guardada correctamente');
 }
 
@@ -2656,12 +2665,12 @@ function generarSeguimientoVisual(p) {
           <div style="font-weight:600;color:#0284c7;font-size:.85rem">Evaluación Inicial</div>
           <div style="color:#666;font-size:.9rem;margin-top:.3rem">${formatFecha(fIni)}</div>
         </div>
-        <button type="button" onclick="abrirModalEvaluacion(2, '${formatFecha(f6m)}')" style="background:#fef3c7;border-left:4px solid #eab308;padding:1rem;border-radius:6px;border:none;cursor:pointer;text-align:left;transition:all .2s;font-size:1rem">
+        <button type="button" onclick="abrirModalEvaluacion('${p.id}', 2, '${formatFecha(f6m)}')" style="background:#fef3c7;border-left:4px solid #eab308;padding:1rem;border-radius:6px;border:none;cursor:pointer;text-align:left;transition:all .2s;font-size:1rem">
           <div style="font-weight:600;color:#ea8c55;font-size:.85rem">📝 6 Meses</div>
           <div style="color:#666;font-size:.9rem;margin-top:.3rem">${formatFecha(f6m)}</div>
           <div style="color:#ea8c55;font-size:.75rem;margin-top:.5rem;font-weight:500">Click para registrar datos</div>
         </button>
-        <button type="button" onclick="abrirModalEvaluacion(3, '${formatFecha(f12m)}')" style="background:#dcfce7;border-left:4px solid #16a34a;padding:1rem;border-radius:6px;border:none;cursor:pointer;text-align:left;transition:all .2s;font-size:1rem">
+        <button type="button" onclick="abrirModalEvaluacion('${p.id}', 3, '${formatFecha(f12m)}')" style="background:#dcfce7;border-left:4px solid #16a34a;padding:1rem;border-radius:6px;border:none;cursor:pointer;text-align:left;transition:all .2s;font-size:1rem">
           <div style="font-weight:600;color:#16a34a;font-size:.85rem">✅ 12 Meses</div>
           <div style="color:#666;font-size:.9rem;margin-top:.3rem">${formatFecha(f12m)}</div>
           <div style="color:#16a34a;font-size:.75rem;margin-top:.5rem;font-weight:500">Click para registrar datos</div>
