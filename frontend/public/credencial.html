@@ -4,6 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credenciales – Centro Diurno Coelemu</title>
+<script>
+  (function() {
+    var token = localStorage.getItem('token');
+    var usuario = localStorage.getItem('usuario');
+    if (!token || !usuario) { window.location.href = '/'; return; }
+    try {
+      var decoded = JSON.parse(atob(token.split('.')[1]));
+      if (Date.now() > decoded.exp * 1000) {
+        localStorage.removeItem('token'); localStorage.removeItem('usuario');
+        window.location.href = '/'; return;
+      }
+    } catch(e) {
+      localStorage.removeItem('token'); localStorage.removeItem('usuario');
+      window.location.href = '/'; return;
+    }
+    var inactivityTimer;
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('dashboardVista');
+        window.location.href = '/';
+      }, 5 * 60 * 1000);
+    }
+    ['mousedown','keydown','scroll','touchstart','click'].forEach(function(e) {
+      window.addEventListener(e, resetInactivityTimer);
+    });
+    resetInactivityTimer();
+  })();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--vd:#15803d;--vm:#22c55e;--vc:#4ade80;--vs:#4ade80;--vp:#f0fdf4;--oro:#d4a843;}
