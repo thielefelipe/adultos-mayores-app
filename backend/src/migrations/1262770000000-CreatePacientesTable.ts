@@ -1,25 +1,28 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 
 export class CreatePacientesTable1262770000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const table = await queryRunner.getTable('pacientes');
 
-    // Drop table if it exists and is incomplete
+    // If table already exists, just ensure all required columns exist (non-destructive)
     if (table) {
+      console.log('✅ [Migration] pacientes table already exists, checking for missing columns...');
       const columns = table.columns.map(c => c.name);
-      const hasRequiredColumns =
-        columns.includes('rut') &&
-        columns.includes('nombre') &&
-        columns.includes('comuna') &&
-        columns.includes('creadoPor');
 
-      if (!hasRequiredColumns) {
-        console.log('⚠️ [Migration] pacientes table is incomplete, dropping...');
-        await queryRunner.dropTable('pacientes', true);
-      } else {
-        console.log('✅ [Migration] pacientes table already exists and is complete');
-        return;
+      const columnDefs = [
+        { name: 'operador_id', type: 'varchar', length: '255', isNullable: true },
+        { name: 'operador_nombre', type: 'varchar', length: '255', isNullable: true },
+      ];
+
+      for (const col of columnDefs) {
+        if (!columns.includes(col.name)) {
+          console.log(`🔄 [Migration] Adding missing column: ${col.name}`);
+          await queryRunner.addColumn('pacientes', new TableColumn(col));
+          console.log(`✅ [Migration] Column ${col.name} added`);
+        }
       }
+
+      return;
     }
 
     console.log('🔄 [Migration] Creating pacientes table...');
