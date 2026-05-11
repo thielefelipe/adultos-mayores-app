@@ -1488,6 +1488,55 @@ function cambiarVGITab(eval, btn) {
   }
 }
 
+let evalNumeroActual = null;
+function abrirModalEvaluacion(numero, fecha) {
+  evalNumeroActual = numero;
+  const modal = document.getElementById('modalEvaluacion');
+  const p = pacientes[editandoId];
+
+  if (!modal || !p) return;
+
+  const sufijo = numero === 2 ? '2' : '3';
+  document.getElementById('eval-titulo').textContent = numero === 2 ? '6 Meses' : '12 Meses';
+  document.getElementById('eval-fecha').textContent = fecha;
+
+  // Llenar los campos con los valores actuales
+  document.getElementById('modal-barthel').value = p[`barthel${sufijo}`] || '';
+  document.getElementById('modal-pfeiffer').value = p[`pfeiffer${sufijo}`] || '';
+  document.getElementById('modal-lawton').value = p[`lawton${sufijo}`] || '';
+  document.getElementById('modal-tug').value = p[`tug${sufijo}`] || '';
+  document.getElementById('modal-mini').value = p[`mini${sufijo}`] || '';
+  document.getElementById('modal-yesa').value = p[`yesa${sufijo}`] || '';
+  document.getElementById('modal-eq').value = p[`eq${sufijo}`] || '';
+
+  modal.style.display = 'flex';
+}
+
+function cerrarModalEvaluacion() {
+  document.getElementById('modalEvaluacion').style.display = 'none';
+  evalNumeroActual = null;
+}
+
+function guardarEvaluacion() {
+  if (evalNumeroActual === null || editandoId === null) return;
+
+  const p = pacientes[editandoId];
+  const sufijo = evalNumeroActual === 2 ? '2' : '3';
+
+  p[`barthel${sufijo}`] = toNum(document.getElementById('modal-barthel').value);
+  p[`pfeiffer${sufijo}`] = toNum(document.getElementById('modal-pfeiffer').value);
+  p[`lawton${sufijo}`] = toNum(document.getElementById('modal-lawton').value);
+  p[`tug${sufijo}`] = toNum(document.getElementById('modal-tug').value);
+  p[`mini${sufijo}`] = toNum(document.getElementById('modal-mini').value);
+  p[`yesa${sufijo}`] = toNum(document.getElementById('modal-yesa').value);
+  p[`eq${sufijo}`] = document.getElementById('modal-eq').value;
+
+  guardar();
+  cerrarModalEvaluacion();
+  renderAll();
+  toast('✅ Evaluación guardada correctamente');
+}
+
 // Cargar regiones desde la API
 async function cargarRegiones() {
   try {
@@ -2603,18 +2652,20 @@ function generarSeguimientoVisual(p) {
 
       <!-- Timeline -->
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:2rem">
-        <div style="background:#e0f2fe;border-left:4px solid #0284c7;padding:1rem;border-radius:6px">
+        <div style="background:#e0f2fe;border-left:4px solid #0284c7;padding:1rem;border-radius:6px;cursor:default">
           <div style="font-weight:600;color:#0284c7;font-size:.85rem">Evaluación Inicial</div>
           <div style="color:#666;font-size:.9rem;margin-top:.3rem">${formatFecha(fIni)}</div>
         </div>
-        <div style="background:#fef3c7;border-left:4px solid #eab308;padding:1rem;border-radius:6px">
-          <div style="font-weight:600;color:#ea8c55;font-size:.85rem">6 Meses</div>
+        <button type="button" onclick="abrirModalEvaluacion(2, '${formatFecha(f6m)}')" style="background:#fef3c7;border-left:4px solid #eab308;padding:1rem;border-radius:6px;border:none;cursor:pointer;text-align:left;transition:all .2s;font-size:1rem">
+          <div style="font-weight:600;color:#ea8c55;font-size:.85rem">📝 6 Meses</div>
           <div style="color:#666;font-size:.9rem;margin-top:.3rem">${formatFecha(f6m)}</div>
-        </div>
-        <div style="background:#dcfce7;border-left:4px solid #16a34a;padding:1rem;border-radius:6px">
-          <div style="font-weight:600;color:#16a34a;font-size:.85rem">12 Meses</div>
+          <div style="color:#ea8c55;font-size:.75rem;margin-top:.5rem;font-weight:500">Click para registrar datos</div>
+        </button>
+        <button type="button" onclick="abrirModalEvaluacion(3, '${formatFecha(f12m)}')" style="background:#dcfce7;border-left:4px solid #16a34a;padding:1rem;border-radius:6px;border:none;cursor:pointer;text-align:left;transition:all .2s;font-size:1rem">
+          <div style="font-weight:600;color:#16a34a;font-size:.85rem">✅ 12 Meses</div>
           <div style="color:#666;font-size:.9rem;margin-top:.3rem">${formatFecha(f12m)}</div>
-        </div>
+          <div style="color:#16a34a;font-size:.75rem;margin-top:.5rem;font-weight:500">Click para registrar datos</div>
+        </button>
       </div>
 
       <!-- Gráficos de Instrumentos -->
@@ -2890,5 +2941,81 @@ window.guardarPaciente = function() {
 
 renderAll();
 </script>
+
+<!-- Modal para Evaluaciones (6 meses y 12 meses) -->
+<div id="modalEvaluacion" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:12px;padding:2rem;max-width:600px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <h2 style="margin:0;color:var(--azul);font-size:1.3rem">
+        <span id="eval-titulo">Evaluación</span>
+        <div style="font-size:0.9rem;color:#666;margin-top:0.3rem" id="eval-fecha"></div>
+      </h2>
+      <button type="button" onclick="cerrarModalEvaluacion()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:#999">✕</button>
+    </div>
+
+    <div style="display:grid;gap:1.5rem">
+      <!-- Barthel -->
+      <div>
+        <label style="display:block;margin-bottom:0.5rem;font-weight:600;color:#333">🦽 Índice de Barthel (0-100)</label>
+        <input type="number" id="modal-barthel" placeholder="0-100" min="0" max="100" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem">
+        <div style="font-size:0.85rem;color:#666;margin-top:0.3rem">0 = dependencia total · 100 = independiente</div>
+      </div>
+
+      <!-- Pfeiffer -->
+      <div>
+        <label style="display:block;margin-bottom:0.5rem;font-weight:600;color:#333">🧠 Test de Pfeiffer (0-10)</label>
+        <input type="number" id="modal-pfeiffer" placeholder="0-10" min="0" max="10" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem">
+        <div style="font-size:0.85rem;color:#666;margin-top:0.3rem">0-2: Normal · 3-4: Leve · 5-7: Moderado · 8-10: Severo</div>
+      </div>
+
+      <!-- Lawton -->
+      <div>
+        <label style="display:block;margin-bottom:0.5rem;font-weight:600;color:#333">🏠 Escala Lawton y Brody (0-8)</label>
+        <input type="number" id="modal-lawton" placeholder="0-8" min="0" max="8" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem">
+        <div style="font-size:0.85rem;color:#666;margin-top:0.3rem">8 = sin dependencia · 0 = dependencia total</div>
+      </div>
+
+      <!-- TUG -->
+      <div>
+        <label style="display:block;margin-bottom:0.5rem;font-weight:600;color:#333">⏱️ Timed Up and Go (segundos)</label>
+        <input type="number" id="modal-tug" placeholder="segundos" min="0" step="0.1" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem">
+        <div style="font-size:0.85rem;color:#666;margin-top:0.3rem">&lt;10 seg: Bajo riesgo · 10-20: Moderado · &gt;20: Alto riesgo</div>
+      </div>
+
+      <!-- Mini Mental -->
+      <div>
+        <label style="display:block;margin-bottom:0.5rem;font-weight:600;color:#333">🔢 Mini Mental State (0-30)</label>
+        <input type="number" id="modal-mini" placeholder="0-30" min="0" max="30" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem">
+        <div style="font-size:0.85rem;color:#666;margin-top:0.3rem">≥25: Normal · 18-24: Leve · &lt;18: Mod/Severo</div>
+      </div>
+
+      <!-- Yesavage -->
+      <div>
+        <label style="display:block;margin-bottom:0.5rem;font-weight:600;color:#333">💭 Escala Yesavage (0-15)</label>
+        <input type="number" id="modal-yesa" placeholder="0-15" min="0" max="15" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem">
+        <div style="font-size:0.85rem;color:#666;margin-top:0.3rem">0-5: Sin depresión · 6-10: Moderada · 11-15: Severa</div>
+      </div>
+
+      <!-- EQ5D -->
+      <div>
+        <label style="display:block;margin-bottom:0.5rem;font-weight:600;color:#333">❤️ Autopercepción Salud (EQ-5D)</label>
+        <select id="modal-eq" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem">
+          <option value="">Seleccionar…</option>
+          <option>Muy buena</option>
+          <option>Buena</option>
+          <option>Más o menos</option>
+          <option>Mala</option>
+          <option>Muy mala</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;margin-top:2rem">
+      <button type="button" onclick="guardarEvaluacion()" style="flex:1;padding:0.75rem;background:var(--terra);color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer">💾 Guardar</button>
+      <button type="button" onclick="cerrarModalEvaluacion()" style="flex:1;padding:0.75rem;background:#eee;color:#333;border:none;border-radius:6px;font-weight:600;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
