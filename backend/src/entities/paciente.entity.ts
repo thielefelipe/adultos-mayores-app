@@ -24,6 +24,9 @@ export class PacienteEntity {
   @Column({ type: 'varchar', length: 20, nullable: true })
   sexo?: string;
 
+  @Column({ type: 'date', nullable: true })
+  fecha_nacimiento?: Date;
+
   @Column({ type: 'integer', nullable: true })
   edad?: number;
 

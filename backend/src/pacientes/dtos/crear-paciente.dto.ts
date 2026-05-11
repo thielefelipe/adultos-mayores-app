@@ -37,6 +37,11 @@ export class CrearPacienteDto {
   @IsOptional()
   sexo?: string;
 
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  fecha_nacimiento?: Date;
+
   @IsNumber()
   @IsOptional()
   @Min(18)
