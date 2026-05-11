@@ -186,6 +186,13 @@ export class PacienteEntity {
   @Column({ type: 'text', nullable: true })
   plan?: string;
 
+  // ── Operador ──
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  operador_id?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  operador_nombre?: string;
+
   // ── Auditoría ──
   @Column({ type: 'varchar', length: 255 })
   creadoPor: string;
