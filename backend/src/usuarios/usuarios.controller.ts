@@ -88,6 +88,7 @@ export class UsuariosController {
   }
 
   @Post('heartbeat')
+  @UseGuards(JwtGuard)
   async heartbeat(@Request() req) {
     await this.usuariosService.actualizarUltimoAcceso(req.user.sub);
     return { mensaje: 'Heartbeat registrado' };
