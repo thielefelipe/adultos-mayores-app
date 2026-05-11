@@ -39,7 +39,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
         };
       },
     }),
-    TypeOrmModule.forFeature([UsuarioEntity]),
+    TypeOrmModule.forFeature([UsuarioEntity, PacienteEntity]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
