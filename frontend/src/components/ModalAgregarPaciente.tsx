@@ -20,21 +20,21 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
     dv: '',
     nombre: '',
     sexo: '',
+    fecha_nacimiento: '',
     edad: '',
     telefono: '',
-    email: '',
     escolaridad: '',
-    puebloOriginario: '',
-    tramosRsh: '',
+    pueblo: '',
+    rsh: '',
     anio: new Date().getFullYear().toString(),
     semestre: '1',
-    fechaIngreso: '',
+    f_ingreso: '',
     region: '',
     provincia: '',
     comuna: '',
-    ruralUrbana: '',
+    rural: '',
     dependencia: '',
-    enfermedadesCronicas: '',
+    enfermedades: '',
     operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : ''
   });
 
@@ -124,13 +124,21 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
     e.preventDefault();
     setLoading(true);
     try {
-      await onSave(formData);
+      // Transform empty strings to undefined to avoid sending unnecessary fields
+      const dataToSave = Object.entries(formData).reduce((acc, [key, value]) => {
+        if (value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as any);
+
+      await onSave(dataToSave);
       setFormData({
-        rut: '', dv: '', nombre: '', sexo: '', edad: '', telefono: '', email: '',
-        escolaridad: '', puebloOriginario: '', tramosRsh: '',
+        rut: '', dv: '', nombre: '', sexo: '', fecha_nacimiento: '', edad: '', telefono: '',
+        escolaridad: '', pueblo: '', rsh: '',
         anio: new Date().getFullYear().toString(), semestre: '1',
-        fechaIngreso: '',
-        region: '', provincia: '', comuna: '', ruralUrbana: '', dependencia: '', enfermedadesCronicas: '',
+        f_ingreso: '',
+        region: '', provincia: '', comuna: '', rural: '', dependencia: '', enfermedades: '',
         operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : ''
       });
       onClose();
@@ -355,6 +363,25 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
 
             <div>
               <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+                Fecha de Nacimiento
+              </label>
+              <input
+                type="date"
+                name="fecha_nacimiento"
+                value={formData.fecha_nacimiento}
+                onChange={handleChange}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: 6,
+                  fontSize: 14
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
                 Edad
               </label>
               <input
@@ -395,25 +422,6 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
               />
             </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="nombre@example.com"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #E0E0E0',
-                  borderRadius: 6,
-                  fontSize: 14
-                }}
-              />
-            </div>
           </div>
 
           <div style={{
@@ -454,8 +462,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
                 Pueblo Originario
               </label>
               <select
-                name="puebloOriginario"
-                value={formData.puebloOriginario}
+                name="pueblo"
+                value={formData.pueblo}
                 onChange={handleChange}
                 style={{
                   width: '100%',
@@ -476,8 +484,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
                 Tramo RSH
               </label>
               <select
-                name="tramosRsh"
-                value={formData.tramosRsh}
+                name="rsh"
+                value={formData.rsh}
                 onChange={handleChange}
                 style={{
                   width: '100%',
@@ -516,8 +524,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
               </label>
               <input
                 type="date"
-                name="fechaIngreso"
-                value={formData.fechaIngreso}
+                name="f_ingreso"
+                value={formData.f_ingreso}
                 onChange={handleChange}
                 style={{
                   width: '100%',
@@ -622,8 +630,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
                 Rural/Urbana
               </label>
               <select
-                name="ruralUrbana"
-                value={formData.ruralUrbana}
+                name="rural"
+                value={formData.rural}
                 onChange={handleChange}
                 style={{
                   width: '100%',
@@ -667,8 +675,8 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
                 Enfermedades Crónicas
               </label>
               <select
-                name="enfermedadesCronicas"
-                value={formData.enfermedadesCronicas}
+                name="enfermedades"
+                value={formData.enfermedades}
                 onChange={handleChange}
                 style={{
                   width: '100%',
