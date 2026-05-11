@@ -16,24 +16,39 @@ export class AppService implements OnModuleInit {
     console.log('🔍 [APP] NODE_ENV:', process.env.NODE_ENV);
     let queryRunner;
     try {
-      // Verificar si la columna fecha_nacimiento existe
+      // Esperar a que la base de datos esté lista (puede tomar un momento en desarrollo)
       queryRunner = this.dataSource.createQueryRunner();
       console.log('🔍 [APP] QueryRunner creado, conectando a la base de datos...');
 
       await queryRunner.connect();
       console.log('✅ [APP] Conectado a la base de datos exitosamente');
 
+      // Pequeña espera para asegurar que las tablas están listas
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       console.log('🔍 [APP] Verificando si la tabla "pacientes" existe...');
-      const tableExists = await queryRunner.hasTable('pacientes');
+      let tableExists = false;
+      try {
+        tableExists = await queryRunner.hasTable('pacientes');
+      } catch (tableCheckError) {
+        console.warn('⚠️ [APP] Error verificando tabla:', tableCheckError.message);
+        tableExists = false;
+      }
+
       if (!tableExists) {
         console.log('⚠️ [APP] La tabla "pacientes" no existe aún (probablemente será creada por TypeORM)');
-        await queryRunner.release();
         return;
       }
 
       console.log('✅ [APP] Tabla "pacientes" encontrada. Verificando columnas...');
 
-      const hasColumn = await queryRunner.hasColumn('pacientes', 'fecha_nacimiento');
+      let hasColumn = false;
+      try {
+        hasColumn = await queryRunner.hasColumn('pacientes', 'fecha_nacimiento');
+      } catch (columnCheckError) {
+        console.warn('⚠️ [APP] Error verificando columna:', columnCheckError.message);
+        hasColumn = false;
+      }
 
       if (!hasColumn) {
         console.log('⚠️ [APP] Columna fecha_nacimiento NO existe. Agregando...');
@@ -44,7 +59,7 @@ export class AppService implements OnModuleInit {
           console.log('✅ [APP] Columna fecha_nacimiento agregada exitosamente');
         } catch (alterError) {
           console.error('❌ [APP] Error al agregar columna:', alterError.message);
-          throw alterError;
+          // No relanzar el error, permitir que la app continúe
         }
       } else {
         console.log('✅ [APP] Columna fecha_nacimiento ya existe en la tabla');
@@ -52,13 +67,20 @@ export class AppService implements OnModuleInit {
 
       console.log('✅ [APP] Verificación de esquema completada exitosamente');
     } catch (error) {
-      console.error('❌ [APP] Error durante verificación de esquema:', error.message);
-      console.error('❌ [APP] Stack:', error.stack);
+      console.error('❌ [APP] Error durante verificación de esquema:', error?.message || 'Unknown error');
+      if (error?.stack) {
+        console.error('❌ [APP] Stack:', error.stack);
+      }
+      // No relanzar el error - permitir que la app continúe incluso si hay errores de esquema
     } finally {
-      if (queryRunner && queryRunner.isConnected) {
-        console.log('🔍 [APP] Liberando QueryRunner...');
-        await queryRunner.release();
-        console.log('✅ [APP] QueryRunner liberado');
+      try {
+        if (queryRunner) {
+          console.log('🔍 [APP] Liberando QueryRunner...');
+          await queryRunner.release();
+          console.log('✅ [APP] QueryRunner liberado');
+        }
+      } catch (releaseError) {
+        console.warn('⚠️ [APP] Error liberando QueryRunner:', releaseError?.message || 'Unknown error');
       }
     }
   }
