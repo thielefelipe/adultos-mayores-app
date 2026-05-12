@@ -1776,8 +1776,8 @@ function calcularEdadAutomatica() {
 function guardar() {
   localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
 
-  // Guardar en backend (sin bloquear)
-  guardarEnBackend().catch(e => console.error('Error guardando en backend:', e));
+  // También guardar en el backend
+  guardarEnBackend();
 }
 
 function toNum(v) {
