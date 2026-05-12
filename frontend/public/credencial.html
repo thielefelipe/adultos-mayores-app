@@ -542,8 +542,8 @@ document.addEventListener('touchend',   () => endDrag());
 // ─── Tabs ────────────────────────────────────────────────────
 function showTab(t) {
   document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', i===(t==='cred'?0:1)));
-  document.getElementById('sec-form').style.display    = t==='cred' ? '' : 'none';
-  document.getElementById('sec-preview').style.display = t==='cred' ? '' : 'none';
+  document.getElementById('sec-form').style.display    = t==='cred' ? 'block' : 'none';
+  document.getElementById('sec-preview').style.display = t==='cred' ? 'block' : 'none';
   document.getElementById('sec-reg').style.display     = t==='reg'  ? 'block' : 'none';
   if (t==='reg') renderTabla();
 }
