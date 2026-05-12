@@ -204,4 +204,82 @@ export class CrearPacienteDto {
   @IsString()
   @IsOptional()
   plan?: string;
+
+  // ── Año y Semestre ──
+  @IsNumber()
+  @IsOptional()
+  anio?: number;
+
+  @IsNumber()
+  @IsOptional()
+  semestre?: number;
+
+  // ── Seguimiento Trimestral ──
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  t1_fecha?: Date;
+
+  @IsNumber()
+  @IsOptional()
+  t1_punt?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t1_barthel?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t1_mini?: number;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  t2_fecha?: Date;
+
+  @IsNumber()
+  @IsOptional()
+  t2_punt?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t2_barthel?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t2_mini?: number;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  t3_fecha?: Date;
+
+  @IsNumber()
+  @IsOptional()
+  t3_punt?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t3_barthel?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t3_mini?: number;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  t4_fecha?: Date;
+
+  @IsNumber()
+  @IsOptional()
+  t4_punt?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t4_barthel?: number;
+
+  @IsNumber()
+  @IsOptional()
+  t4_mini?: number;
 }
