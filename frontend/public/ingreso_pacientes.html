@@ -1524,7 +1524,7 @@ function cerrarModalEvaluacion() {
   evalPacienteIdActual = null;
 }
 
-async function guardarEvaluacion() {
+function guardarEvaluacion() {
   if (evalNumeroActual === null || evalPacienteIdActual === null) return;
 
   const p = pacientes.find(x => x.id === evalPacienteIdActual);
@@ -1540,7 +1540,7 @@ async function guardarEvaluacion() {
   p[`yesa${sufijo}`] = toNum(document.getElementById('modal-yesa').value);
   p[`eq${sufijo}`] = document.getElementById('modal-eq').value;
 
-  await guardar();
+  guardar();
   cerrarModalEvaluacion();
   verPaciente(evalPacienteIdActual);
   toast('✅ Evaluación guardada correctamente');
@@ -1773,11 +1773,11 @@ function calcularEdadAutomatica() {
   edadInput.value = edad;
 }
 
-async function guardar() {
+function guardar() {
   localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
 
-  // También guardar en el backend (esperar a que termine)
-  await guardarEnBackend();
+  // Guardar en backend (sin bloquear)
+  guardarEnBackend().catch(e => console.error('Error guardando en backend:', e));
 }
 
 function toNum(v) {
@@ -2233,7 +2233,7 @@ function limpiarFormulario() {
   }
 }
 
-async function guardarPaciente() {
+function guardarPaciente() {
   const datos = leerFormulario();
   if (!datos.nombre) { toast('⚠️ El nombre es obligatorio'); return; }
   if (!datos.rut)    { toast('⚠️ El RUT es obligatorio'); return; }
