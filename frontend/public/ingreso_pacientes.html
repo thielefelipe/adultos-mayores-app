@@ -2286,7 +2286,7 @@ function guardarPaciente() {
     pacientes.push(datos);
   }
 
-  await guardar();
+  guardar();
   cerrarModal();
   renderAll();
   toast('✅ Registro guardado correctamente');
