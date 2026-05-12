@@ -1524,7 +1524,7 @@ function cerrarModalEvaluacion() {
   evalPacienteIdActual = null;
 }
 
-function guardarEvaluacion() {
+async function guardarEvaluacion() {
   if (evalNumeroActual === null || evalPacienteIdActual === null) return;
 
   const p = pacientes.find(x => x.id === evalPacienteIdActual);
@@ -1540,7 +1540,7 @@ function guardarEvaluacion() {
   p[`yesa${sufijo}`] = toNum(document.getElementById('modal-yesa').value);
   p[`eq${sufijo}`] = document.getElementById('modal-eq').value;
 
-  guardar();
+  await guardar();
   cerrarModalEvaluacion();
   verPaciente(evalPacienteIdActual);
   toast('✅ Evaluación guardada correctamente');
@@ -2233,7 +2233,7 @@ function limpiarFormulario() {
   }
 }
 
-function guardarPaciente() {
+async function guardarPaciente() {
   const datos = leerFormulario();
   if (!datos.nombre) { toast('⚠️ El nombre es obligatorio'); return; }
   if (!datos.rut)    { toast('⚠️ El RUT es obligatorio'); return; }
@@ -2286,7 +2286,7 @@ function guardarPaciente() {
     pacientes.push(datos);
   }
 
-  guardar();
+  await guardar();
   cerrarModal();
   renderAll();
   toast('✅ Registro guardado correctamente');
