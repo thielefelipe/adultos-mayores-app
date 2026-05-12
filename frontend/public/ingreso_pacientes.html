@@ -1773,11 +1773,11 @@ function calcularEdadAutomatica() {
   edadInput.value = edad;
 }
 
-function guardar() {
+async function guardar() {
   localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
 
-  // También guardar en el backend
-  guardarEnBackend();
+  // También guardar en el backend (esperar a que termine)
+  await guardarEnBackend();
 }
 
 function toNum(v) {
