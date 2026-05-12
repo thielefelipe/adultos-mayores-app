@@ -36,15 +36,22 @@ export class PacientesController {
     @Query('anio') anio?: number,
     @Query('semestre') semestre?: number,
     @Query('operador_id') operador_id?: string,
+    @Req() req,
   ) {
-    return this.pacientesService.obtenerTodos(pagina, limite, {
-      region,
-      provincia,
-      comuna,
-      anio,
-      semestre,
-      operador_id,
-    });
+    return this.pacientesService.obtenerTodos(
+      pagina,
+      limite,
+      {
+        region,
+        provincia,
+        comuna,
+        anio,
+        semestre,
+        operador_id,
+      },
+      req.user.rol,
+      req.user.username,
+    );
   }
 
   @Get('buscar')

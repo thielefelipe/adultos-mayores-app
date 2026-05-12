@@ -57,10 +57,18 @@ export class PacientesService {
       semestre?: number;
       operador_id?: string;
     },
+    rolUsuario?: string,
+    usernameUsuario?: string,
   ) {
     const skip = (pagina - 1) * limite;
     const where: any = { eliminado: false };
 
+    // Si el usuario es operador (no admin), solo puede ver sus propios pacientes
+    if (rolUsuario && rolUsuario !== 'admin') {
+      where.creadoPor = usernameUsuario;
+    }
+
+    // Aplicar filtros adicionales
     if (filtros?.region) where.region = filtros.region;
     if (filtros?.provincia) where.provincia = filtros.provincia;
     if (filtros?.comuna) where.comuna = filtros.comuna;
@@ -76,7 +84,7 @@ export class PacientesService {
     });
 
     return {
-      datos: pacientes,
+      data: pacientes,
       total,
       pagina,
       totalPaginas: Math.ceil(total / limite),
