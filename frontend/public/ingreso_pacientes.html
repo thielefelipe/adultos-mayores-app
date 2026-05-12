@@ -1849,12 +1849,21 @@ async function guardarEnBackend() {
       });
 
       if (response.ok) {
-        pacientesGuardadosEnBackend.add(paciente.id);
+        const savedData = await response.json();
+        // Actualizar ID local con el ID del backend
+        paciente.id = savedData.id;
+        pacientesGuardadosEnBackend.add(savedData.id);
         console.log('Paciente guardado en backend:', paciente.nombre);
       } else {
         const errBody = await response.text();
-        console.error('Error al guardar paciente en backend:', response.status, errBody);
-        toast('⚠️ Error al guardar en servidor (' + response.status + '). Revisa los datos.');
+        if (response.status === 400 && errBody.includes('RUT ya existe')) {
+          // El paciente ya existe en el backend, solo marcarlo como guardado
+          pacientesGuardadosEnBackend.add(paciente.id);
+          console.log('Paciente ya existe en backend:', paciente.nombre);
+        } else {
+          console.error('Error al guardar paciente en backend:', response.status, errBody);
+          toast('⚠️ Error al guardar en servidor (' + response.status + '). Revisa los datos.');
+        }
       }
     }
   } catch (e) {
