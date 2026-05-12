@@ -28,6 +28,7 @@ export class PacientesController {
 
   @Get()
   async obtenerTodos(
+    @Req() req,
     @Query('pagina') pagina: number = 1,
     @Query('limite') limite: number = 20,
     @Query('region') region?: string,
@@ -36,7 +37,6 @@ export class PacientesController {
     @Query('anio') anio?: number,
     @Query('semestre') semestre?: number,
     @Query('operador_id') operador_id?: string,
-    @Req() req,
   ) {
     return this.pacientesService.obtenerTodos(
       pagina,
