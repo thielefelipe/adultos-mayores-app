@@ -60,38 +60,43 @@ export class PacientesService {
       usernameUsuario?: string;
     },
   ) {
-    const skip = (pagina - 1) * limite;
-    const where: any = { eliminado: false };
+    try {
+      const skip = (pagina - 1) * limite;
+      const where: any = { eliminado: false };
 
-    const rolUsuario = filtros?.rolUsuario;
-    const usernameUsuario = filtros?.usernameUsuario;
+      const rolUsuario = filtros?.rolUsuario;
+      const usernameUsuario = filtros?.usernameUsuario;
 
-    // Si el usuario es operador (no admin), solo puede ver sus propios pacientes
-    if (rolUsuario && rolUsuario !== 'admin') {
-      where.creadoPor = usernameUsuario;
+      // Si el usuario es operador (no admin), solo puede ver sus propios pacientes
+      if (rolUsuario && rolUsuario !== 'admin' && usernameUsuario) {
+        where.creadoPor = usernameUsuario;
+      }
+
+      // Aplicar filtros adicionales
+      if (filtros?.region) where.region = filtros.region;
+      if (filtros?.provincia) where.provincia = filtros.provincia;
+      if (filtros?.comuna) where.comuna = filtros.comuna;
+      if (filtros?.anio) where.anio = filtros.anio;
+      if (filtros?.semestre) where.semestre = filtros.semestre;
+      if (filtros?.operador_id) where.creadoPor = filtros.operador_id;
+
+      const [pacientes, total] = await this.pacienteRepository.findAndCount({
+        where,
+        skip,
+        take: limite,
+        order: { fechaRegistro: 'DESC' },
+      });
+
+      return {
+        data: pacientes,
+        total,
+        pagina,
+        totalPaginas: Math.ceil(total / limite),
+      };
+    } catch (error) {
+      console.error('Error en obtenerTodos:', error);
+      throw error;
     }
-
-    // Aplicar filtros adicionales
-    if (filtros?.region) where.region = filtros.region;
-    if (filtros?.provincia) where.provincia = filtros.provincia;
-    if (filtros?.comuna) where.comuna = filtros.comuna;
-    if (filtros?.anio) where.anio = filtros.anio;
-    if (filtros?.semestre) where.semestre = filtros.semestre;
-    if (filtros?.operador_id) where.creadoPor = filtros.operador_id;
-
-    const [pacientes, total] = await this.pacienteRepository.findAndCount({
-      where,
-      skip,
-      take: limite,
-      order: { fechaRegistro: 'DESC' },
-    });
-
-    return {
-      data: pacientes,
-      total,
-      pagina,
-      totalPaginas: Math.ceil(total / limite),
-    };
   }
 
   async obtenerPorId(id: string): Promise<PacienteEntity> {
