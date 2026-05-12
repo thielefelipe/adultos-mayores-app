@@ -30,24 +30,24 @@ export class PacientesController {
   async obtenerTodos(
     @Query('pagina') pagina: number = 1,
     @Query('limite') limite: number = 20,
-    @Query('region') region?: string,
-    @Query('provincia') provincia?: string,
-    @Query('comuna') comuna?: string,
-    @Query('anio') anio?: number,
-    @Query('semestre') semestre?: number,
-    @Query('operador_id') operador_id?: string,
+    @Query('region') region: string = '',
+    @Query('provincia') provincia: string = '',
+    @Query('comuna') comuna: string = '',
+    @Query('anio') anio: number = 0,
+    @Query('semestre') semestre: number = 0,
+    @Query('operador_id') operador_id: string = '',
     @Req() req,
   ) {
     const rolUsuario = req?.user?.rol;
     const usernameUsuario = req?.user?.username;
 
     return this.pacientesService.obtenerTodos(pagina, limite, {
-      region,
-      provincia,
-      comuna,
-      anio,
-      semestre,
-      operador_id,
+      region: region || undefined,
+      provincia: provincia || undefined,
+      comuna: comuna || undefined,
+      anio: anio || undefined,
+      semestre: semestre || undefined,
+      operador_id: operador_id || undefined,
       rolUsuario,
       usernameUsuario,
     });
