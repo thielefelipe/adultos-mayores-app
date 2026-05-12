@@ -56,12 +56,15 @@ export class PacientesService {
       anio?: number;
       semestre?: number;
       operador_id?: string;
+      rolUsuario?: string;
+      usernameUsuario?: string;
     },
-    rolUsuario?: string,
-    usernameUsuario?: string,
   ) {
     const skip = (pagina - 1) * limite;
     const where: any = { eliminado: false };
+
+    const rolUsuario = filtros?.rolUsuario;
+    const usernameUsuario = filtros?.usernameUsuario;
 
     // Si el usuario es operador (no admin), solo puede ver sus propios pacientes
     if (rolUsuario && rolUsuario !== 'admin') {
