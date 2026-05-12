@@ -2388,8 +2388,8 @@ function renderSidebar(lista) {
     const sem = semaforo(sc);
     const initials = (p.nombre||'?').split(' ').slice(0,2).map(w=>w[0]).join('');
     const colors = ['#0066CC','#003D82','#2D7A4F','#9A6C00','#B83232'];
-    const color = colors[p.id % colors.length] || colors[0];
-    return `<div class="patient-card" onclick="verPaciente(${p.id})">
+    const color = colors[(p.nombre||'').charCodeAt(0) % colors.length] || colors[0];
+    return `<div class="patient-card" onclick="verPaciente('${p.id}')">
       <div class="patient-avatar" style="background:${color}">${initials}</div>
       <div class="patient-info">
         <div class="patient-name">${p.nombre}</div>
@@ -2479,7 +2479,7 @@ function renderMain() {
             const sc = score(p);
             const sem = semaforo(sc);
             const badgeClass = sem.color === 'verde' ? 'score-verde' : sem.color === 'ambar' ? 'score-ambar' : sem.color === 'rojo' ? 'score-rojo' : 'score-gray';
-            return `<tr onclick="verPaciente(${p.id})">
+            return `<tr onclick="verPaciente('${p.id}')">
               <td class="td-name">${p.nombre||'—'}</td>
               <td>${p.rut||'—'}</td>
               <td>${p.edad||'—'}</td>
@@ -2489,8 +2489,8 @@ function renderMain() {
               <td><span class="score-display ${badgeClass}" style="font-size:.75rem;padding:.2rem .6rem">${sem.emoji} ${sem.label}</span></td>
               <td style="color:#ccc;font-size:.8rem">—</td>
               <td onclick="event.stopPropagation()">
-                <button class="btn btn-sm btn-verde" onclick="abrirModal(${p.id})">✏️</button>
-                <button class="btn btn-sm btn-danger" onclick="eliminarPaciente(${p.id})" style="margin-left:.3rem">🗑</button>
+                <button class="btn btn-sm btn-verde" onclick="abrirModal('${p.id}')">✏️</button>
+                <button class="btn btn-sm btn-danger" onclick="eliminarPaciente('${p.id}')" style="margin-left:.3rem">🗑</button>
               </td>
             </tr>`;
           }).join('')}
