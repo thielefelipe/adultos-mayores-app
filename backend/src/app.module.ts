@@ -25,28 +25,34 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
         const isProduction = configService.get('NODE_ENV') === 'production';
         const databaseUrl = configService.get('DATABASE_URL');
 
-        // Si existe DATABASE_URL (Render), usarla directamente
-        if (databaseUrl) {
-          return {
-            type: 'postgres',
-            url: databaseUrl,
-            entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
-            migrations: ['dist/migrations/*.js'],
-            migrationsRun: true,
-            synchronize: !isProduction,
-            logging: !isProduction,
-            ssl: isProduction ? { rejectUnauthorized: false } : false,
-          };
+        let host = configService.get('DB_HOST', 'localhost');
+        let port = parseInt(configService.get('DB_PORT', '5432'), 10);
+        let username = configService.get('DB_USERNAME', 'admin');
+        let password = configService.get('DB_PASSWORD', 'admin');
+        let database = configService.get('DB_NAME', 'centros_diurnos_db');
+
+        // Si existe DATABASE_URL (Render), parsearla
+        if (databaseUrl && databaseUrl.startsWith('postgresql://')) {
+          try {
+            // postgresql://user:password@host:port/database
+            const url = new URL(databaseUrl);
+            host = url.hostname;
+            port = parseInt(url.port || '5432', 10);
+            username = url.username;
+            password = url.password;
+            database = url.pathname.substring(1); // Remover el / inicial
+          } catch (e) {
+            console.error('Error parsing DATABASE_URL:', e);
+          }
         }
 
-        // Si no, usar variables individuales (desarrollo local)
         return {
           type: 'postgres',
-          host: configService.get('DB_HOST', 'localhost'),
-          port: parseInt(configService.get('DB_PORT', '5432'), 10),
-          username: configService.get('DB_USERNAME', 'admin'),
-          password: configService.get('DB_PASSWORD', 'admin'),
-          database: configService.get('DB_NAME', 'centros_diurnos_db'),
+          host,
+          port,
+          username,
+          password,
+          database,
           entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
           migrations: ['dist/migrations/*.js'],
           migrationsRun: true,
