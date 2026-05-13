@@ -25,6 +25,13 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
         const isProduction = process.env.NODE_ENV === 'production';
         const databaseUrl = process.env.DATABASE_URL;
 
+        console.log('=== TypeORM Config ===');
+        console.log('NODE_ENV:', process.env.NODE_ENV);
+        console.log('DATABASE_URL exists:', !!databaseUrl);
+        if (databaseUrl) console.log('DATABASE_URL:', databaseUrl.substring(0, 50) + '...');
+        console.log('DB_HOST:', process.env.DB_HOST);
+        console.log('========================');
+
         let config: any = {
           type: 'postgres',
           entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
@@ -44,28 +51,35 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
             config.username = url.username;
             config.password = url.password;
             config.database = url.pathname.substring(1);
-            console.log('Usando DATABASE_URL parseada:', {
+            console.log('✅ Parsed DATABASE_URL:', {
               host: config.host,
               port: config.port,
               database: config.database,
             });
           } catch (e) {
-            console.error('Error parsing DATABASE_URL:', e);
-            // Fallback a variables individuales
-            config.host = process.env.DB_HOST || 'localhost';
-            config.port = parseInt(process.env.DB_PORT || '5432', 10);
-            config.username = process.env.DB_USERNAME || 'admin';
-            config.password = process.env.DB_PASSWORD || 'admin';
-            config.database = process.env.DB_NAME || 'centros_diurnos_db';
+            console.error('❌ Error parsing DATABASE_URL:', e.message);
+            config.host = 'localhost';
+            config.port = 5432;
+            config.username = 'admin';
+            config.password = 'admin';
+            config.database = 'centros_diurnos_db';
           }
         } else {
-          // Usar variables individuales
+          console.log('⚠️ DATABASE_URL not found, using individual env vars');
           config.host = process.env.DB_HOST || 'localhost';
           config.port = parseInt(process.env.DB_PORT || '5432', 10);
           config.username = process.env.DB_USERNAME || 'admin';
           config.password = process.env.DB_PASSWORD || 'admin';
           config.database = process.env.DB_NAME || 'centros_diurnos_db';
         }
+
+        console.log('Final config:', {
+          type: config.type,
+          host: config.host,
+          port: config.port,
+          username: config.username ? config.username.substring(0, 5) + '...' : undefined,
+          database: config.database,
+        });
 
         return config;
       },
