@@ -23,17 +23,34 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const isProduction = configService.get('NODE_ENV') === 'production';
+        const databaseUrl = configService.get('DATABASE_URL');
+
+        // Si existe DATABASE_URL (Render), usarla directamente
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
+            migrations: ['dist/migrations/*.js'],
+            migrationsRun: true,
+            synchronize: !isProduction,
+            logging: !isProduction,
+            ssl: isProduction ? { rejectUnauthorized: false } : false,
+          };
+        }
+
+        // Si no, usar variables individuales (desarrollo local)
         return {
           type: 'postgres',
           host: configService.get('DB_HOST', 'localhost'),
-          port: configService.get('DB_PORT', 5432),
+          port: parseInt(configService.get('DB_PORT', '5432'), 10),
           username: configService.get('DB_USERNAME', 'admin'),
           password: configService.get('DB_PASSWORD', 'admin'),
           database: configService.get('DB_NAME', 'centros_diurnos_db'),
           entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
           migrations: ['dist/migrations/*.js'],
           migrationsRun: true,
-          synchronize: !isProduction, // ⚠️ NUNCA sincronizar en producción
+          synchronize: !isProduction,
           logging: !isProduction,
           ssl: isProduction ? { rejectUnauthorized: false } : false,
         };
