@@ -23,14 +23,9 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const isProduction = process.env.NODE_ENV === 'production';
-        const databaseUrl = process.env.DATABASE_URL;
 
-        console.log('=== TypeORM Config ===');
-        console.log('NODE_ENV:', process.env.NODE_ENV);
-        console.log('DATABASE_URL exists:', !!databaseUrl);
-        if (databaseUrl) console.log('DATABASE_URL:', databaseUrl.substring(0, 50) + '...');
-        console.log('DB_HOST:', process.env.DB_HOST);
-        console.log('========================');
+        // Render puede poner la URL en DATABASE_URL o DB_HOST
+        let databaseUrl = process.env.DATABASE_URL || process.env.DB_HOST;
 
         let config: any = {
           type: 'postgres',
@@ -42,7 +37,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
           ssl: isProduction ? { rejectUnauthorized: false } : false,
         };
 
-        // Si existe DATABASE_URL (Render), parsearla
+        // Si existe URL (DATABASE_URL o DB_HOST con postgresql://), parsearla
         if (databaseUrl && databaseUrl.startsWith('postgresql://')) {
           try {
             const url = new URL(databaseUrl);
@@ -51,13 +46,9 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
             config.username = url.username;
             config.password = url.password;
             config.database = url.pathname.substring(1);
-            console.log('✅ Parsed DATABASE_URL:', {
-              host: config.host,
-              port: config.port,
-              database: config.database,
-            });
+            console.log('✅ Parsed PostgreSQL URL');
           } catch (e) {
-            console.error('❌ Error parsing DATABASE_URL:', e.message);
+            console.error('❌ Error parsing PostgreSQL URL:', e.message);
             config.host = 'localhost';
             config.port = 5432;
             config.username = 'admin';
@@ -65,21 +56,13 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
             config.database = 'centros_diurnos_db';
           }
         } else {
-          console.log('⚠️ DATABASE_URL not found, using individual env vars');
+          // Fallback a variables individuales
           config.host = process.env.DB_HOST || 'localhost';
           config.port = parseInt(process.env.DB_PORT || '5432', 10);
           config.username = process.env.DB_USERNAME || 'admin';
           config.password = process.env.DB_PASSWORD || 'admin';
           config.database = process.env.DB_NAME || 'centros_diurnos_db';
         }
-
-        console.log('Final config:', {
-          type: config.type,
-          host: config.host,
-          port: config.port,
-          username: config.username ? config.username.substring(0, 5) + '...' : undefined,
-          database: config.database,
-        });
 
         return config;
       },
