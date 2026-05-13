@@ -1810,6 +1810,7 @@ async function guardarEnBackend() {
       if (pacientesGuardadosEnBackend.has(paciente.id)) continue;
 
       const datosBackend = {
+        // Datos Personales
         rut: paciente.rut || undefined,
         dv: paciente.dv || undefined,
         nombre: paciente.nombre,
@@ -1820,34 +1821,52 @@ async function guardarEnBackend() {
         escolaridad: paciente.escolaridad || undefined,
         pueblo: paciente.pueblo || undefined,
         rsh: paciente.rsh || undefined,
+        // Ubicación
+        region: paciente.region || undefined,
+        provincia: paciente.provincia || undefined,
+        comuna: paciente.comuna || undefined,
+        // Nuevos campos de ubicación personal
+        sector: paciente.sector || undefined,
+        direccion: paciente.direccion || undefined,
+        // Período
+        anio: toNum(paciente.anio),
+        semestre: toNum(paciente.semestre),
+        // Operador
+        operador_id: paciente.operador_id || undefined,
+        operador_nombre: paciente.operador_nombre || undefined,
+        // Contacto de emergencia
+        contacto_nombre: paciente.contacto_nombre || undefined,
+        contacto_telefono: paciente.contacto_telefono || undefined,
+        contacto_relacion: paciente.contacto_relacion || undefined,
+        // Atención/Admisión
         f_ingreso: paciente.f_ingreso || undefined,
         f_consentimiento: paciente.f_consentimiento || undefined,
         f_egreso: paciente.f_egreso || undefined,
-        comuna: paciente.comuna_personal || undefined,
         naturaleza: paciente.naturaleza || undefined,
         rural: paciente.rural || undefined,
-        region: paciente.region || undefined,
-        provincia: paciente.provincia || undefined,
         dependencia: paciente.dependencia || undefined,
         enfermedades: paciente.enfermedades || undefined,
         pai: paciente.pai || undefined,
         obj_pai: toNum(paciente.obj_pai),
         obj_alc: toNum(paciente.obj_alc),
         talleres: paciente.talleres || undefined,
+        // VGI 1ª evaluación
         barthel1: toNum(paciente.barthel1),
-        barthel2: toNum(paciente.barthel2),
         pfeiffer1: toNum(paciente.pfeiffer1),
-        pfeiffer2: toNum(paciente.pfeiffer2),
         lawton1: toNum(paciente.lawton1),
-        lawton2: toNum(paciente.lawton2),
         tug1: toNum(paciente.tug1),
-        tug2: toNum(paciente.tug2),
         mini1: toNum(paciente.mini1),
-        mini2: toNum(paciente.mini2),
         yesa1: toNum(paciente.yesa1),
-        yesa2: toNum(paciente.yesa2),
         eq1: paciente.eq1 || undefined,
+        // VGI 2ª evaluación
+        barthel2: toNum(paciente.barthel2),
+        pfeiffer2: toNum(paciente.pfeiffer2),
+        lawton2: toNum(paciente.lawton2),
+        tug2: toNum(paciente.tug2),
+        mini2: toNum(paciente.mini2),
+        yesa2: toNum(paciente.yesa2),
         eq2: paciente.eq2 || undefined,
+        // Notas
         notas: paciente.notas || undefined,
         plan: paciente.plan || undefined,
       };
