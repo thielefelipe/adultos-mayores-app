@@ -22,37 +22,11 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const isProduction = configService.get('NODE_ENV') === 'production';
-        const databaseUrl = configService.get('DATABASE_URL');
+        const isProduction = process.env.NODE_ENV === 'production';
+        const databaseUrl = process.env.DATABASE_URL;
 
-        let host = configService.get('DB_HOST', 'localhost');
-        let port = parseInt(configService.get('DB_PORT', '5432'), 10);
-        let username = configService.get('DB_USERNAME', 'admin');
-        let password = configService.get('DB_PASSWORD', 'admin');
-        let database = configService.get('DB_NAME', 'centros_diurnos_db');
-
-        // Si existe DATABASE_URL (Render), parsearla
-        if (databaseUrl && databaseUrl.startsWith('postgresql://')) {
-          try {
-            // postgresql://user:password@host:port/database
-            const url = new URL(databaseUrl);
-            host = url.hostname;
-            port = parseInt(url.port || '5432', 10);
-            username = url.username;
-            password = url.password;
-            database = url.pathname.substring(1); // Remover el / inicial
-          } catch (e) {
-            console.error('Error parsing DATABASE_URL:', e);
-          }
-        }
-
-        return {
+        let config: any = {
           type: 'postgres',
-          host,
-          port,
-          username,
-          password,
-          database,
           entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
           migrations: ['dist/migrations/*.js'],
           migrationsRun: true,
@@ -60,6 +34,40 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
           logging: !isProduction,
           ssl: isProduction ? { rejectUnauthorized: false } : false,
         };
+
+        // Si existe DATABASE_URL (Render), parsearla
+        if (databaseUrl && databaseUrl.startsWith('postgresql://')) {
+          try {
+            const url = new URL(databaseUrl);
+            config.host = url.hostname;
+            config.port = parseInt(url.port || '5432', 10);
+            config.username = url.username;
+            config.password = url.password;
+            config.database = url.pathname.substring(1);
+            console.log('Usando DATABASE_URL parseada:', {
+              host: config.host,
+              port: config.port,
+              database: config.database,
+            });
+          } catch (e) {
+            console.error('Error parsing DATABASE_URL:', e);
+            // Fallback a variables individuales
+            config.host = process.env.DB_HOST || 'localhost';
+            config.port = parseInt(process.env.DB_PORT || '5432', 10);
+            config.username = process.env.DB_USERNAME || 'admin';
+            config.password = process.env.DB_PASSWORD || 'admin';
+            config.database = process.env.DB_NAME || 'centros_diurnos_db';
+          }
+        } else {
+          // Usar variables individuales
+          config.host = process.env.DB_HOST || 'localhost';
+          config.port = parseInt(process.env.DB_PORT || '5432', 10);
+          config.username = process.env.DB_USERNAME || 'admin';
+          config.password = process.env.DB_PASSWORD || 'admin';
+          config.database = process.env.DB_NAME || 'centros_diurnos_db';
+        }
+
+        return config;
       },
     }),
     TypeOrmModule.forFeature([UsuarioEntity]),
