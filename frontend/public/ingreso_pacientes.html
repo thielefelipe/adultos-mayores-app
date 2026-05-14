@@ -1851,103 +1851,111 @@ function toNum(v) {
   return isNaN(n) ? undefined : n;
 }
 
-async function guardarEnBackend() {
+function construirDatosBackend(paciente) {
+  const datos = {
+    rut: paciente.rut || undefined,
+    dv: paciente.dv || undefined,
+    nombre: paciente.nombre,
+    sexo: paciente.sexo || undefined,
+    fecha_nacimiento: paciente.fecha_nacimiento || undefined,
+    edad: toNum(paciente.edad),
+    telefono: paciente.telefono || undefined,
+    contacto_nombre: paciente.contacto_nombre || undefined,
+    contacto_telefono: paciente.contacto_telefono || undefined,
+    contacto_relacion: paciente.contacto_relacion || undefined,
+    escolaridad: paciente.escolaridad || undefined,
+    pueblo: paciente.pueblo || undefined,
+    rsh: paciente.rsh || undefined,
+    region: paciente.region || undefined,
+    provincia: paciente.provincia || undefined,
+    comuna: paciente.comuna || undefined,
+    sector: paciente.sector || undefined,
+    direccion: paciente.direccion || undefined,
+    anio: toNum(paciente.anio),
+    semestre: toNum(paciente.semestre),
+    operador_id: paciente.operador_id || undefined,
+    operador_nombre: paciente.operador_nombre || undefined,
+    f_ingreso: paciente.f_ingreso || undefined,
+    f_consentimiento: paciente.f_consentimiento || undefined,
+    f_egreso: paciente.f_egreso || undefined,
+    naturaleza: paciente.naturaleza || undefined,
+    rural: paciente.rural || undefined,
+    dependencia: paciente.dependencia || undefined,
+    enfermedades: paciente.enfermedades || undefined,
+    pai: paciente.pai || undefined,
+    obj_pai: toNum(paciente.obj_pai),
+    obj_alc: toNum(paciente.obj_alc),
+    talleres: paciente.talleres || undefined,
+    barthel1: toNum(paciente.barthel1),
+    pfeiffer1: toNum(paciente.pfeiffer1),
+    lawton1: toNum(paciente.lawton1),
+    tug1: toNum(paciente.tug1),
+    mini1: toNum(paciente.mini1),
+    yesa1: toNum(paciente.yesa1),
+    eq1: paciente.eq1 || undefined,
+    barthel2: toNum(paciente.barthel2),
+    pfeiffer2: toNum(paciente.pfeiffer2),
+    lawton2: toNum(paciente.lawton2),
+    tug2: toNum(paciente.tug2),
+    mini2: toNum(paciente.mini2),
+    yesa2: toNum(paciente.yesa2),
+    eq2: paciente.eq2 || undefined,
+    notas: paciente.notas || undefined,
+    plan: paciente.plan || undefined,
+  };
+  // Eliminar claves undefined
+  Object.keys(datos).forEach(k => datos[k] === undefined && delete datos[k]);
+  return datos;
+}
+
+async function guardarEnBackend(pacienteEspecifico = null) {
   try {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    for (const paciente of pacientes) {
-      if (pacientesGuardadosEnBackend.has(paciente.id)) continue;
+    const lista = pacienteEspecifico ? [pacienteEspecifico] : pacientes;
 
-      const datosBackend = {
-        // Datos Personales
-        rut: paciente.rut || undefined,
-        dv: paciente.dv || undefined,
-        nombre: paciente.nombre,
-        sexo: paciente.sexo || undefined,
-        fecha_nacimiento: paciente.fecha_nacimiento || undefined,
-        edad: toNum(paciente.edad),
-        telefono: paciente.telefono || undefined,
-        escolaridad: paciente.escolaridad || undefined,
-        pueblo: paciente.pueblo || undefined,
-        rsh: paciente.rsh || undefined,
-        // Ubicación
-        region: paciente.region || undefined,
-        provincia: paciente.provincia || undefined,
-        comuna: paciente.comuna || undefined,
-        // Nuevos campos de ubicación personal
-        sector: paciente.sector || undefined,
-        direccion: paciente.direccion || undefined,
-        // Período
-        anio: toNum(paciente.anio),
-        semestre: toNum(paciente.semestre),
-        // Operador
-        operador_id: paciente.operador_id || undefined,
-        operador_nombre: paciente.operador_nombre || undefined,
-        // Contacto de emergencia
-        contacto_nombre: paciente.contacto_nombre || undefined,
-        contacto_telefono: paciente.contacto_telefono || undefined,
-        contacto_relacion: paciente.contacto_relacion || undefined,
-        // Atención/Admisión
-        f_ingreso: paciente.f_ingreso || undefined,
-        f_consentimiento: paciente.f_consentimiento || undefined,
-        f_egreso: paciente.f_egreso || undefined,
-        naturaleza: paciente.naturaleza || undefined,
-        rural: paciente.rural || undefined,
-        dependencia: paciente.dependencia || undefined,
-        enfermedades: paciente.enfermedades || undefined,
-        pai: paciente.pai || undefined,
-        obj_pai: toNum(paciente.obj_pai),
-        obj_alc: toNum(paciente.obj_alc),
-        talleres: paciente.talleres || undefined,
-        // VGI 1ª evaluación
-        barthel1: toNum(paciente.barthel1),
-        pfeiffer1: toNum(paciente.pfeiffer1),
-        lawton1: toNum(paciente.lawton1),
-        tug1: toNum(paciente.tug1),
-        mini1: toNum(paciente.mini1),
-        yesa1: toNum(paciente.yesa1),
-        eq1: paciente.eq1 || undefined,
-        // VGI 2ª evaluación
-        barthel2: toNum(paciente.barthel2),
-        pfeiffer2: toNum(paciente.pfeiffer2),
-        lawton2: toNum(paciente.lawton2),
-        tug2: toNum(paciente.tug2),
-        mini2: toNum(paciente.mini2),
-        yesa2: toNum(paciente.yesa2),
-        eq2: paciente.eq2 || undefined,
-        // Notas
-        notas: paciente.notas || undefined,
-        plan: paciente.plan || undefined,
-      };
+    for (const paciente of lista) {
+      const datosBackend = construirDatosBackend(paciente);
+      const esNuevo = !pacientesGuardadosEnBackend.has(paciente.id);
 
-      // Eliminar claves undefined para que el backend no las reciba
-      Object.keys(datosBackend).forEach(k => datosBackend[k] === undefined && delete datosBackend[k]);
+      if (esNuevo) {
+        // POST — crear nuevo
+        const response = await fetch(`${API_URL}/pacientes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(datosBackend)
+        });
 
-      const response = await fetch(`${API_URL}/pacientes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(datosBackend)
-      });
-
-      if (response.ok) {
-        const savedData = await response.json();
-        // Actualizar ID local con el ID del backend
-        paciente.id = savedData.id;
-        pacientesGuardadosEnBackend.add(savedData.id);
-        console.log('Paciente guardado en backend:', paciente.nombre);
-      } else {
-        const errBody = await response.text();
-        if (response.status === 400 && errBody.includes('RUT ya existe')) {
-          // El paciente ya existe en el backend, solo marcarlo como guardado
-          pacientesGuardadosEnBackend.add(paciente.id);
-          console.log('Paciente ya existe en backend:', paciente.nombre);
+        if (response.ok) {
+          const savedData = await response.json();
+          paciente.id = savedData.id;
+          pacientesGuardadosEnBackend.add(savedData.id);
+          localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
+          console.log('✅ Paciente creado en backend:', paciente.nombre);
         } else {
-          console.error('Error al guardar paciente en backend:', response.status, errBody);
-          toast('⚠️ Error al guardar en servidor (' + response.status + '). Revisa los datos.');
+          const errBody = await response.text();
+          if (response.status === 400 && errBody.includes('RUT ya existe')) {
+            pacientesGuardadosEnBackend.add(paciente.id);
+          } else {
+            console.error('Error creando paciente:', response.status, errBody);
+            toast('⚠️ Error al guardar en servidor (' + response.status + ').');
+          }
+        }
+      } else {
+        // PATCH — actualizar existente
+        const response = await fetch(`${API_URL}/pacientes/${paciente.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(datosBackend)
+        });
+
+        if (response.ok) {
+          console.log('✅ Paciente actualizado en backend:', paciente.nombre);
+        } else {
+          const errBody = await response.text();
+          console.error('Error actualizando paciente:', response.status, errBody);
+          toast('⚠️ Error al actualizar en servidor (' + response.status + ').');
         }
       }
     }
@@ -2384,11 +2392,11 @@ function guardarPaciente() {
     };
   }
 
+  let pacienteGuardado;
   if (editandoId !== null) {
     const idx = pacientes.findIndex(p => p.id === editandoId);
     const pacienteExistente = pacientes[idx];
 
-    // Preservar VGI previo si existe
     if (pacienteExistente.vgi && datos.vgi) {
       datos.vgi = { ...pacienteExistente.vgi, ...datos.vgi };
     } else if (pacienteExistente.vgi && !datos.vgi) {
@@ -2396,13 +2404,16 @@ function guardarPaciente() {
     }
 
     pacientes[idx] = { ...pacienteExistente, ...datos };
+    pacienteGuardado = pacientes[idx];
   } else {
     datos.id = Date.now();
     datos.fechaRegistro = new Date().toISOString();
     pacientes.push(datos);
+    pacienteGuardado = datos;
   }
 
-  guardar();
+  localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
+  guardarEnBackend(pacienteGuardado);
   cerrarModal();
   renderAll();
   toast('✅ Registro guardado correctamente');

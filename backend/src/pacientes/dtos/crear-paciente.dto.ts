@@ -55,6 +55,26 @@ export class CrearPacienteDto {
 
   @IsString()
   @IsOptional()
+  contacto_nombre?: string;
+
+  @IsString()
+  @IsOptional()
+  contacto_telefono?: string;
+
+  @IsString()
+  @IsOptional()
+  contacto_relacion?: string;
+
+  @IsString()
+  @IsOptional()
+  sector?: string;
+
+  @IsString()
+  @IsOptional()
+  direccion?: string;
+
+  @IsString()
+  @IsOptional()
   escolaridad?: string;
 
   @IsString()
@@ -204,6 +224,14 @@ export class CrearPacienteDto {
   @IsString()
   @IsOptional()
   plan?: string;
+
+  @IsString()
+  @IsOptional()
+  operador_id?: string;
+
+  @IsString()
+  @IsOptional()
+  operador_nombre?: string;
 
   // ── Año y Semestre ──
   @IsNumber()

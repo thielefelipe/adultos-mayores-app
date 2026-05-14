@@ -33,6 +33,21 @@ export class PacienteEntity {
   @Column({ type: 'varchar', length: 20, nullable: true })
   telefono?: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  contacto_nombre?: string;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  contacto_telefono?: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  contacto_relacion?: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  sector?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  direccion?: string;
+
   @Column({ type: 'varchar', length: 50, nullable: true })
   escolaridad?: string;
 
