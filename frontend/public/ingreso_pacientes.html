@@ -69,6 +69,7 @@
 
   resetInactivityTimer();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -488,7 +489,12 @@
       <!-- Para OPERADOR: Nombre bloqueado -->
       <span id="operadorNombre" style="background: rgba(255,255,255,0.15); padding: .4rem .8rem; border-radius: 6px; font-weight: 500; display: none;"></span>
     </div>
-    <button class="btn btn-ghost btn-sm" onclick="exportarDatos()">⬇ Exportar CSV</button>
+    <button class="btn btn-ghost btn-sm" onclick="exportarExcel()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)">📊 Exportar Excel</button>
+    <button class="btn btn-ghost btn-sm" onclick="descargarPlantilla()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3)">📥 Plantilla</button>
+    <label class="btn btn-ghost btn-sm" style="cursor:pointer;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3)">
+      📤 Importar
+      <input type="file" id="inputImportar" accept=".xlsx,.xls" style="display:none" onchange="importarExcel(this)">
+    </label>
     <button class="btn btn-primary" onclick="abrirModal()">+ Nuevo Adulto Mayor</button>
     <button class="btn btn-ghost btn-sm" onclick="window.location.href='/';">← Volver</button>
   </div>
@@ -2647,20 +2653,264 @@ function recalcularSeg() {
   }
 }
 
-function exportarDatos() {
+function exportarExcel() {
   if (!pacientes.length) { toast('No hay datos para exportar'); return; }
-  const headers = ['Nombre','RUT','DV','Edad','Sexo','Región','Provincia','Comuna','Dirección','Rural','Dependencia','Enfermedades','PAI','Obj_PAI','Obj_Alc','Barthel1','Barthel2','Pfeiffer1','Pfeiffer2','Lawton1','Lawton2','TUG1','TUG2','Minimental1','Minimental2','Yesavage1','Yesavage2','EQ5D_1','EQ5D_2','Puntaje_Base','Estado_Base'];
+
+  const wb = XLSX.utils.book_new();
+
+  // ── Hoja 1: Resumen ───────────────────────────────────────────────────────
+  const resumenData = [
+    ['LÍNEA BASE 2025 — ADULTOS MAYORES', '', '', '', '', '', '', ''],
+    ['Generado:', new Date().toLocaleDateString('es-CL'), '', 'Total pacientes:', pacientes.length],
+    [],
+    ['NOMBRE', 'RUT', 'EDAD', 'SEXO', 'COMUNA', 'DEPENDENCIA', 'PUNTAJE', 'ESTADO'],
+  ];
+
+  pacientes.forEach(p => {
+    const sc = score(p);
+    const sem = semaforo(sc);
+    resumenData.push([
+      p.nombre || '',
+      mostrarRUTFormateado(p.rut, p.dv),
+      p.edad || '',
+      p.sexo || '',
+      p.comuna_personal || p.comuna || '',
+      p.dependencia || '',
+      sc !== null ? sc : '',
+      sem.label,
+    ]);
+  });
+
+  const wsResumen = XLSX.utils.aoa_to_sheet(resumenData);
+  wsResumen['!cols'] = [
+    {wch:30},{wch:14},{wch:7},{wch:8},{wch:18},{wch:14},{wch:10},{wch:12}
+  ];
+  wsResumen['!merges'] = [{ s:{r:0,c:0}, e:{r:0,c:7} }];
+  XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen');
+
+  // ── Hoja 2: Datos Completos ───────────────────────────────────────────────
+  const headers = [
+    'Nombre','RUT','DV','Edad','Sexo','Fecha Nacimiento','Teléfono',
+    'Contacto Nombre','Contacto Teléfono','Contacto Relación',
+    'Región','Provincia','Comuna','Sector','Dirección','Rural','Escolaridad',
+    'F. Ingreso','F. Consentimiento','F. Egreso','Naturaleza','Dependencia',
+    'Enfermedades','PAI','Obj. PAI %','Obj. Alcanzado %','Talleres',
+    'Barthel 1ª','Pfeiffer 1ª','Lawton 1ª','TUG 1ª','Mini Mental 1ª','Yesavage 1ª','EQ-5D 1ª',
+    'Barthel 2ª','Pfeiffer 2ª','Lawton 2ª','TUG 2ª','Mini Mental 2ª','Yesavage 2ª','EQ-5D 2ª',
+    'Puntaje','Estado','Notas','Plan de Cuidados','Fecha Registro',
+  ];
+
   const rows = pacientes.map(p => {
     const sc = score(p);
     const sem = semaforo(sc);
-    return [p.nombre,p.rut,p.dv,p.edad,p.sexo,p.region,p.provincia,p.comuna_personal,p.direccion,p.rural,p.dependencia,p.enfermedades,p.pai,p.obj_pai,p.obj_alc,p.barthel1,p.barthel2,p.pfeiffer1,p.pfeiffer2,p.lawton1,p.lawton2,p.tug1,p.tug2,p.mini1,p.mini2,p.yesa1,p.yesa2,p.eq1,p.eq2,sc,sem.label].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+    return [
+      p.nombre||'', p.rut||'', p.dv||'', p.edad||'', p.sexo||'', p.fecha_nacimiento||'',
+      p.telefono||'', p.contacto_nombre||'', p.contacto_telefono||'', p.contacto_relacion||'',
+      p.region||'', p.provincia||'', p.comuna_personal||'', p.sector||'', p.direccion||'',
+      p.rural||'', p.escolaridad||'',
+      p.f_ingreso||'', p.f_consentimiento||'', p.f_egreso||'', p.naturaleza||'', p.dependencia||'',
+      p.enfermedades||'', p.pai||'', p.obj_pai||'', p.obj_alc||'', p.talleres||'',
+      p.barthel1||'', p.pfeiffer1||'', p.lawton1||'', p.tug1||'', p.mini1||'', p.yesa1||'', p.eq1||'',
+      p.barthel2||'', p.pfeiffer2||'', p.lawton2||'', p.tug2||'', p.mini2||'', p.yesa2||'', p.eq2||'',
+      sc !== null ? sc : '', sem.label,
+      p.notas||'', p.plan||'',
+      p.fechaRegistro ? new Date(p.fechaRegistro).toLocaleDateString('es-CL') : '',
+    ];
   });
-  const csv = [headers.join(','), ...rows].join('\n');
+
+  const wsCompleto = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+  wsCompleto['!cols'] = headers.map((h, i) => ({
+    wch: [30,12,5,7,8,14,14,24,14,14,22,18,18,14,28,8,18,12,14,12,16,14,30,8,10,12,22,10,10,10,10,12,10,14,10,10,10,10,12,10,14,10,12,28,28,14][i] || 12
+  }));
+  XLSX.utils.book_append_sheet(wb, wsCompleto, 'Datos Completos');
+
+  // ── Hoja 3: Instrumentos VGI ──────────────────────────────────────────────
+  const vgiHeaders = [
+    'Nombre','RUT',
+    'Barthel 1ª','Pfeiffer 1ª','Lawton 1ª','TUG 1ª','Mini Mental 1ª','Yesavage 1ª','EQ-5D 1ª',
+    'Barthel 2ª','Pfeiffer 2ª','Lawton 2ª','TUG 2ª','Mini Mental 2ª','Yesavage 2ª','EQ-5D 2ª',
+    'Puntaje Final','Estado',
+  ];
+  const vgiRows = pacientes.map(p => {
+    const sc = score(p);
+    const sem = semaforo(sc);
+    return [
+      p.nombre||'', mostrarRUTFormateado(p.rut, p.dv),
+      p.barthel1||'', p.pfeiffer1||'', p.lawton1||'', p.tug1||'', p.mini1||'', p.yesa1||'', p.eq1||'',
+      p.barthel2||'', p.pfeiffer2||'', p.lawton2||'', p.tug2||'', p.mini2||'', p.yesa2||'', p.eq2||'',
+      sc !== null ? sc : '', sem.label,
+    ];
+  });
+  const wsVGI = XLSX.utils.aoa_to_sheet([vgiHeaders, ...vgiRows]);
+  wsVGI['!cols'] = [{wch:30},{wch:14},...Array(16).fill({wch:12})];
+  XLSX.utils.book_append_sheet(wb, wsVGI, 'Instrumentos VGI');
+
+  XLSX.writeFile(wb, `linea_base_adultos_mayores_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('📊 Excel descargado correctamente');
+}
+
+function descargarPlantilla() {
   const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,﻿' + encodeURIComponent(csv);
-  a.download = 'linea_base_2025.csv';
+  a.href = 'plantilla_importacion.xlsx';
+  a.download = 'plantilla_importacion_adultos_mayores.xlsx';
   a.click();
-  toast('📥 CSV descargado correctamente');
+  toast('📥 Plantilla descargada');
+}
+
+function importarExcel(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'binary', cellDates: true });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const filas = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+
+      // Buscar fila de encabezados (contiene "RUT")
+      let headerRow = -1;
+      for (let i = 0; i < Math.min(filas.length, 6); i++) {
+        if (filas[i].some(c => String(c).toUpperCase().includes('RUT'))) {
+          headerRow = i;
+          break;
+        }
+      }
+      if (headerRow === -1) { toast('⚠️ No se encontró la fila de encabezados'); input.value=''; return; }
+
+      const headers = filas[headerRow].map(h => String(h).trim().toLowerCase());
+      const col = (names) => {
+        for (const n of names) {
+          const idx = headers.findIndex(h => h.includes(n.toLowerCase()));
+          if (idx !== -1) return idx;
+        }
+        return -1;
+      };
+
+      const mapa = {
+        rut:               col(['rut']),
+        dv:                col(['dv']),
+        nombre:            col(['nombre']),
+        sexo:              col(['sexo']),
+        fecha_nacimiento:  col(['fecha nac', 'nacimiento']),
+        edad:              col(['edad']),
+        telefono:          col(['telefono', 'teléfono']),
+        escolaridad:       col(['escolaridad']),
+        pueblo:            col(['pueblo']),
+        contacto_nombre:   col(['nombre contacto', 'contacto nombre']),
+        contacto_telefono: col(['tel. contacto', 'telefono contacto']),
+        contacto_relacion: col(['relacion', 'relación']),
+        region:            col(['region', 'región']),
+        provincia:         col(['provincia']),
+        comuna:            col(['comuna']),
+        f_ingreso:         col(['f. ingreso', 'ingreso']),
+        naturaleza:        col(['naturaleza']),
+        dependencia:       col(['dependencia']),
+        rural:             col(['rural']),
+        rsh:               col(['rsh']),
+        direccion:         col(['direccion', 'dirección']),
+        enfermedades:      col(['enfermedad', 'diagnostico']),
+        pai:               col(['pai']),
+        obj_pai:           col(['objetivo pai']),
+        obj_alc:           col(['objetivo alc']),
+        talleres:          col(['talleres']),
+        barthel1:          col(['barthel\n(0-100)']),
+        pfeiffer1:         col(['pfeiffer\n(0-10)']),
+        lawton1:           col(['lawton\n(0-8)']),
+        tug1:              col(['tug (seg)']),
+        mini1:             col(['mini mental\n(0-30)']),
+        yesa1:             col(['yesavage\n(0-15)']),
+        eq1:               col(['eq-5d salud']),
+        notas:             col(['notas']),
+        plan:              col(['plan']),
+        operador_id:       col(['operador']),
+      };
+
+      const get = (fila, key) => {
+        const idx = mapa[key];
+        if (idx === -1 || idx === undefined) return '';
+        const val = fila[idx];
+        if (val === null || val === undefined) return '';
+        if (val instanceof Date) return val.toISOString().slice(0,10);
+        return String(val).trim();
+      };
+
+      let importados = 0;
+      let omitidos = 0;
+      const dataRows = filas.slice(headerRow + 1).filter(f => f.some(c => c !== ''));
+
+      for (const fila of dataRows) {
+        const rutRaw = get(fila, 'rut');
+        const nombre = get(fila, 'nombre');
+        if (!rutRaw || !nombre) { omitidos++; continue; }
+
+        const rut = String(rutRaw).replace(/\D/g, '');
+        if (!rut) { omitidos++; continue; }
+
+        // Verificar duplicado
+        const existe = pacientes.find(p => p.rut === rut);
+        if (existe) { omitidos++; continue; }
+
+        const operador = localStorage.getItem('operador_actual') || get(fila, 'operador_id') || '';
+        const nuevo = {
+          id: Date.now() + importados,
+          rut,
+          dv: get(fila, 'dv'),
+          nombre,
+          sexo: get(fila, 'sexo'),
+          fecha_nacimiento: get(fila, 'fecha_nacimiento'),
+          edad: get(fila, 'edad'),
+          telefono: get(fila, 'telefono'),
+          escolaridad: get(fila, 'escolaridad'),
+          pueblo: get(fila, 'pueblo'),
+          contacto_nombre: get(fila, 'contacto_nombre'),
+          contacto_telefono: get(fila, 'contacto_telefono'),
+          contacto_relacion: get(fila, 'contacto_relacion'),
+          region: get(fila, 'region'),
+          provincia: get(fila, 'provincia'),
+          comuna_personal: get(fila, 'comuna'),
+          f_ingreso: get(fila, 'f_ingreso'),
+          naturaleza: get(fila, 'naturaleza'),
+          dependencia: get(fila, 'dependencia'),
+          rural: get(fila, 'rural'),
+          rsh: get(fila, 'rsh'),
+          direccion: get(fila, 'direccion'),
+          enfermedades: get(fila, 'enfermedades'),
+          pai: get(fila, 'pai'),
+          obj_pai: get(fila, 'obj_pai'),
+          obj_alc: get(fila, 'obj_alc'),
+          talleres: get(fila, 'talleres'),
+          barthel1: get(fila, 'barthel1') || '',
+          pfeiffer1: get(fila, 'pfeiffer1') || '',
+          lawton1: get(fila, 'lawton1') || '',
+          tug1: get(fila, 'tug1') || '',
+          mini1: get(fila, 'mini1') || '',
+          yesa1: get(fila, 'yesa1') || '',
+          eq1: get(fila, 'eq1') || '',
+          notas: get(fila, 'notas'),
+          plan: get(fila, 'plan'),
+          operador_id: operador,
+          fechaRegistro: new Date().toISOString(),
+        };
+        pacientes.push(nuevo);
+        importados++;
+      }
+
+      if (importados > 0) {
+        localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
+        guardarEnBackend();
+        renderAll();
+        toast(`✅ ${importados} paciente(s) importado(s)${omitidos ? ` · ${omitidos} omitido(s)` : ''}`);
+      } else {
+        toast(`⚠️ No se importó ningún paciente${omitidos ? ` (${omitidos} omitidos por RUT duplicado o datos incompletos)` : ''}`);
+      }
+    } catch (err) {
+      console.error('Error importando:', err);
+      toast('⚠️ Error al leer el archivo Excel');
+    }
+    input.value = '';
+  };
+  reader.readAsBinaryString(file);
 }
 
 function filtrarLista() {
