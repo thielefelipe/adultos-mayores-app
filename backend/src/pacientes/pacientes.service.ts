@@ -88,7 +88,7 @@ export class PacientesService {
       });
 
       return {
-        data: pacientes,
+        datos: pacientes,
         total,
         pagina,
         totalPaginas: Math.ceil(total / limite),
