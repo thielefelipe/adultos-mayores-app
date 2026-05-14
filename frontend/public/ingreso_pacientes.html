@@ -1952,28 +1952,40 @@ function componentScores(p) {
 
 function formatearRUT() {
   const rutField = document.getElementById('f_rut');
-  let valor = rutField.value.replace(/\D/g, ''); // Remover caracteres no numéricos
+  let valor = rutField.value.replace(/[^0-9K]/gi, ''); // Solo números y K
 
   if (valor.length === 0) {
     rutField.value = '';
     return;
   }
 
-  // Soportar RUTs de 5 a 8 dígitos (adultos mayores tienen RUTs más cortos)
-  valor = valor.slice(0, 8);
+  // Separar números y dígito verificador (si tiene K)
+  let numParte = valor;
+  let dvParte = '';
 
-  // Formatear según cantidad de dígitos
-  if (valor.length <= 2) {
-    rutField.value = valor;
-  } else if (valor.length === 3 || valor.length === 4) {
-    rutField.value = valor.slice(0, 1) + '.' + valor.slice(1);
-  } else if (valor.length === 5 || valor.length === 6) {
-    rutField.value = valor.slice(0, 1) + '.' + valor.slice(1, 4) + '.' + valor.slice(4);
-  } else if (valor.length === 7) {
-    rutField.value = valor.slice(0, 1) + '.' + valor.slice(1, 4) + '.' + valor.slice(4);
-  } else {
-    rutField.value = valor.slice(0, 2) + '.' + valor.slice(2, 5) + '.' + valor.slice(5);
+  if (/[K]$/i.test(valor)) {
+    dvParte = valor[valor.length - 1].toUpperCase();
+    numParte = valor.slice(0, -1);
   }
+
+  // Soportar RUTs de 5 a 8 dígitos
+  numParte = numParte.slice(0, 8);
+
+  // Formatear números con puntos
+  let formatted = '';
+  if (numParte.length <= 2) {
+    formatted = numParte;
+  } else if (numParte.length === 3 || numParte.length === 4) {
+    formatted = numParte.slice(0, 1) + '.' + numParte.slice(1);
+  } else if (numParte.length === 5 || numParte.length === 6) {
+    formatted = numParte.slice(0, 1) + '.' + numParte.slice(1, 4) + '.' + numParte.slice(4);
+  } else if (numParte.length === 7) {
+    formatted = numParte.slice(0, 1) + '.' + numParte.slice(1, 4) + '.' + numParte.slice(4);
+  } else {
+    formatted = numParte.slice(0, 2) + '.' + numParte.slice(2, 5) + '.' + numParte.slice(5);
+  }
+
+  rutField.value = formatted + (dvParte ? '-' + dvParte : '');
 }
 
 function recalcular() {
@@ -2151,13 +2163,25 @@ function leerFormulario() {
   const get = (id) => document.getElementById(id)?.value || '';
   const getNum = (id) => parseInt(get(id)) || null;
 
+  // Extraer RUT y dígito verificador
+  let rutCompleto = get('f_rut');
+  let rutNumeros = rutCompleto.replace(/[^0-9K]/gi, '');
+  let rutFinal = rutNumeros;
+  let dvFinal = get('f_dv');
+
+  // Si el RUT contiene K (dígito verificador), extraerlo
+  if (/K$/i.test(rutNumeros)) {
+    dvFinal = 'K';
+    rutFinal = rutNumeros.slice(0, -1);
+  }
+
   return {
     anio: getNum('f_anio') || new Date().getFullYear(),
     semestre: getNum('f_semestre'),
     operador_id: get('f_operador_id'),
     operador_nombre: get('f_operador_nombre'),
-    rut: get('f_rut').replace(/\D/g, '').trim(),
-    dv: get('f_dv').trim(),
+    rut: rutFinal,
+    dv: dvFinal,
     nombre: get('f_nombre').trim(),
     contacto_nombre: get('f_contacto_nombre').trim(),
     contacto_telefono: get('f_contacto_telefono').trim(),
@@ -2525,7 +2549,7 @@ function renderMain() {
             const badgeClass = sem.color === 'verde' ? 'score-verde' : sem.color === 'ambar' ? 'score-ambar' : sem.color === 'rojo' ? 'score-rojo' : 'score-gray';
             return `<tr onclick="verPaciente('${p.id}')">
               <td class="td-name">${p.nombre||'—'}</td>
-              <td>${p.rut||'—'}</td>
+              <td>${mostrarRUTFormateado(p.rut, p.dv)}</td>
               <td>${p.edad||'—'}</td>
               <td>${p.comuna||'—'}</td>
               <td>${p.dependencia||'—'}</td>
@@ -2627,7 +2651,7 @@ function verPaciente(id) {
           <div style="margin-bottom:2rem;padding-bottom:2rem;border-bottom:2px solid var(--sand)">
             <h3 style="color:var(--azul);font-size:1.1rem;margin:0 0 1rem 0">📋 Datos Personales</h3>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.9rem">
-              <div><strong>RUT:</strong> ${p.rut || '—'} ${p.dv || '—'}</div>
+              <div><strong>RUT:</strong> ${mostrarRUTFormateado(p.rut, p.dv)}</div>
               <div><strong>Sexo:</strong> ${p.sexo || '—'}</div>
               <div><strong>Teléfono:</strong> ${p.telefono || '—'}</div>
               <div><strong>Contacto:</strong> ${p.contacto_nombre || '—'}</div>
@@ -2933,11 +2957,17 @@ function cerrarModalCredencial() {
 
 function formatearRUTParaCredencial(rut) {
   if (!rut) return '';
-  // Asegurarse de que sea solo números
   rut = rut.replace(/\D/g, '');
   if (rut.length <= 2) return rut;
   if (rut.length <= 5) return rut.slice(0, 2) + '.' + rut.slice(2);
   return rut.slice(0, 2) + '.' + rut.slice(2, 5) + '.' + rut.slice(5);
+}
+
+function mostrarRUTFormateado(rut, dv) {
+  if (!rut) return '—';
+  const rutNum = rut.replace(/\D/g, '');
+  const rutFormateado = formatearRUTParaCredencial(rutNum);
+  return rutFormateado + (dv && dv.trim() ? '-' + dv.trim() : '');
 }
 
 function abrirGeneradorCredencial() {
