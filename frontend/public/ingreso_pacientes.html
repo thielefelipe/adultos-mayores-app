@@ -2296,30 +2296,30 @@ function cargarFormulario(p) {
 
   // Cargar datos VGI si existen
   if (p.vgi) {
-    const semestre = document.getElementById('f_semestre').value;
+    const semestreEl = document.getElementById('f_semestre');
+    const semestre = semestreEl ? semestreEl.value : null;
     if (semestre && p.vgi[semestre]) {
       const vgiData = p.vgi[semestre];
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
 
-      // Cargar 1ª VGI
       if (vgiData.vgi1) {
-        document.getElementById('f_barthel1').value = vgiData.vgi1.barthel || '';
-        document.getElementById('f_pfeiffer1').value = vgiData.vgi1.pfeiffer || '';
-        document.getElementById('f_lawton1').value = vgiData.vgi1.lawton || '';
-        document.getElementById('f_tug1').value = vgiData.vgi1.tug || '';
-        document.getElementById('f_mini1').value = vgiData.vgi1.mini || '';
-        document.getElementById('f_yesa1').value = vgiData.vgi1.yesa || '';
-        document.getElementById('f_eq1').value = vgiData.vgi1.eq || '';
+        setVal('f_barthel1', vgiData.vgi1.barthel);
+        setVal('f_pfeiffer1', vgiData.vgi1.pfeiffer);
+        setVal('f_lawton1', vgiData.vgi1.lawton);
+        setVal('f_tug1', vgiData.vgi1.tug);
+        setVal('f_mini1', vgiData.vgi1.mini);
+        setVal('f_yesa1', vgiData.vgi1.yesa);
+        setVal('f_eq1', vgiData.vgi1.eq);
       }
 
-      // Cargar 2ª VGI
       if (vgiData.vgi2) {
-        document.getElementById('f_barthel2').value = vgiData.vgi2.barthel || '';
-        document.getElementById('f_pfeiffer2').value = vgiData.vgi2.pfeiffer || '';
-        document.getElementById('f_lawton2').value = vgiData.vgi2.lawton || '';
-        document.getElementById('f_tug2').value = vgiData.vgi2.tug || '';
-        document.getElementById('f_mini2').value = vgiData.vgi2.mini || '';
-        document.getElementById('f_yesa2').value = vgiData.vgi2.yesa || '';
-        document.getElementById('f_eq2').value = vgiData.vgi2.eq || '';
+        setVal('f_barthel2', vgiData.vgi2.barthel);
+        setVal('f_pfeiffer2', vgiData.vgi2.pfeiffer);
+        setVal('f_lawton2', vgiData.vgi2.lawton);
+        setVal('f_tug2', vgiData.vgi2.tug);
+        setVal('f_mini2', vgiData.vgi2.mini);
+        setVal('f_yesa2', vgiData.vgi2.yesa);
+        setVal('f_eq2', vgiData.vgi2.eq);
       }
     }
   }
