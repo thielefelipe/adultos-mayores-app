@@ -2156,19 +2156,17 @@ function actualizarBotonesFooter(tabIdx) {
   const btnSiguiente = document.getElementById('btnSiguiente');
   const btnGuardar = document.getElementById('btnGuardar');
 
-  // Mostrar/ocultar botones según la pestaña
+  if (!btnAnterior || !btnSiguiente || !btnGuardar) return;
+
   if (tabIdx === 0) {
-    // Primer tab: solo mostrar Siguiente
     btnAnterior.style.display = 'none';
     btnSiguiente.style.display = 'block';
     btnGuardar.style.display = 'none';
   } else if (tabIdx === 3) {
-    // Último tab: mostrar Anterior y Guardar
     btnAnterior.style.display = 'block';
     btnSiguiente.style.display = 'none';
     btnGuardar.style.display = 'block';
   } else {
-    // Tabs intermedios: mostrar Anterior y Siguiente
     btnAnterior.style.display = 'block';
     btnSiguiente.style.display = 'block';
     btnGuardar.style.display = 'none';
@@ -3008,8 +3006,9 @@ function cerrarModalCredencial() {
 function formatearRUTParaCredencial(rut) {
   if (!rut) return '';
   rut = rut.replace(/\D/g, '');
-  if (rut.length <= 2) return rut;
-  if (rut.length <= 5) return rut.slice(0, 2) + '.' + rut.slice(2);
+  if (rut.length <= 3) return rut;
+  if (rut.length <= 6) return rut.slice(0, rut.length - 3) + '.' + rut.slice(-3);
+  if (rut.length === 7) return rut.slice(0, 1) + '.' + rut.slice(1, 4) + '.' + rut.slice(4);
   return rut.slice(0, 2) + '.' + rut.slice(2, 5) + '.' + rut.slice(5);
 }
 
