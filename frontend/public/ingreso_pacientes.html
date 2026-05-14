@@ -1986,7 +1986,7 @@ function score(p) {
   else if (n(p.mini1)) vals.push(Number(p.mini1)/30*10);
   if (n(p.yesa2)) vals.push((15-Number(p.yesa2))/15*10);
   else if (n(p.yesa1)) vals.push((15-Number(p.yesa1))/15*10);
-  const eqMap = {'muy buena':10,'buena':7.5,'más o menos':5,'mala':2.5,'muy mala':0};
+  const eqMap = {'muy buena':10,'buena':8,'más o menos':6,'mala':4,'muy mala':0};
   const eqVal = (v) => v ? eqMap[v.toLowerCase()] : undefined;
   const eq = eqVal(p.eq2) ?? eqVal(p.eq1);
   if (eq !== undefined) vals.push(eq);
@@ -2010,7 +2010,7 @@ function componentScores(p) {
     { label: 'TUG', val: n(p.tug2) ? Math.max(0,Math.min(10,(20-Number(p.tug2))/10*10)) : n(p.tug1) ? Math.max(0,Math.min(10,(20-Number(p.tug1))/10*10)) : null },
     { label: 'Minimental', val: n(p.mini2) ? Number(p.mini2)/30*10 : n(p.mini1) ? Number(p.mini1)/30*10 : null },
     { label: 'Yesavage', val: n(p.yesa2) ? (15-Number(p.yesa2))/15*10 : n(p.yesa1) ? (15-Number(p.yesa1))/15*10 : null },
-    { label: 'EQ-5D', val: (() => { const eqMap = {'muy buena':10,'buena':7.5,'más o menos':5,'mala':2.5,'muy mala':0}; const v = p.eq2 || p.eq1; return v ? eqMap[v.toLowerCase()] ?? null : null; })() },
+    { label: 'EQ-5D', val: (() => { const eqMap = {'muy buena':10,'buena':8,'más o menos':6,'mala':4,'muy mala':0}; const v = p.eq2 || p.eq1; return v ? eqMap[v.toLowerCase()] ?? null : null; })() },
   ];
 }
 
