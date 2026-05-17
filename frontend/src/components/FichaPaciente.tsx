@@ -17,7 +17,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
     const opt = {
       margin: 0,
       filename: `Ficha_${paciente.nombre.replace(/\s+/g, '_')}_${paciente.rut}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
@@ -104,7 +104,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
           </div>
 
           {/* Ubicación */}
-          <div style={{ marginBottom: '20px', borderTop: '1px solid rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.3)', paddingY: '15px' }}>
+          <div style={{ marginBottom: '20px', borderTop: '1px solid rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.3)', paddingTop: '15px', paddingBottom: '15px' }}>
             <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px', textTransform: 'uppercase' }}>📍 Ubicación</div>
             <div style={{ fontSize: '12px' }}>
               {paciente.comuna}, {paciente.provincia}
