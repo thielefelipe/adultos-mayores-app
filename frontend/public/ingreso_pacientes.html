@@ -3271,60 +3271,135 @@ function descargarFichaPaciente(id) {
   if (!p) return;
 
   const fichaHTML = `
-    <div style="background: linear-gradient(135deg, #003D82 0%, #0066CC 100%); border-radius: 12px; padding: 40px 30px; color: white; font-family: 'Open Sans', sans-serif; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div style="margin-bottom: 20px; text-align: center; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 20px;">
-          <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">
-            🏥 FICHA DE PACIENTE
-          </div>
-          <div style="font-size: 11px; opacity: 0.9;">
-            Centro de Cuidado de Adultos Mayores
-          </div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <div style="font-size: 24px; font-weight: 700; margin-bottom: 15px;">
-            ${p.nombre || 'N/A'}
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 12px;">
-            <div>
-              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">RUT</div>
-              <div style="font-weight: 600; font-size: 13px;">${mostrarRUTFormateado(p.rut, p.dv)}</div>
-            </div>
-            <div>
-              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">Edad</div>
-              <div style="font-weight: 600; font-size: 13px;">${p.edad || '—'} años</div>
-            </div>
-            <div>
-              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">Sexo</div>
-              <div style="font-weight: 600; font-size: 13px;">${p.sexo || '—'}</div>
-            </div>
-            <div>
-              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">Estado</div>
-              <div style="font-weight: 600; font-size: 13px; text-transform: uppercase;">Activo</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.3); border-bottom: 1px solid rgba(255,255,255,0.3); padding-top: 15px; padding-bottom: 15px;">
-          <div style="font-size: 11px; opacity: 0.8; margin-bottom: 8px; text-transform: uppercase;">📍 Ubicación</div>
-          <div style="font-size: 12px;">
-            ${p.comuna || '—'}, ${p.provincia || '—'}<br/>
-            ${p.region || '—'}
+    <div style="font-family: 'DM Sans', sans-serif; background: #FAF7F2; padding: 20px; color: #1A1208;">
+      <!-- HEADER CREDENCIAL -->
+      <div style="background: linear-gradient(135deg, #003D82 0%, #0066CC 100%); border-radius: 12px; padding: 30px; color: white; margin-bottom: 30px; page-break-inside: avoid;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.3);">
+          <div>
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">🏥 Centro de Gestión</div>
+            <div style="font-size: 10px; opacity: 0.9;">Adultos Mayores</div>
           </div>
         </div>
 
         <div style="margin-bottom: 20px;">
-          <div style="font-size: 11px; opacity: 0.8; margin-bottom: 8px; text-transform: uppercase;">📞 Contacto</div>
-          <div style="font-size: 12px;">
-            <div>Tel: ${p.telefono || '—'}</div>
-            <div>Email: ${p.email || '—'}</div>
+          <h1 style="font-size: 28px; font-weight: 700; margin: 0 0 8px 0;">${p.nombre || 'N/A'}</h1>
+          <p style="margin: 0; font-size: 13px; opacity: 0.9;">${p.edad || '—'} años • ${p.sexo || '—'}</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+          <div>
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 4px; text-transform: uppercase;">RUT</div>
+            <div style="font-size: 13px; font-weight: 600;">${mostrarRUTFormateado(p.rut, p.dv)}</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 4px; text-transform: uppercase;">Dependencia</div>
+            <div style="font-size: 13px; font-weight: 600;">${p.dependencia || '—'}</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 4px; text-transform: uppercase;">Contacto</div>
+            <div style="font-size: 13px; font-weight: 600;">${p.contacto_nombre || p.telefono || '—'}</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 4px; text-transform: uppercase;">Región</div>
+            <div style="font-size: 13px; font-weight: 600;">${p.region || '—'}</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px;">
+          <div>
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 4px; text-transform: uppercase;">Provincia</div>
+            <div style="font-size: 13px; font-weight: 600;">${p.provincia || '—'}</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 4px; text-transform: uppercase;">Comuna</div>
+            <div style="font-size: 13px; font-weight: 600;">${p.comuna || '—'}</div>
           </div>
         </div>
       </div>
 
-      <div style="text-align: center; font-size: 10px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px;">
-        <div>ID: ${p.id}</div>
+      <!-- DATOS PERSONALES -->
+      <div style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <h2 style="font-size: 16px; font-weight: 700; color: #003D82; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #0066CC;">📋 Datos Personales</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <div style="font-size: 11px; color: #0066CC; font-weight: 600; margin-bottom: 4px;">RUT</div>
+            <div style="font-size: 12px;">${mostrarRUTFormateado(p.rut, p.dv)}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: #0066CC; font-weight: 600; margin-bottom: 4px;">Teléfono</div>
+            <div style="font-size: 12px;">${p.telefono || '—'}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: #0066CC; font-weight: 600; margin-bottom: 4px;">Sexo</div>
+            <div style="font-size: 12px;">${p.sexo || '—'}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: #0066CC; font-weight: 600; margin-bottom: 4px;">Contacto</div>
+            <div style="font-size: 12px;">${p.contacto_nombre || '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATOS DE ATENCIÓN -->
+      <div style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <h2 style="font-size: 16px; font-weight: 700; color: #003D82; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #0066CC;">🏥 Datos de Atención</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <div style="font-size: 11px; color: #0066CC; font-weight: 600; margin-bottom: 4px;">Dependencia</div>
+            <div style="font-size: 12px;">${p.dependencia || '—'}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: #0066CC; font-weight: 600; margin-bottom: 4px;">Enfermedades Crónicas</div>
+            <div style="font-size: 12px;">${p.enfermedades || '—'}</div>
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <div style="font-size: 11px; color: #0066CC; font-weight: 600; margin-bottom: 4px;">PAI (Plan de Atención Individualizado)</div>
+            <div style="font-size: 12px;">${p.pai || '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVALUACIONES GERIÁTRICAS -->
+      <div style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <h2 style="font-size: 16px; font-weight: 700; color: #003D82; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #0066CC;">📊 Evaluaciones Geriátricas (Seguimiento)</h2>
+
+        ${[1, 2, 3].map(n => `
+          <div style="margin-bottom: 15px; ${n > 1 ? 'border-top: 1px solid #E0E0E0; padding-top: 15px;' : ''}">
+            <div style="font-size: 12px; font-weight: 600; color: #0066CC; margin-bottom: 10px;">Evaluación ${n}</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <div style="font-size: 10px; color: #666; margin-bottom: 3px;">Barthel</div>
+                <div style="font-size: 13px; font-weight: 600;">${p['barthel' + n] || '—'}</div>
+              </div>
+              <div>
+                <div style="font-size: 10px; color: #666; margin-bottom: 3px;">Pfeiffer</div>
+                <div style="font-size: 13px; font-weight: 600;">${p['pfeiffer' + n] || '—'}</div>
+              </div>
+              <div>
+                <div style="font-size: 10px; color: #666; margin-bottom: 3px;">Lawton</div>
+                <div style="font-size: 13px; font-weight: 600;">${p['lawton' + n] || '—'}</div>
+              </div>
+              <div>
+                <div style="font-size: 10px; color: #666; margin-bottom: 3px;">TUG (seg)</div>
+                <div style="font-size: 13px; font-weight: 600;">${p['tug' + n] || '—'}</div>
+              </div>
+              <div>
+                <div style="font-size: 10px; color: #666; margin-bottom: 3px;">Mini Mental</div>
+                <div style="font-size: 13px; font-weight: 600;">${p['mini' + n] || '—'}</div>
+              </div>
+              <div>
+                <div style="font-size: 10px; color: #666; margin-bottom: 3px;">YesAvage</div>
+                <div style="font-size: 13px; font-weight: 600;">${p['yesavage' + n] || '—'}</div>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- FOOTER -->
+      <div style="text-align: center; font-size: 10px; color: #999; padding-top: 20px; border-top: 1px solid #E0E0E0;">
+        <div>Documento generado: ${new Date().toLocaleDateString('es-CL')}</div>
+        <div>ID del paciente: ${p.id}</div>
       </div>
     </div>
   `;
@@ -3333,7 +3408,7 @@ function descargarFichaPaciente(id) {
   element.innerHTML = fichaHTML;
 
   const opt = {
-    margin: 0,
+    margin: 10,
     filename: `Ficha_${p.nombre.replace(/\s+/g, '_')}_${p.rut}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2 },
