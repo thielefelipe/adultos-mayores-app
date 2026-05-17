@@ -19,7 +19,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
       filename: `Ficha_${paciente.nombre.replace(/\s+/g, '_')}_${paciente.rut}.pdf`,
       image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
     };
 
     html2pdf().set(opt).from(element).save();
