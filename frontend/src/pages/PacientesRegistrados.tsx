@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { patientsService, type Paciente, type FiltrosPacientes } from '../services/patientsService';
 import { ModalAgregarPaciente } from '../components/ModalAgregarPaciente';
 import { CustomSelect } from '../components/CustomSelect';
+import { FichaPaciente } from '../components/FichaPaciente';
 
 interface PacientesRegistradosProps {
   onVolver: () => void;
@@ -18,6 +19,8 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   const [comunas, setComunas] = useState<{id: string, nombre: string}[]>([]);
   const [operadores, setOperadores] = useState<{id: string, nombre: string}[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [fichaPacienteOpen, setFichaPacienteOpen] = useState(false);
+  const [pacienteSeleccionado, setPacienteSeleccionado] = useState<Paciente | null>(null);
 
   const [filtros, setFiltros] = useState<FiltrosPacientes>({});
   const [regionSeleccionada, setRegionSeleccionada] = useState('');
@@ -655,12 +658,13 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Fecha Registro</th>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Teléfono</th>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Estado</th>
+                  <th style={{ padding: 15, textAlign: 'center', fontWeight: 600, color: 'white', fontSize: 14 }}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {pacientes.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ padding: 40, textAlign: 'center', color: '#666666' }}>
+                    <td colSpan={8} style={{ padding: 40, textAlign: 'center', color: '#666666' }}>
                       No se encontraron pacientes con los filtros seleccionados
                     </td>
                   </tr>
@@ -718,6 +722,36 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                           {paciente.estado}
                         </span>
                       </td>
+                      <td style={{ padding: 15, textAlign: 'center' }}>
+                        <button
+                          onClick={() => {
+                            setPacienteSeleccionado(paciente);
+                            setFichaPacienteOpen(true);
+                          }}
+                          style={{
+                            background: '#0066CC',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            transition: 'all 0.3s',
+                            whiteSpace: 'nowrap'
+                          }}
+                          onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLElement).style.background = '#004999';
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLElement).style.background = '#0066CC';
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+                          }}
+                        >
+                          📋 Ver Ficha
+                        </button>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -735,6 +769,17 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
         usuario={usuario}
         operadores={operadores}
       />
+
+      {/* Modal para ver ficha del paciente */}
+      {fichaPacienteOpen && pacienteSeleccionado && (
+        <FichaPaciente
+          paciente={pacienteSeleccionado}
+          onClose={() => {
+            setFichaPacienteOpen(false);
+            setPacienteSeleccionado(null);
+          }}
+        />
+      )}
     </div>
   );
 }
