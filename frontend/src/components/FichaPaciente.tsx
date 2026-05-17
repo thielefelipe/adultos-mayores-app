@@ -110,95 +110,95 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
         justifyContent: 'center',
         padding: '20px'
       }}>
-      <div style={{
-        background: '#FAF7F2',
-        borderRadius: '12px',
-        padding: '30px',
-        maxWidth: '500px',
-        width: '100%',
-        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
-      }}>
-        {/* Tarjeta de Credencial */}
-        <div
-          ref={fichaRef}
-          style={{
-            background: 'linear-gradient(135deg, #003D82 0%, #0066CC 100%)',
-            borderRadius: '12px',
-            padding: '40px 30px',
-            color: '#FFFFFF',
-            marginBottom: '30px',
-            minHeight: '400px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            fontFamily: "'Open Sans', sans-serif",
-            pageBreakInside: 'avoid'
-          }}>
-          {/* Header */}
-          <div style={{ marginBottom: '20px', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.3)', paddingBottom: '20px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px' }}>
-              🏥 FICHA DE PACIENTE
-            </div>
-            <div style={{ fontSize: '11px', opacity: 0.9 }}>
-              Centro de Cuidado de Adultos Mayores
-            </div>
-          </div>
-
-          {/* Información Principal */}
-          <div style={{ marginBottom: '20px' }}>
-            <div style={{ fontSize: '24px', fontWeight: 700, marginBottom: '15px', wordBreak: 'break-word' }}>
-              {paciente.nombre}
+        <div style={{
+          background: '#FAF7F2',
+          borderRadius: '12px',
+          padding: '30px',
+          maxWidth: '500px',
+          width: '100%',
+          boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
+        }}>
+          {/* Tarjeta de Credencial */}
+          <div
+            ref={fichaRef}
+            style={{
+              background: 'linear-gradient(135deg, #003D82 0%, #0066CC 100%)',
+              borderRadius: '12px',
+              padding: '40px 30px',
+              color: '#FFFFFF',
+              marginBottom: '0px',
+              minHeight: '400px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              fontFamily: "'Open Sans', sans-serif",
+              pageBreakInside: 'avoid'
+            }}>
+            {/* Header */}
+            <div style={{ marginBottom: '20px', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.3)', paddingBottom: '20px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px' }}>
+                🏥 FICHA DE PACIENTE
+              </div>
+              <div style={{ fontSize: '11px', opacity: 0.9 }}>
+                Centro de Cuidado de Adultos Mayores
+              </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', fontSize: '12px' }}>
-              <div>
-                <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>RUT</div>
-                <div style={{ fontWeight: 600, fontSize: '13px' }}>{paciente.rut}-{paciente.dv}</div>
+            {/* Información Principal */}
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ fontSize: '24px', fontWeight: 700, marginBottom: '15px', wordBreak: 'break-word' }}>
+                {paciente.nombre}
               </div>
-              <div>
-                <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>Edad</div>
-                <div style={{ fontWeight: 600, fontSize: '13px' }}>{paciente.edad || '—'} años</div>
-              </div>
-              <div>
-                <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>Sexo</div>
-                <div style={{ fontWeight: 600, fontSize: '13px' }}>{paciente.sexo || '—'}</div>
-              </div>
-              <div>
-                <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>Estado</div>
-                <div style={{ fontWeight: 600, fontSize: '13px', textTransform: 'uppercase' }}>
-                  {paciente.estado === 'activo' ? '✓ Activo' : '✗ Inactivo'}
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', fontSize: '12px' }}>
+                <div>
+                  <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>RUT</div>
+                  <div style={{ fontWeight: 600, fontSize: '13px' }}>{paciente.rut}-{paciente.dv}</div>
+                </div>
+                <div>
+                  <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>Edad</div>
+                  <div style={{ fontWeight: 600, fontSize: '13px' }}>{paciente.edad || '—'} años</div>
+                </div>
+                <div>
+                  <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>Sexo</div>
+                  <div style={{ fontWeight: 600, fontSize: '13px' }}>{paciente.sexo || '—'}</div>
+                </div>
+                <div>
+                  <div style={{ opacity: 0.8, fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase' }}>Estado</div>
+                  <div style={{ fontWeight: 600, fontSize: '13px', textTransform: 'uppercase' }}>
+                    {paciente.estado === 'activo' ? '✓ Activo' : '✗ Inactivo'}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Ubicación */}
-          <div style={{ marginBottom: '20px', borderTop: '1px solid rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.3)', paddingTop: '15px', paddingBottom: '15px' }}>
-            <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px', textTransform: 'uppercase' }}>📍 Ubicación</div>
-            <div style={{ fontSize: '12px' }}>
-              {paciente.comuna}, {paciente.provincia}
-              <br />
-              {paciente.region}
+            {/* Ubicación */}
+            <div style={{ marginBottom: '20px', borderTop: '1px solid rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.3)', paddingTop: '15px', paddingBottom: '15px' }}>
+              <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px', textTransform: 'uppercase' }}>📍 Ubicación</div>
+              <div style={{ fontSize: '12px' }}>
+                {paciente.comuna}, {paciente.provincia}
+                <br />
+                {paciente.region}
+              </div>
             </div>
-          </div>
 
-          {/* Contacto */}
-          <div style={{ marginBottom: '20px' }}>
-            <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px', textTransform: 'uppercase' }}>📞 Contacto</div>
-            <div style={{ fontSize: '12px' }}>
-              <div>Tel: {paciente.telefono || '—'}</div>
-              <div>Email: {paciente.email || '—'}</div>
+            {/* Contacto */}
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px', textTransform: 'uppercase' }}>📞 Contacto</div>
+              <div style={{ fontSize: '12px' }}>
+                <div>Tel: {paciente.telefono || '—'}</div>
+                <div>Email: {paciente.email || '—'}</div>
+              </div>
             </div>
-          </div>
 
-          {/* Footer */}
-          <div style={{ textAlign: 'center', fontSize: '10px', opacity: 0.8, borderTop: '1px solid rgba(255,255,255,0.3)', paddingTop: '15px' }}>
-            <div>Registro: {new Date(paciente.fecha_registro).toLocaleDateString('es-CL')}</div>
-            <div style={{ marginTop: '8px' }}>Operador: {paciente.creadoPor}</div>
-            <div style={{ marginTop: '8px' }}>ID: {paciente.id}</div>
+            {/* Footer */}
+            <div style={{ textAlign: 'center', fontSize: '10px', opacity: 0.8, borderTop: '1px solid rgba(255,255,255,0.3)', paddingTop: '15px' }}>
+              <div>Registro: {new Date(paciente.fecha_registro).toLocaleDateString('es-CL')}</div>
+              <div style={{ marginTop: '8px' }}>Operador: {paciente.creadoPor}</div>
+              <div style={{ marginTop: '8px' }}>ID: {paciente.id}</div>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
