@@ -70,6 +70,7 @@
   resetInactivityTimer();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2943,6 +2944,7 @@ function verPaciente(id) {
           <p style="margin:.5rem 0 0 0;opacity:.9;font-size:.95rem">${p.edad} años • ${p.comuna || '—'} • ${p.dependencia || '—'}</p>
         </div>
         <div style="display:flex;gap:.5rem">
+          <button class="btn btn-primary btn-sm" onclick="descargarFichaPaciente('${p.id}')" style="background:#28A745;color:white;border:none">⬇️ Descargar ficha</button>
           <button class="btn btn-primary btn-sm" onclick="mostrarCredencialPorId('${p.id}')" style="background:#16a34a;color:white;border:none">🎫 Credencial</button>
           <button class="btn btn-primary btn-sm" onclick="editarPacienteDesdeVista('${p.id}')" style="background:white;color:var(--azul);border:none">✏️ Editar</button>
           <button class="btn btn-primary btn-sm" onclick="renderMain()" style="background:rgba(255,255,255,.2);border:none">← Volver</button>
@@ -3262,6 +3264,83 @@ function mostrarModalCredencial(paciente) {
 function mostrarCredencialPorId(id) {
   const p = pacientes.find(x => x.id === id);
   if (p) mostrarModalCredencial(p);
+}
+
+function descargarFichaPaciente(id) {
+  const p = pacientes.find(x => x.id === id);
+  if (!p) return;
+
+  const fichaHTML = `
+    <div style="background: linear-gradient(135deg, #003D82 0%, #0066CC 100%); border-radius: 12px; padding: 40px 30px; color: white; font-family: 'Open Sans', sans-serif; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="margin-bottom: 20px; text-align: center; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 20px;">
+          <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">
+            🏥 FICHA DE PACIENTE
+          </div>
+          <div style="font-size: 11px; opacity: 0.9;">
+            Centro de Cuidado de Adultos Mayores
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 24px; font-weight: 700; margin-bottom: 15px;">
+            ${p.nombre || 'N/A'}
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 12px;">
+            <div>
+              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">RUT</div>
+              <div style="font-weight: 600; font-size: 13px;">${mostrarRUTFormateado(p.rut, p.dv)}</div>
+            </div>
+            <div>
+              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">Edad</div>
+              <div style="font-weight: 600; font-size: 13px;">${p.edad || '—'} años</div>
+            </div>
+            <div>
+              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">Sexo</div>
+              <div style="font-weight: 600; font-size: 13px;">${p.sexo || '—'}</div>
+            </div>
+            <div>
+              <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px; text-transform: uppercase;">Estado</div>
+              <div style="font-weight: 600; font-size: 13px; text-transform: uppercase;">Activo</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.3); border-bottom: 1px solid rgba(255,255,255,0.3); padding-top: 15px; padding-bottom: 15px;">
+          <div style="font-size: 11px; opacity: 0.8; margin-bottom: 8px; text-transform: uppercase;">📍 Ubicación</div>
+          <div style="font-size: 12px;">
+            ${p.comuna || '—'}, ${p.provincia || '—'}<br/>
+            ${p.region || '—'}
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 11px; opacity: 0.8; margin-bottom: 8px; text-transform: uppercase;">📞 Contacto</div>
+          <div style="font-size: 12px;">
+            <div>Tel: ${p.telefono || '—'}</div>
+            <div>Email: ${p.email || '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; font-size: 10px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px;">
+        <div>ID: ${p.id}</div>
+      </div>
+    </div>
+  `;
+
+  const element = document.createElement('div');
+  element.innerHTML = fichaHTML;
+
+  const opt = {
+    margin: 0,
+    filename: `Ficha_${p.nombre.replace(/\s+/g, '_')}_${p.rut}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save();
 }
 
 function cerrarModalCredencial() {
