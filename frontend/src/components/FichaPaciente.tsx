@@ -34,19 +34,88 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
       bottom: 0,
       background: 'rgba(0, 0, 0, 0.6)',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '20px'
+      flexDirection: 'column',
+      zIndex: 1000
     }}>
+      {/* Header */}
+      <div style={{
+        background: '#003D82',
+        padding: '16px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        boxShadow: '0px 2px 8px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{ fontSize: '18px', fontWeight: 700, color: '#FFFFFF' }}>
+          📋 Ficha de Paciente
+        </div>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button
+            onClick={descargarPDF}
+            style={{
+              background: '#28A745',
+              color: '#FFFFFF',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: 600,
+              transition: 'all 0.3s',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#218838';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#28A745';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+            }}
+          >
+            ⬇️ Descargar ficha
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              background: '#FFFFFF',
+              color: '#003D82',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: 600,
+              transition: 'all 0.3s'
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#E8F3FF';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#FFFFFF';
+            }}
+          >
+            ← Volver
+          </button>
+        </div>
+      </div>
+
+      {/* Contenedor principal */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
       <div style={{
         background: '#FAF7F2',
         borderRadius: '12px',
         padding: '30px',
         maxWidth: '500px',
         width: '100%',
-        maxHeight: '90vh',
-        overflowY: 'auto',
         boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
       }}>
         {/* Tarjeta de Credencial */}
@@ -129,62 +198,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
             <div style={{ marginTop: '8px' }}>ID: {paciente.id}</div>
           </div>
         </div>
-
-        {/* Botones de Acción */}
-        <div style={{
-          display: 'flex',
-          gap: '12px',
-          justifyContent: 'center'
-        }}>
-          <button
-            onClick={descargarPDF}
-            style={{
-              background: '#0066CC',
-              color: '#FFFFFF',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 600,
-              transition: 'all 0.3s',
-              flex: 1
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#004999';
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#0066CC';
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-            }}
-          >
-            📥 Descargar PDF
-          </button>
-          <button
-            onClick={onClose}
-            style={{
-              background: '#FFFFFF',
-              color: '#0066CC',
-              border: '2px solid #0066CC',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 600,
-              transition: 'all 0.3s',
-              flex: 1
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#E8F3FF';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#FFFFFF';
-            }}
-          >
-            Cerrar
-          </button>
-        </div>
+      </div>
       </div>
     </div>
   );
