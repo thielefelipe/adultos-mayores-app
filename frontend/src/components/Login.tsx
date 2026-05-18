@@ -33,41 +33,50 @@ export function Login({ onLoginSuccess }: LoginProps) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1>🔐 Centro de Gestión</h1>
-        <p className="subtitle">Adultos Mayores</p>
-
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label htmlFor="username">Usuario:</label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="admin"
-              disabled={loading}
-              autoFocus
-            />
+        <div className="login-header">
+          <img src="/images/logo_municipalidad.png" alt="Municipalidad de Coelemu" className="login-logo-m" />
+          <div className="login-header-text">
+            <h2>Centro Diurno Comunitario para el Adulto Mayor</h2>
           </div>
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Contraseña:</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              disabled={loading}
-            />
-          </div>
+        <div className="login-info">
+          <h1>Centro de Gestión</h1>
+          <p className="subtitle">Adultos Mayores</p>
 
-          {error && <div className="error-message">{error}</div>}
+          <form onSubmit={handleLogin}>
+            <div className="form-group">
+              <label htmlFor="username">Usuario:</label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="admin"
+                disabled={loading}
+                autoFocus
+              />
+            </div>
 
-          <button type="submit" disabled={loading} className="btn-primary">
-            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
-          </button>
-        </form>
+            <div className="form-group">
+              <label htmlFor="password">Contraseña:</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                disabled={loading}
+              />
+            </div>
+
+            {error && <div className="error-message">{error}</div>}
+
+            <button type="submit" disabled={loading} className="btn-primary">
+              {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
