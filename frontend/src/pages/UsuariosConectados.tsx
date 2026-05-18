@@ -80,7 +80,9 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
           fontWeight: 600
         }}>← Volver</button>
 
-        <img src="/images/logo_municipalidad.png" alt="Logo Municipalidad" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+        <img src="/images/logo.png" alt="Logo Centro Diurno" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+          <div style={{ width: 1, height: 36, background: 'rgba(255,255,255,0.35)', margin: '0 6px' }} />
+          <img src="/images/logo_municipalidad.png" alt="Logo Municipalidad" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
         <div>
           <div style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 17 }}>
             Usuarios Conectados

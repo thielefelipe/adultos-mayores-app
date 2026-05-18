@@ -55,6 +55,8 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
             (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
           }}
         >
+          <img src="/images/logo.png" alt="Logo Centro Diurno" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
+          <div style={{ width: 1, height: 36, background: 'rgba(255,255,255,0.35)', margin: '0 6px' }} />
           <img src="/images/logo_municipalidad.png" alt="Logo Municipalidad" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
         </button>
         <div>
