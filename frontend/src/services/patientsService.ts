@@ -28,9 +28,6 @@ export interface FiltrosPacientes {
   semestre?: number;
 }
 
-// Mock data - sera reemplazado por API real cuando esté disponible
-const MOCK_PACIENTES: Paciente[] = [];
-
 export const patientsService = {
   async obtenerPacientes(token: string, filtros?: FiltrosPacientes) {
     try {
