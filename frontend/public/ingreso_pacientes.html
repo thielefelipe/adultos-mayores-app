@@ -3015,7 +3015,11 @@ function verPaciente(id) {
 }
 
 function generarSeguimientoVisual(p) {
-  const fechaIni = p.vgi_fecha_inicial;
+  // Si hay datos de instrumentos pero no hay fecha VGI, usar fecha de ingreso como fecha inicial
+  let fechaIni = p.vgi_fecha_inicial;
+  if (!fechaIni && (p.barthel1 || p.pfeiffer1 || p.lawton1 || p.tug1 || p.mini1 || p.yesa1 || p.eq1)) {
+    fechaIni = p.f_ingreso || (p.fechaRegistro ? p.fechaRegistro.split('T')[0] : '') || '';
+  }
   if (!fechaIni) {
     return '<div style="background:#f0f4f8;border:2px dashed var(--azul);border-radius:8px;padding:2rem;text-align:center;color:var(--azul)">📅 Sin evaluaciones VGI registradas. Edita el paciente para agregar fecha inicial.</div>';
   }
