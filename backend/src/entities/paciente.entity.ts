@@ -226,4 +226,14 @@ export class PacienteEntity {
 
   @Column({ type: 'timestamp', nullable: true })
   fechaEliminacion?: Date;
+
+  // 'activo' | 'pendiente_eliminacion' | 'dado_de_alta'
+  @Column({ type: 'varchar', length: 30, default: 'activo' })
+  estado: string;
+
+  @Column({ type: 'text', nullable: true })
+  motivoEliminacion?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  fechaAlta?: Date;
 }

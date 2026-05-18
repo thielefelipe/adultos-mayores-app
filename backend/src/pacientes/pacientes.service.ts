@@ -64,23 +64,29 @@ export class PacientesService {
   ) {
     try {
       const skip = (pagina - 1) * limite;
-      const where: any = { eliminado: false };
-
       const rolUsuario = filtros?.rolUsuario;
       const usernameUsuario = filtros?.usernameUsuario;
+      const esAdmin = rolUsuario === 'admin';
 
-      // Si el usuario es operador (no admin), solo puede ver sus propios pacientes
-      if (rolUsuario && rolUsuario !== 'admin' && usernameUsuario) {
-        where.creadoPor = usernameUsuario;
+      const baseWhere: any = {};
+      if (!esAdmin) {
+        baseWhere.eliminado = false;
+        if (usernameUsuario) baseWhere.creadoPor = usernameUsuario;
       }
+      // Admins ven activos y pendiente_eliminacion (not eliminado permanente)
+      if (esAdmin) baseWhere.eliminado = false;
 
-      // Aplicar filtros adicionales
-      if (filtros?.region) where.region = filtros.region;
-      if (filtros?.provincia) where.provincia = filtros.provincia;
-      if (filtros?.comuna) where.comuna = filtros.comuna;
-      if (filtros?.anio) where.anio = filtros.anio;
-      if (filtros?.semestre) where.semestre = filtros.semestre;
-      if (filtros?.operador_id) where.creadoPor = filtros.operador_id;
+      if (filtros?.region) baseWhere.region = filtros.region;
+      if (filtros?.provincia) baseWhere.provincia = filtros.provincia;
+      if (filtros?.comuna) baseWhere.comuna = filtros.comuna;
+      if (filtros?.anio) baseWhere.anio = filtros.anio;
+      if (filtros?.semestre) baseWhere.semestre = filtros.semestre;
+      if (filtros?.operador_id) baseWhere.creadoPor = filtros.operador_id;
+
+      // Para admin: incluir también pendiente_eliminacion en un segundo where
+      const where: any = esAdmin
+        ? [{ ...baseWhere, estado: 'activo' }, { ...baseWhere, estado: 'pendiente_eliminacion' }, { ...baseWhere, estado: 'dado_de_alta' }]
+        : baseWhere;
 
       const [pacientes, total] = await this.pacienteRepository.findAndCount({
         where,
@@ -191,20 +197,53 @@ export class PacientesService {
     const paciente = await this.obtenerPorId(id);
 
     paciente.eliminado = true;
+    paciente.estado = 'pendiente_eliminacion';
     paciente.fechaEliminacion = new Date();
     paciente.modificadoPor = username;
     paciente.modificadoEn = new Date();
 
     await this.pacienteRepository.save(paciente);
 
-    // Auditoría
-    await this.auditService.registrar(
-      username,
-      'DELETE',
-      'paciente',
-      id,
-      { motivo: 'eliminación de registro' },
-    );
+    await this.auditService.registrar(username, 'DELETE', 'paciente', id, {
+      motivo: 'eliminación con período de gracia 30 días',
+    });
+  }
+
+  async reintegrar(id: string, username: string): Promise<PacienteEntity> {
+    const paciente = await this.pacienteRepository.findOne({ where: { id } });
+    if (!paciente) throw new NotFoundException('Paciente no encontrado');
+
+    const diasTranscurridos = paciente.fechaEliminacion
+      ? (Date.now() - new Date(paciente.fechaEliminacion).getTime()) / (1000 * 60 * 60 * 24)
+      : 0;
+
+    if (diasTranscurridos > 30) {
+      throw new BadRequestException('El plazo de 30 días para reintegrar ha vencido');
+    }
+
+    paciente.eliminado = false;
+    paciente.estado = 'activo';
+    paciente.fechaEliminacion = null;
+    paciente.motivoEliminacion = null;
+    paciente.modificadoPor = username;
+    paciente.modificadoEn = new Date();
+
+    const resultado = await this.pacienteRepository.save(paciente);
+    await this.auditService.registrar(username, 'REINTEGRAR', 'paciente', id, {});
+    return resultado;
+  }
+
+  async darDeAlta(id: string, username: string): Promise<PacienteEntity> {
+    const paciente = await this.obtenerPorId(id);
+
+    paciente.estado = 'dado_de_alta';
+    paciente.fechaAlta = new Date();
+    paciente.modificadoPor = username;
+    paciente.modificadoEn = new Date();
+
+    const resultado = await this.pacienteRepository.save(paciente);
+    await this.auditService.registrar(username, 'DAR_DE_ALTA', 'paciente', id, {});
+    return resultado;
   }
 
   async exportarCSV(): Promise<string> {

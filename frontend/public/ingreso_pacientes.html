@@ -2426,72 +2426,114 @@ function guardarPaciente() {
   toast('✅ Registro guardado correctamente');
 }
 
+function getUsuarioActual() {
+  try { return JSON.parse(localStorage.getItem('usuario') || '{}'); } catch(e) { return {}; }
+}
+
 function eliminarPaciente(id) {
-  const operador = localStorage.getItem('operador_actual') || '';
   const p = pacientes.find(x => x.id === id);
+  if (!p) { toast('⚠️ Registro no encontrado'); return; }
 
-  if (!p) {
-    toast('⚠️ Registro no encontrado');
-    return;
-  }
-
-  // Verificar permisos
-  let usuario = {};
-  try {
-    const usuarioJSON = localStorage.getItem('usuario');
-    if (usuarioJSON) {
-      usuario = JSON.parse(usuarioJSON);
-    }
-  } catch (e) {
-    console.error('Error parsing usuario:', e);
-  }
-
+  const usuario = getUsuarioActual();
   const esAdmin = usuario.rol === 'admin';
+  const operador = localStorage.getItem('operador_actual') || '';
   const esOwner = p.operador_id === operador;
 
-  // Solo admin o el dueño pueden eliminar
   if (!esAdmin && !esOwner) {
     toast('⚠️ No tienes permiso para eliminar este paciente');
     return;
   }
 
-  // Si es admin, pedir contraseña para mayor seguridad
-  if (esAdmin) {
-    const pwd = prompt(`🔐 Ingresa tu contraseña para confirmar eliminación de ${p.nombre}:`);
-    if (!pwd) return;
+  if (!confirm(`¿Eliminar a ${p.nombre}?\n\nTendrás 30 días para reintegrarlo si es necesario.`)) return;
 
-    // Validar contraseña (se valida contra el backend)
-    const usuarioActual = usuario.username || usuario.email || 'admin';
-    fetch('/api/auth/verify-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ usuario: usuarioActual, password: pwd })
-    }).then(res => res.json()).then(data => {
-      if (data.valido) {
-        _procesoEliminacion(id);
-      } else {
-        toast('❌ Contraseña incorrecta. Eliminación cancelada.');
-      }
-    }).catch(() => {
-      // Si no hay backend, mostrar confirmación adicional
-      const confirmacion = confirm(`⚠️ ¿Estás seguro de que deseas eliminar a ${p.nombre}? Esta acción no se puede deshacer.`);
-      if (confirmacion) {
-        _procesoEliminacion(id);
-      }
-    });
-  } else {
-    // Operadores normales solo piden confirmación simple
-    if (!confirm(`¿Eliminar el registro de ${p.nombre}?`)) return;
-    _procesoEliminacion(id);
-  }
+  const token = localStorage.getItem('token');
+  fetch(`${API_URL}/pacientes/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  }).then(res => {
+    if (res.ok || res.status === 204) {
+      p.estado = 'pendiente_eliminacion';
+      p.fechaEliminacion = new Date().toISOString();
+      guardar();
+      renderAll();
+      renderMain();
+      toast('🗑 Paciente eliminado. Tienes 30 días para reintegrarlo.');
+    } else {
+      toast('⚠️ Error al eliminar en el servidor');
+    }
+  }).catch(() => {
+    p.estado = 'pendiente_eliminacion';
+    p.fechaEliminacion = new Date().toISOString();
+    guardar();
+    renderAll();
+    renderMain();
+    toast('🗑 Eliminado localmente (sin conexión)');
+  });
 }
 
-function _procesoEliminacion(id) {
-  pacientes = pacientes.filter(x => x.id !== id);
-  guardar();
-  renderAll();
-  renderMain();
-  toast('🗑 Registro eliminado');
+function reintegrarPaciente(id) {
+  const p = pacientes.find(x => x.id === id);
+  if (!p) return;
+
+  const diasRestantes = p.fechaEliminacion
+    ? Math.max(0, 30 - Math.floor((Date.now() - new Date(p.fechaEliminacion).getTime()) / (1000*60*60*24)))
+    : 30;
+
+  if (diasRestantes === 0) {
+    toast('❌ El plazo de 30 días para reintegrar ha vencido');
+    return;
+  }
+
+  if (!confirm(`¿Reintegrar a ${p.nombre}?\nQuedan ${diasRestantes} días del plazo.`)) return;
+
+  const token = localStorage.getItem('token');
+  fetch(`${API_URL}/pacientes/${id}/reintegrar`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` }
+  }).then(res => res.ok ? res.json() : Promise.reject(res.status))
+  .then(() => {
+    p.estado = 'activo';
+    p.fechaEliminacion = null;
+    guardar();
+    renderAll();
+    renderMain();
+    toast('✅ Paciente reintegrado correctamente');
+  }).catch(() => {
+    p.estado = 'activo';
+    p.fechaEliminacion = null;
+    guardar();
+    renderAll();
+    renderMain();
+    toast('✅ Reintegrado (sin conexión)');
+  });
+}
+
+function darDeAltaPaciente(id) {
+  const p = pacientes.find(x => x.id === id);
+  if (!p) return;
+
+  if (!confirm(`¿Dar de alta a ${p.nombre}?\n\nEl paciente quedará registrado como dado de alta.`)) return;
+
+  const token = localStorage.getItem('token');
+  fetch(`${API_URL}/pacientes/${id}/dar-de-alta`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` }
+  }).then(res => res.ok ? res.json() : Promise.reject(res.status))
+  .then(() => {
+    p.estado = 'dado_de_alta';
+    p.fechaAlta = new Date().toISOString();
+    guardar();
+    renderAll();
+    renderMain();
+    toast('🏥 Paciente dado de alta correctamente');
+  }).catch(() => {
+    p.estado = 'dado_de_alta';
+    p.fechaAlta = new Date().toISOString();
+    guardar();
+    renderAll();
+    renderMain();
+    toast('🏥 Dado de alta (sin conexión)');
+  });
 }
 
 
@@ -2623,8 +2665,16 @@ function renderMain() {
               <td><span class="score-display ${badgeClass}" style="font-size:.75rem;padding:.2rem .6rem">${sem.emoji} ${sem.label}</span></td>
               <td style="color:#ccc;font-size:.8rem">—</td>
               <td onclick="event.stopPropagation()">
-                <button class="btn btn-sm btn-verde" onclick="abrirModal('${p.id}')">✏️</button>
-                <button class="btn btn-sm btn-danger" onclick="eliminarPaciente('${p.id}')" style="margin-left:.3rem">🗑</button>
+                ${p.estado === 'pendiente_eliminacion' ? `
+                  <span style="font-size:.75rem;color:var(--rojo);font-weight:600">🗑 ${Math.max(0,30-Math.floor((Date.now()-new Date(p.fechaEliminacion).getTime())/(1000*60*60*24)))}d</span>
+                  <button class="btn btn-sm" onclick="reintegrarPaciente('${p.id}')" style="background:#16a34a;color:white;border:none;margin-left:.3rem;font-size:.75rem">↩ Reintegrar</button>
+                ` : p.estado === 'dado_de_alta' ? `
+                  <span style="font-size:.75rem;color:#0284c7;font-weight:600">🏥 Alta</span>
+                ` : `
+                  <button class="btn btn-sm btn-verde" onclick="abrirModal('${p.id}')">✏️</button>
+                  <button class="btn btn-sm" onclick="darDeAltaPaciente('${p.id}')" style="background:#0284c7;color:white;border:none;margin-left:.3rem;font-size:.75rem" title="Dar de alta">🏥</button>
+                  <button class="btn btn-sm btn-danger" onclick="eliminarPaciente('${p.id}')" style="margin-left:.3rem" title="Eliminar">🗑</button>
+                `}
               </td>
             </tr>`;
           }).join('')}
@@ -2944,10 +2994,21 @@ function verPaciente(id) {
           </h1>
           <p style="margin:.5rem 0 0 0;opacity:.9;font-size:.95rem">${p.edad} años • ${p.comuna || '—'} • ${p.dependencia || '—'}</p>
         </div>
-        <div style="display:flex;gap:.5rem">
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
           <button class="btn btn-primary btn-sm" onclick="descargarFichaPaciente('${p.id}')" style="background:#28A745;color:white;border:none">⬇️ Descargar ficha</button>
           <button class="btn btn-primary btn-sm" onclick="mostrarCredencialPorId('${p.id}')" style="background:#16a34a;color:white;border:none">🎫 Credencial</button>
-          <button class="btn btn-primary btn-sm" onclick="editarPacienteDesdeVista('${p.id}')" style="background:white;color:var(--azul);border:none">✏️ Editar</button>
+          ${p.estado === 'pendiente_eliminacion' ? `
+            <span style="background:rgba(255,100,100,.2);color:#fca5a5;padding:.4rem .8rem;border-radius:6px;font-size:.85rem;font-weight:600">
+              🗑 Eliminado — quedan ${Math.max(0,30-Math.floor((Date.now()-new Date(p.fechaEliminacion).getTime())/(1000*60*60*24)))} días para reintegrar
+            </span>
+            <button class="btn btn-primary btn-sm" onclick="reintegrarPaciente('${p.id}')" style="background:#16a34a;color:white;border:none">↩ Reintegrar</button>
+          ` : p.estado === 'dado_de_alta' ? `
+            <span style="background:rgba(255,255,255,.2);color:white;padding:.4rem .8rem;border-radius:6px;font-size:.85rem;font-weight:600">🏥 Dado de alta</span>
+          ` : `
+            <button class="btn btn-primary btn-sm" onclick="editarPacienteDesdeVista('${p.id}')" style="background:white;color:var(--azul);border:none">✏️ Editar</button>
+            <button class="btn btn-primary btn-sm" onclick="darDeAltaPaciente('${p.id}')" style="background:#0284c7;color:white;border:none">🏥 Dar de alta</button>
+            <button class="btn btn-primary btn-sm" onclick="eliminarPaciente('${p.id}')" style="background:#dc2626;color:white;border:none">🗑 Eliminar</button>
+          `}
           <button class="btn btn-primary btn-sm" onclick="renderMain()" style="background:rgba(255,255,255,.2);border:none">← Volver</button>
         </div>
       </div>

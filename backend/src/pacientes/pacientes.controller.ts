@@ -100,4 +100,14 @@ export class PacientesController {
   async eliminar(@Param('id') id: string, @Req() req) {
     await this.pacientesService.eliminar(id, req.user.username);
   }
+
+  @Post(':id/reintegrar')
+  async reintegrar(@Param('id') id: string, @Req() req) {
+    return this.pacientesService.reintegrar(id, req.user.username);
+  }
+
+  @Post(':id/dar-de-alta')
+  async darDeAlta(@Param('id') id: string, @Req() req) {
+    return this.pacientesService.darDeAlta(id, req.user.username);
+  }
 }
