@@ -233,19 +233,28 @@ export class UsuariosService {
       throw new UnauthorizedException('Contraseña de administrador incorrecta');
     }
 
-    await this.auditService.registrar(
-      usuarioAdmin,
-      'ELIMINAR_DEFINITIVO_USUARIO',
-      'usuario',
-      id,
-      {
-        username: usuario.username,
-        rol: usuario.rol,
-        nota: 'Usuario eliminado permanentemente de la base de datos',
-      },
-    );
+    try {
+      await this.auditService.registrar(
+        usuarioAdmin,
+        'ELIMINAR_DEFINITIVO_USUARIO',
+        'usuario',
+        id,
+        {
+          username: usuario.username,
+          rol: usuario.rol,
+          nota: 'Usuario eliminado permanentemente de la base de datos',
+        },
+      );
+    } catch (auditError) {
+      console.error('Error registrando en audit:', auditError);
+    }
 
-    await this.usuarioRepository.delete(id);
+    try {
+      await this.usuarioRepository.delete(id);
+    } catch (deleteError) {
+      console.error('Error eliminando usuario:', deleteError);
+      throw new BadRequestException('Error al eliminar usuario. Puede que el usuario tenga registros asociados.');
+    }
 
     return { mensaje: 'Usuario eliminado definitivamente' };
   }
