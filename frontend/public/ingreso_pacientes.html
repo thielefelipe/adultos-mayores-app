@@ -3277,58 +3277,58 @@ function descargarFichaPaciente(id) {
     const fotoData = localStorage.getItem('cdcReg8') ? JSON.parse(localStorage.getItem('cdcReg8')).find(r => r.id === id)?.foto : null;
 
     const fichaHTML = `
-      <div style="font-family: 'DM Sans', sans-serif; background: white; padding: 12px; color: #1A1208; margin: 0 auto; @page { size: A4; margin: 0; }">
-        <!-- HEADER CON FOTO (Compacto) -->
-        <div style="display: grid; grid-template-columns: 60px 1fr; gap: 10px; margin-bottom: 12px; page-break-inside: avoid;">
-          ${fotoData ? `<img src="${fotoData}" style="width: 60px; height: 60px; border-radius: 4px; object-fit: cover; border: 2px solid #22c55e;">` : `<div style="width: 60px; height: 60px; background: #f0fdf4; border: 2px dashed #22c55e; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 24px;">📸</div>`}
-          <div style="background: linear-gradient(135deg, #15803d 0%, #22c55e 100%); border-radius: 4px; padding: 8px; color: white;">
-            <div style="font-size: 14px; font-weight: 700; margin: 0;">${p.nombre || 'N/A'}</div>
-            <div style="font-size: 10px; opacity: 0.9; margin: 2px 0 0 0;">${p.edad || '—'} años • ${p.sexo || '—'} • ${p.dependencia || '—'}</div>
-            <div style="font-size: 9px; opacity: 0.8; margin: 2px 0 0 0;">RUT: ${mostrarRUTFormateado(p.rut, p.dv)} • ${p.region || '—'}, ${p.comuna || '—'}</div>
+      <div style="font-family: 'DM Sans', sans-serif; background: white; padding: 20px; color: #1A1208; margin: 0 auto; @page { size: A4; margin: 0; }">
+        <!-- HEADER CON FOTO -->
+        <div style="display: grid; grid-template-columns: 90px 1fr; gap: 15px; margin-bottom: 20px; page-break-inside: avoid;">
+          ${fotoData ? `<img src="${fotoData}" style="width: 90px; height: 90px; border-radius: 6px; object-fit: cover; border: 3px solid #22c55e;">` : `<div style="width: 90px; height: 90px; background: #f0fdf4; border: 3px dashed #22c55e; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 32px;">📸</div>`}
+          <div style="background: linear-gradient(135deg, #15803d 0%, #22c55e 100%); border-radius: 6px; padding: 15px; color: white; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 20px; font-weight: 700; margin: 0;">${p.nombre || 'N/A'}</div>
+            <div style="font-size: 12px; opacity: 0.95; margin: 4px 0 0 0;">${p.edad || '—'} años • ${p.sexo || '—'} • ${p.dependencia || '—'}</div>
+            <div style="font-size: 11px; opacity: 0.85; margin: 4px 0 0 0;">RUT: ${mostrarRUTFormateado(p.rut, p.dv)} • ${p.region || '—'}, ${p.comuna || '—'}</div>
           </div>
         </div>
 
         <!-- GRID 2 COLUMNAS: DATOS + EVALUACIONES -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; page-break-inside: avoid;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; page-break-inside: avoid;">
           <!-- COLUMNA IZQUIERDA: DATOS PERSONALES Y ATENCIÓN -->
           <div>
-            <div style="background: #f9fafb; border-left: 3px solid #22c55e; padding: 8px; margin-bottom: 8px; border-radius: 3px;">
-              <div style="font-size: 10px; font-weight: 700; color: #15803d; margin-bottom: 6px; text-transform: uppercase;">📋 Datos Personales</div>
-              <div style="font-size: 9px; line-height: 1.4;">
-                <div><strong>RUT:</strong> ${mostrarRUTFormateado(p.rut, p.dv)}</div>
-                <div><strong>Teléfono:</strong> ${p.telefono || '—'}</div>
+            <div style="background: #f9fafb; border-left: 4px solid #22c55e; padding: 12px; margin-bottom: 12px; border-radius: 4px;">
+              <div style="font-size: 12px; font-weight: 700; color: #15803d; margin-bottom: 8px; text-transform: uppercase;">📋 Datos Personales</div>
+              <div style="font-size: 11px; line-height: 1.6;">
+                <div style="margin-bottom: 6px;"><strong>RUT:</strong> ${mostrarRUTFormateado(p.rut, p.dv)}</div>
+                <div style="margin-bottom: 6px;"><strong>Teléfono:</strong> ${p.telefono || '—'}</div>
                 <div><strong>Contacto:</strong> ${p.contacto_nombre || '—'}</div>
               </div>
             </div>
 
-            <div style="background: #f9fafb; border-left: 3px solid #22c55e; padding: 8px; border-radius: 3px;">
-              <div style="font-size: 10px; font-weight: 700; color: #15803d; margin-bottom: 6px; text-transform: uppercase;">🏥 Datos de Atención</div>
-              <div style="font-size: 9px; line-height: 1.4;">
-                <div><strong>Dependencia:</strong> ${p.dependencia || '—'}</div>
-                <div><strong>Enfermedades:</strong> ${p.enfermedades || '—'}</div>
+            <div style="background: #f9fafb; border-left: 4px solid #22c55e; padding: 12px; border-radius: 4px;">
+              <div style="font-size: 12px; font-weight: 700; color: #15803d; margin-bottom: 8px; text-transform: uppercase;">🏥 Datos de Atención</div>
+              <div style="font-size: 11px; line-height: 1.6;">
+                <div style="margin-bottom: 6px;"><strong>Dependencia:</strong> ${p.dependencia || '—'}</div>
+                <div style="margin-bottom: 6px;"><strong>Enfermedades:</strong> ${p.enfermedades || '—'}</div>
                 <div><strong>PAI:</strong> ${p.pai || '—'}</div>
               </div>
             </div>
           </div>
 
-          <!-- COLUMNA DERECHA: EVALUACIONES COMPACTAS -->
+          <!-- COLUMNA DERECHA: EVALUACIONES -->
           <div>
-            <div style="background: #f9fafb; border-left: 3px solid #22c55e; padding: 8px; border-radius: 3px;">
-              <div style="font-size: 10px; font-weight: 700; color: #15803d; margin-bottom: 6px; text-transform: uppercase;">📊 Evaluaciones</div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 8px;">
-                <div><strong>Barthel:</strong> ${p.barthel1 || '—'}</div>
-                <div><strong>Pfeiffer:</strong> ${p.pfeiffer1 || '—'}</div>
-                <div><strong>Lawton:</strong> ${p.lawton1 || '—'}</div>
-                <div><strong>TUG:</strong> ${p.tug1 || '—'}</div>
-                <div><strong>Mini Mental:</strong> ${p.mini1 || '—'}</div>
-                <div><strong>YesAvage:</strong> ${p.yesavage1 || '—'}</div>
+            <div style="background: #f9fafb; border-left: 4px solid #22c55e; padding: 12px; border-radius: 4px; height: fit-content;">
+              <div style="font-size: 12px; font-weight: 700; color: #15803d; margin-bottom: 8px; text-transform: uppercase;">📊 Evaluaciones</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px;">
+                <div style="margin-bottom: 4px;"><strong>Barthel:</strong> <span style="font-size: 13px; color: #15803d; font-weight: 600;">${p.barthel1 || '—'}</span></div>
+                <div style="margin-bottom: 4px;"><strong>Pfeiffer:</strong> <span style="font-size: 13px; color: #15803d; font-weight: 600;">${p.pfeiffer1 || '—'}</span></div>
+                <div style="margin-bottom: 4px;"><strong>Lawton:</strong> <span style="font-size: 13px; color: #15803d; font-weight: 600;">${p.lawton1 || '—'}</span></div>
+                <div style="margin-bottom: 4px;"><strong>TUG:</strong> <span style="font-size: 13px; color: #15803d; font-weight: 600;">${p.tug1 || '—'}</span></div>
+                <div style="margin-bottom: 4px;"><strong>Mini Mental:</strong> <span style="font-size: 13px; color: #15803d; font-weight: 600;">${p.mini1 || '—'}</span></div>
+                <div><strong>YesAvage:</strong> <span style="font-size: 13px; color: #15803d; font-weight: 600;">${p.yesavage1 || '—'}</span></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- FOOTER -->
-        <div style="text-align: center; font-size: 8px; color: #999; margin-top: 8px; padding-top: 6px; border-top: 1px solid #E8E8E8;">
+        <div style="text-align: center; font-size: 10px; color: #999; margin-top: 15px; padding-top: 10px; border-top: 1px solid #E8E8E8;">
           Generado: ${new Date().toLocaleDateString('es-CL')} • ID: ${p.id}
         </div>
       </div>
@@ -3339,7 +3339,7 @@ function descargarFichaPaciente(id) {
     document.body.appendChild(element);
 
     const opt = {
-      margin: [10, 10, 10, 10],
+      margin: [3, 3, 3, 3],
       filename: `Ficha_${p.nombre.replace(/\s+/g, '_')}_${p.rut}.pdf`,
       image: { type: 'jpeg', quality: 0.95 },
       html2canvas: { scale: 1.5, useCORS: true },
