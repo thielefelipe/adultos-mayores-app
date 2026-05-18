@@ -154,6 +154,23 @@ export const usuariosService = {
     return response.json();
   },
 
+  async eliminarDefinitivamente(id: string, passwordConfirmacion: string, token: string) {
+    const response = await fetch(`${API_URL}/usuarios/${id}/definitivo`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ passwordConfirmacion }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.message || 'Error al eliminar usuario definitivamente');
+    }
+    return response.json();
+  },
+
   async reactivar(id: string, token: string) {
     const response = await fetch(`${API_URL}/usuarios/${id}/reactivar`, {
       method: 'POST',

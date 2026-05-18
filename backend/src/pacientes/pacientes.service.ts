@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
-import { PacienteEntity } from '../entities';
+import { Repository, Like, In } from 'typeorm';
+import { PacienteEntity, UsuarioEntity } from '../entities';
 import { CrearPacienteDto } from './dtos/crear-paciente.dto';
 import { AuditService } from '../audit/audit.service';
 
@@ -10,6 +10,8 @@ export class PacientesService {
   constructor(
     @InjectRepository(PacienteEntity)
     private pacienteRepository: Repository<PacienteEntity>,
+    @InjectRepository(UsuarioEntity)
+    private usuarioRepository: Repository<UsuarioEntity>,
     private auditService: AuditService,
   ) {}
 
@@ -87,8 +89,23 @@ export class PacientesService {
         order: { fechaRegistro: 'DESC' },
       });
 
+      // Resolver nombres de operadores a partir de sus usernames
+      const usernames = [...new Set(pacientes.map((p) => p.creadoPor).filter(Boolean))];
+      const usuarios = usernames.length
+        ? await this.usuarioRepository.find({
+            where: { username: In(usernames) },
+            select: ['username', 'nombre'],
+          })
+        : [];
+      const nombrePorUsername = Object.fromEntries(usuarios.map((u) => [u.username, u.nombre]));
+
+      const datos = pacientes.map((p) => ({
+        ...p,
+        creadoPorNombre: nombrePorUsername[p.creadoPor] ?? p.creadoPor,
+      }));
+
       return {
-        datos: pacientes,
+        datos,
         total,
         pagina,
         totalPaginas: Math.ceil(total / limite),

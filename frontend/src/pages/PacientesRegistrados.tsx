@@ -695,13 +695,16 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                         {paciente.comuna}
                       </td>
                       <td style={{ padding: 15, color: '#666666', fontSize: 13, fontWeight: 500 }}>
-                        <span style={{
-                          backgroundColor: paciente.creadoPor === 'SISTEMA' ? '#FFF3CD' : '#E3F2FD',
-                          padding: '4px 8px',
-                          borderRadius: 4,
-                          color: paciente.creadoPor === 'SISTEMA' ? '#856404' : '#0f5c2e'
-                        }}>
-                          {paciente.creadoPor}
+                        <span
+                          style={{
+                            backgroundColor: paciente.creadoPor === 'admin' ? '#FFF3CD' : '#E3F2FD',
+                            padding: '4px 8px',
+                            borderRadius: 4,
+                            color: paciente.creadoPor === 'admin' ? '#856404' : '#0f5c2e'
+                          }}
+                          title={`Usuario: ${paciente.creadoPor}`}
+                        >
+                          {paciente.creadoPorNombre || paciente.creadoPor}
                         </span>
                       </td>
                       <td style={{ padding: 15, color: '#666666', fontSize: 14 }}>

@@ -216,6 +216,40 @@ export class UsuariosService {
     return { mensaje: 'Usuario eliminado correctamente' };
   }
 
+  async eliminarDefinitivamente(
+    id: string,
+    eliminarDto: EliminarUsuarioDto,
+    usuarioAdmin: string,
+    passwordAdmin: string,
+  ) {
+    const usuario = await this.obtenerPorId(id);
+
+    if (usuario.activo) {
+      throw new BadRequestException('Solo se pueden eliminar definitivamente usuarios desactivados');
+    }
+
+    const passwordValida = await bcrypt.compare(eliminarDto.passwordConfirmacion, passwordAdmin);
+    if (!passwordValida) {
+      throw new UnauthorizedException('Contraseña de administrador incorrecta');
+    }
+
+    await this.auditService.registrar(
+      usuarioAdmin,
+      'ELIMINAR_DEFINITIVO_USUARIO',
+      'usuario',
+      id,
+      {
+        username: usuario.username,
+        rol: usuario.rol,
+        nota: 'Usuario eliminado permanentemente de la base de datos',
+      },
+    );
+
+    await this.usuarioRepository.remove(usuario);
+
+    return { mensaje: 'Usuario eliminado definitivamente' };
+  }
+
   async reactivar(id: string, usuarioAdmin: string) {
     const usuario = await this.usuarioRepository.findOne({ where: { id } });
     if (!usuario) {

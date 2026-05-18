@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { usuariosService, type Usuario } from '../services/usuariosService';
 import { ModalEliminarUsuario } from './ModalEliminarUsuario';
+import { ModalEliminarDefinitivo } from './ModalEliminarDefinitivo';
 import { ModalRestablecerContrasena } from './ModalRestablecerContrasena';
 import { ModalCrearUsuario } from './ModalCrearUsuario';
 import { ModalEditarUsuario } from './ModalEditarUsuario';
@@ -220,13 +221,23 @@ export function AdminUsuarios() {
                         </button>
                       </>
                     ) : (
-                      <button
-                        className="btn-action btn-reactivar"
-                        onClick={() => handleReactivar(usuario.id)}
-                        title="Reactivar usuario"
-                      >
-                        🔄
-                      </button>
+                      <>
+                        <button
+                          className="btn-action btn-reactivar"
+                          onClick={() => handleReactivar(usuario.id)}
+                          title="Reactivar usuario"
+                        >
+                          🔄
+                        </button>
+                        <button
+                          className="btn-action btn-eliminar-definitivo"
+                          onClick={() => setShowModal({ type: 'eliminarDefinitivo', usuarioId: usuario.id })}
+                          title="Eliminar definitivamente"
+                          style={{ backgroundColor: '#c0392b', color: 'white' }}
+                        >
+                          🚨
+                        </button>
+                      </>
                     )}
                   </td>
                 </tr>
@@ -256,6 +267,15 @@ export function AdminUsuarios() {
 
       {showModal?.type === 'crear' && (
         <ModalCrearUsuario
+          onConfirm={handleModalClose}
+          onCancel={() => setShowModal(null)}
+        />
+      )}
+
+      {showModal?.type === 'eliminarDefinitivo' && (
+        <ModalEliminarDefinitivo
+          usuarioId={showModal.usuarioId}
+          usuarios={usuarios}
           onConfirm={handleModalClose}
           onCancel={() => setShowModal(null)}
         />

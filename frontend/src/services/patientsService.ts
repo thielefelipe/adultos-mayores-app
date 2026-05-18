@@ -13,6 +13,7 @@ export interface Paciente {
   email: string;
   estado: 'activo' | 'inactivo';
   creadoPor: string;
+  creadoPorNombre?: string;
   edad?: number;
   sexo?: string;
   dependencia?: string;

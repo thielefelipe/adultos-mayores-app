@@ -142,6 +142,22 @@ export class UsuariosController {
     );
   }
 
+  @Delete(':id/definitivo')
+  @Roles('admin')
+  async eliminarDefinitivamente(
+    @Param('id') id: string,
+    @Body() eliminarDto: EliminarUsuarioDto,
+    @Request() req,
+  ) {
+    const usuario = await this.usuariosService.obtenerPorId(req.user.sub);
+    return this.usuariosService.eliminarDefinitivamente(
+      id,
+      eliminarDto,
+      req.user.username,
+      usuario.password,
+    );
+  }
+
   @Post(':id/reactivar')
   @Roles('admin')
   async reactivar(
