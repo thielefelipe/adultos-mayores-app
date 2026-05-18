@@ -223,8 +223,8 @@ export class PacientesService {
 
     paciente.eliminado = false;
     paciente.estado = 'activo';
-    paciente.fechaEliminacion = null;
-    paciente.motivoEliminacion = null;
+    paciente.fechaEliminacion = undefined;
+    paciente.motivoEliminacion = undefined;
     paciente.modificadoPor = username;
     paciente.modificadoEn = new Date();
 
