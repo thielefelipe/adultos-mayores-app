@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { CustomSelect } from './CustomSelect';
 
 interface ModalAgregarPacienteProps {
@@ -175,12 +175,12 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
       }}>
         {/* Header */}
         <div style={{
-          background: '#003D82',
+          background: '#0f5c2e',
           padding: '20px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderBottom: '2px solid #0066CC'
+          borderBottom: '2px solid #15803d'
         }}>
           <h2 style={{ color: '#FFFFFF', margin: 0 }}>Agregar Paciente</h2>
           <button
@@ -199,7 +199,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
         {/* Form */}
         <form onSubmit={handleSubmit} style={{ padding: '24px' }}>
           {/* Período */}
-          <h3 style={{ color: '#003D82', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
+          <h3 style={{ color: '#0f5c2e', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
             📅 Período
           </h3>
 
@@ -210,7 +210,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             marginBottom: 24
           }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Año <span style={{ color: 'red' }}>*</span>
               </label>
               <input
@@ -232,7 +232,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Semestre <span style={{ color: 'red' }}>*</span>
               </label>
               <select
@@ -257,7 +257,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
           </div>
 
           {/* Datos Personales */}
-          <h3 style={{ color: '#003D82', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
+          <h3 style={{ color: '#0f5c2e', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
             📋 Datos Personales
           </h3>
 
@@ -268,7 +268,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             marginBottom: 24
           }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 RUT <span style={{ color: 'red' }}>*</span>
               </label>
               <input
@@ -290,7 +290,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 DV
               </label>
               <input
@@ -312,7 +312,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
           </div>
 
           <div style={{ marginBottom: 24 }}>
-            <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+            <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
               Nombre Completo <span style={{ color: 'red' }}>*</span>
             </label>
             <input
@@ -339,7 +339,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             marginBottom: 24
           }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Sexo
               </label>
               <select
@@ -362,7 +362,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Fecha de Nacimiento
               </label>
               <input
@@ -381,7 +381,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Edad
               </label>
               <input
@@ -403,7 +403,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Teléfono
               </label>
               <input
@@ -431,7 +431,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             marginBottom: 24
           }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Escolaridad
               </label>
               <select
@@ -458,7 +458,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Pueblo Originario
               </label>
               <select
@@ -480,7 +480,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Tramo RSH
               </label>
               <select
@@ -508,7 +508,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
           </div>
 
           {/* Ubicación y Atención */}
-          <h3 style={{ color: '#003D82', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
+          <h3 style={{ color: '#0f5c2e', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
             🏥 Ubicación y Atención
           </h3>
 
@@ -519,7 +519,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             marginBottom: 24
           }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Fecha Ingreso
               </label>
               <input
@@ -539,7 +539,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
 
             {usuario?.rol !== 'admin' && (
               <div>
-                <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+                <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                   Operador <span style={{ color: 'red' }}>*</span>
                 </label>
                 <CustomSelect
@@ -552,7 +552,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             )}
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Región <span style={{ color: 'red' }}>*</span>
               </label>
               <select
@@ -576,7 +576,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Provincia
               </label>
               <select
@@ -601,7 +601,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Comuna
               </label>
               <select
@@ -626,7 +626,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Rural/Urbana
               </label>
               <select
@@ -648,7 +648,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Nivel Dependencia
               </label>
               <select
@@ -671,7 +671,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
                 Enfermedades Crónicas
               </label>
               <select
@@ -721,9 +721,9 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
               disabled={loading}
               style={{
                 padding: '10px 24px',
-                border: '1px solid #0066CC',
+                border: '1px solid #15803d',
                 background: '#FFFFFF',
-                color: '#0066CC',
+                color: '#15803d',
                 borderRadius: 6,
                 cursor: 'pointer',
                 fontWeight: 600,
@@ -736,7 +736,7 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
               disabled={loading}
               style={{
                 padding: '10px 24px',
-                background: '#0066CC',
+                background: '#15803d',
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: 6,

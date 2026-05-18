@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { AdminUsuarios } from '../components/AdminUsuarios';
 import { GestorOperadores } from './GestorOperadores';
@@ -134,7 +134,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
     return (
       <div style={{ flex: 1, width: '100%', background: '#FAF7F2', display: 'flex', flexDirection: 'column' }}>
         <nav style={{
-          background: '#003D82',
+          background: '#0f5c2e',
           padding: '12px 24px',
           display: 'flex',
           alignItems: 'center',
@@ -154,7 +154,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
           <span style={{ color: '#FFFFFF', fontWeight: 600 }}>Gestión de Usuarios</span>
           <button onClick={handleLogout} style={{
             marginLeft: 'auto',
-            background: '#0066CC',
+            background: '#15803d',
             color: '#FFFFFF',
             border: 'none',
             padding: '6px 14px',
@@ -180,7 +180,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
     }}>
       {/* Header */}
       <header style={{
-        background: '#003D82',
+        background: '#0f5c2e',
         padding: '14px 28px',
         display: 'flex',
         alignItems: 'center',
@@ -225,7 +225,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             Hola, <strong>{usuario?.nombre || usuario?.username}</strong>
           </span>
           <button onClick={handleLogout} style={{
-            background: '#0066CC',
+            background: '#15803d',
             color: '#FFFFFF',
             border: 'none',
             padding: '7px 16px',
@@ -242,7 +242,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
         <h2 style={{
           fontSize: 32,
           fontWeight: 700,
-          color: '#003D82',
+          color: '#0f5c2e',
           marginBottom: 8,
           fontFamily: "'Montserrat', sans-serif"
         }}>Bienvenido al Sistema</h2>
@@ -257,10 +257,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
           <h3 style={{
             fontSize: 18,
             fontWeight: 700,
-            color: '#003D82',
+            color: '#0f5c2e',
             marginBottom: 20,
             paddingBottom: 12,
-            borderBottom: '2px solid #0066CC'
+            borderBottom: '2px solid #15803d'
           }}>
             Ingreso de Datos
           </h3>
@@ -272,7 +272,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 background: '#FFFFFF',
                 borderRadius: 8,
                 padding: '24px',
-                border: '2px solid #0066CC',
+                border: '2px solid #15803d',
                 boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
                 cursor: 'pointer',
                 transition: 'transform .18s, box-shadow .18s',
@@ -283,7 +283,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
               }}
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0, 102, 204, 0.15)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(21, 128, 61, 0.15)';
                 }}
                 onMouseLeave={e => {
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
@@ -291,7 +291,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 }}
               >
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                  <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                     Ingreso de Pacientes
                   </div>
                   <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
@@ -300,7 +300,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 </div>
                 <div style={{
                   marginTop: 16,
-                  color: '#0066CC',
+                  color: '#15803d',
                   fontSize: 13,
                   fontWeight: 600
                 }}>Abrir →</div>
@@ -316,7 +316,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
           <h3 style={{
             fontSize: 18,
             fontWeight: 700,
-            color: '#003D82',
+            color: '#0f5c2e',
             marginBottom: 20,
             paddingBottom: 12,
             borderBottom: '2px solid #E0E0E0'
@@ -348,10 +348,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
             }}
           >
             <div>
-              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                 Usuarios Activos
               </div>
-              <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
+              <div style={{ fontSize: 36, fontWeight: 700, color: '#15803d', marginBottom: 16 }}>
                 {usuariosActivos.length}
               </div>
               <div style={{ color: '#999999', fontSize: 12, marginBottom: 20 }}>
@@ -361,7 +361,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <button
               onClick={() => setVista('gestorOperadores')}
               style={{
-                background: '#0066CC',
+                background: '#15803d',
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '10px 16px',
@@ -373,10 +373,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 transition: 'background 0.2s'
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+                (e.currentTarget as HTMLButtonElement).style.background = '#0f5c2e';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+                (e.currentTarget as HTMLButtonElement).style.background = '#15803d';
               }}
             >
               Ver todos →
@@ -406,10 +406,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
             }}
           >
             <div>
-              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                 Pacientes Registrados
               </div>
-              <div style={{ fontSize: 36, fontWeight: 700, color: '#0066CC', marginBottom: 16 }}>
+              <div style={{ fontSize: 36, fontWeight: 700, color: '#15803d', marginBottom: 16 }}>
                 {pacientesCount}
               </div>
               <div style={{ color: '#999999', fontSize: 12, marginBottom: 20 }}>
@@ -419,7 +419,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <button
               onClick={() => setVista('pacientes')}
               style={{
-                background: '#0066CC',
+                background: '#15803d',
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '10px 16px',
@@ -431,10 +431,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 transition: 'background 0.2s'
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+                (e.currentTarget as HTMLButtonElement).style.background = '#0f5c2e';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+                (e.currentTarget as HTMLButtonElement).style.background = '#15803d';
               }}
             >
               Ver todos →
@@ -447,7 +447,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             background: '#FFFFFF',
             borderRadius: 8,
             padding: '24px',
-            border: '2px solid #0066CC',
+            border: '2px solid #15803d',
             boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
             cursor: 'pointer',
             transition: 'transform .18s, box-shadow .18s',
@@ -458,7 +458,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
           }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0, 102, 204, 0.15)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(21, 128, 61, 0.15)';
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
@@ -466,10 +466,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
             }}
           >
             <div>
-              <div style={{ fontSize: 36, marginBottom: 16, color: '#0066CC' }}>
+              <div style={{ fontSize: 36, marginBottom: 16, color: '#15803d' }}>
                 👤
               </div>
-              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                 Gestión de Usuarios
               </div>
               <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
@@ -480,7 +480,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
               onClick={() => setVista('usuarios')}
               style={{
                 marginTop: 16,
-                background: '#0066CC',
+                background: '#15803d',
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '10px 16px',
@@ -492,10 +492,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 transition: 'background 0.2s'
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+                (e.currentTarget as HTMLButtonElement).style.background = '#0f5c2e';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+                (e.currentTarget as HTMLButtonElement).style.background = '#15803d';
               }}
             >
               Acceder →
@@ -526,10 +526,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
             }}
           >
             <div>
-              <div style={{ fontSize: 36, marginBottom: 16, color: '#0066CC' }}>
+              <div style={{ fontSize: 36, marginBottom: 16, color: '#15803d' }}>
                 📊
               </div>
-              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                 Reportes
               </div>
               <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
@@ -539,7 +539,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <button
               style={{
                 marginTop: 16,
-                background: '#0066CC',
+                background: '#15803d',
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '10px 16px',
@@ -551,10 +551,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 transition: 'background 0.2s'
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+                (e.currentTarget as HTMLButtonElement).style.background = '#0f5c2e';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+                (e.currentTarget as HTMLButtonElement).style.background = '#15803d';
               }}
             >
               Ver Reportes →
@@ -585,10 +585,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
             }}
           >
             <div>
-              <div style={{ fontSize: 36, marginBottom: 16, color: '#0066CC' }}>
+              <div style={{ fontSize: 36, marginBottom: 16, color: '#15803d' }}>
                 📈
               </div>
-              <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+              <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                 Análisis de Datos
               </div>
               <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
@@ -598,7 +598,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <button
               style={{
                 marginTop: 16,
-                background: '#0066CC',
+                background: '#15803d',
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '10px 16px',
@@ -610,10 +610,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 transition: 'background 0.2s'
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0052A3';
+                (e.currentTarget as HTMLButtonElement).style.background = '#0f5c2e';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#0066CC';
+                (e.currentTarget as HTMLButtonElement).style.background = '#15803d';
               }}
             >
               Ver Análisis →

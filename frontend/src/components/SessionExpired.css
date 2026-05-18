@@ -1,9 +1,9 @@
-.session-expired-container {
+﻿.session-expired-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0066CC 0%, #0052A3 100%);
+  background: linear-gradient(135deg, #15803d 0%, #0f5c2e 100%);
   font-family: var(--sans);
 }
 
@@ -44,7 +44,7 @@
 }
 
 .session-expired-content h1 {
-  color: #003D82;
+  color: #0f5c2e;
   font-size: 32px;
   margin: 0 0 16px 0;
   font-weight: 700;
@@ -64,7 +64,7 @@
 }
 
 .btn-login {
-  background-color: #0066CC;
+  background-color: #15803d;
   color: white;
   border: none;
   padding: 14px 40px;
@@ -78,9 +78,9 @@
 }
 
 .btn-login:hover {
-  background-color: #0052A3;
+  background-color: #0f5c2e;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 102, 204, 0.3);
+  box-shadow: 0 8px 24px rgba(21, 128, 61, 0.3);
 }
 
 .btn-login:active {

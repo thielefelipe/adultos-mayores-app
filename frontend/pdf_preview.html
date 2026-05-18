@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Previa - Ficha PDF de José Torres</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f0f0;
+            padding: 20px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .preview-title {
+            background: #003D82;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .pdf-page {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: 'DM Sans', sans-serif;
+            background: #F5F5F5;
+            color: #1A1208;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* HEADER AZUL */
+        .header {
+            background: #003D82;
+            border-radius: 8px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .header-top span {
+            font-size: 16px;
+        }
+
+        .header-subtitle {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .header-description {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+        }
+
+        .header p {
+            margin: 0 0 15px 0;
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 12px;
+        }
+
+        .header-grid-item {
+            font-size: 9px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-grid-value {
+            font-weight: 600;
+        }
+
+        /* SECCIONES DE CONTENIDO */
+        .section {
+            background: white;
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            page-break-inside: avoid;
+        }
+
+        .section h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #003D82;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #003D82;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 12px;
+        }
+
+        .section-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .grid-item {
+            font-size: 9px;
+            color: #003D82;
+            font-weight: 600;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+
+        .grid-value {
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        /* EVALUACIONES */
+        .evaluation {
+            margin-bottom: 12px;
+        }
+
+        .evaluation:not(:first-child) {
+            border-top: 1px solid #E8E8E8;
+            padding-top: 12px;
+        }
+
+        .evaluation h3 {
+            font-size: 11px;
+            font-weight: 600;
+            color: #003D82;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+        }
+
+        .eval-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 11px;
+        }
+
+        .eval-item-label {
+            font-size: 8px;
+            color: #666;
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+
+        .eval-item-value {
+            font-weight: 600;
+            color: #003D82;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            padding-top: 12px;
+            border-top: 1px solid #E8E8E8;
+        }
+
+        .footer div {
+            margin: 2px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="preview-title">📄 Vista Previa - Ficha PDF de José Torres</div>
+
+        <div class="pdf-page">
+            <!-- HEADER AZUL -->
+            <div class="header">
+                <div class="header-top">
+                    <span>🏥</span>
+                    <div>
+                        <div class="header-subtitle">Centro de Gestión</div>
+                        <div class="header-description">Adultos Mayores</div>
+                    </div>
+                </div>
+
+                <h1>José Torres</h1>
+                <p>77 años • Masculino</p>
+
+                <div class="header-grid">
+                    <div>
+                        <div class="header-grid-item">RUT</div>
+                        <div class="header-grid-value">1.111.111-1</div>
+                    </div>
+                    <div>
+                        <div class="header-grid-item">Dependencia</div>
+                        <div class="header-grid-value">Moderada</div>
+                    </div>
+                    <div>
+                        <div class="header-grid-item">Contacto</div>
+                        <div class="header-grid-value">Juan Torres</div>
+                    </div>
+                    <div>
+                        <div class="header-grid-item">Región</div>
+                        <div class="header-grid-value">Bíobío</div>
+                    </div>
+                    <div>
+                        <div class="header-grid-item">Provincia</div>
+                        <div class="header-grid-value">Arauco</div>
+                    </div>
+                    <div>
+                        <div class="header-grid-item">Comuna</div>
+                        <div class="header-grid-value">Contulmo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATOS PERSONALES -->
+            <div class="section">
+                <h2><span>📋</span> Datos Personales</h2>
+                <div class="section-grid">
+                    <div>
+                        <div class="grid-item">RUT</div>
+                        <div class="grid-value">1.111.111-1</div>
+                    </div>
+                    <div>
+                        <div class="grid-item">Teléfono</div>
+                        <div class="grid-value">9111111</div>
+                    </div>
+                    <div>
+                        <div class="grid-item">Sexo</div>
+                        <div class="grid-value">Masculino</div>
+                    </div>
+                    <div>
+                        <div class="grid-item">Contacto</div>
+                        <div class="grid-value">Juan Torres</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATOS DE ATENCIÓN -->
+            <div class="section">
+                <h2><span>📋</span> Datos de Atención</h2>
+                <div class="section-grid">
+                    <div>
+                        <div class="grid-item">Dependencia</div>
+                        <div class="grid-value">Moderada</div>
+                    </div>
+                    <div>
+                        <div class="grid-item">Enfermedades</div>
+                        <div class="grid-value">Artrosís</div>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <div class="grid-item">PAI</div>
+                        <div class="grid-value">Si</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EVALUACIONES GERIÁTRICAS -->
+            <div class="section">
+                <h2><span>📊</span> Evaluaciones Geriátricas</h2>
+
+                <div class="evaluation">
+                    <h3>Evaluación 1</h3>
+                    <div class="eval-grid">
+                        <div>
+                            <div class="eval-item-label">Barthel</div>
+                            <div class="eval-item-value">60</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Pfeiffer</div>
+                            <div class="eval-item-value">4</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Lawton</div>
+                            <div class="eval-item-value">4</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">TUG</div>
+                            <div class="eval-item-value">25</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Mini Mental</div>
+                            <div class="eval-item-value">13</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">YesAvage</div>
+                            <div class="eval-item-value">9</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evaluation">
+                    <h3>Evaluación 2</h3>
+                    <div class="eval-grid">
+                        <div>
+                            <div class="eval-item-label">Barthel</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Pfeiffer</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Lawton</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">TUG</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Mini Mental</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">YesAvage</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evaluation">
+                    <h3>Evaluación 3</h3>
+                    <div class="eval-grid">
+                        <div>
+                            <div class="eval-item-label">Barthel</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Pfeiffer</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Lawton</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">TUG</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">Mini Mental</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                        <div>
+                            <div class="eval-item-label">YesAvage</div>
+                            <div class="eval-item-value">—</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <div>Generado: 17/05/2026</div>
+                <div>ID: [ID_PACIENTE]</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

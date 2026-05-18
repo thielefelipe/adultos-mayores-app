@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { usuariosService, type Usuario } from '../services/usuariosService';
 
@@ -73,7 +73,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
     }}>
       {/* Header */}
       <header style={{
-        background: '#003D82',
+        background: '#0f5c2e',
         padding: '14px 28px',
         display: 'flex',
         alignItems: 'center',
@@ -103,7 +103,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
             Hola, <strong>{usuario?.nombre || usuario?.username}</strong>
           </span>
           <button onClick={onLogout} style={{
-            background: '#0066CC',
+            background: '#15803d',
             color: '#FFFFFF',
             border: 'none',
             padding: '6px 14px',
@@ -120,12 +120,12 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
         <h2 style={{
           fontSize: 32,
           fontWeight: 700,
-          color: '#003D82',
+          color: '#0f5c2e',
           marginBottom: 8,
           fontFamily: "'Montserrat', sans-serif"
         }}>Operadores y Analistas</h2>
         <p style={{ color: '#666666', fontSize: 14, marginBottom: 30 }}>
-          Total creados: <strong>{todosLosUsuarios.length}</strong> | Conectados ahora: <strong style={{ color: '#0066CC' }}>{usuariosActivos.length}</strong>
+          Total creados: <strong>{todosLosUsuarios.length}</strong> | Conectados ahora: <strong style={{ color: '#15803d' }}>{usuariosActivos.length}</strong>
         </p>
 
         {cargando ? (
@@ -144,14 +144,14 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
               background: '#FFFFFF'
             }}>
               <thead>
-                <tr style={{ background: '#003D82' }}>
+                <tr style={{ background: '#0f5c2e' }}>
                   <th style={{
                     padding: '16px',
                     textAlign: 'left',
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Estado</th>
                   <th style={{
                     padding: '16px',
@@ -159,7 +159,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Nombre</th>
                   <th style={{
                     padding: '16px',
@@ -167,7 +167,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Usuario</th>
                   <th style={{
                     padding: '16px',
@@ -175,7 +175,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Rol</th>
                   <th style={{
                     padding: '16px',
@@ -183,7 +183,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Último Acceso</th>
                 </tr>
               </thead>
@@ -236,7 +236,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
                       </td>
                       <td style={{
                         padding: '16px',
-                        color: '#003D82',
+                        color: '#0f5c2e',
                         fontWeight: 600,
                         fontSize: 14
                       }}>

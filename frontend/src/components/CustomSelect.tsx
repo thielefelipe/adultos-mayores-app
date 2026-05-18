@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 
 interface CustomSelectProps {
   value: string;
@@ -46,12 +46,12 @@ export function CustomSelect({
         style={{
           width: '100%',
           padding: '12px 14px',
-          border: '2px solid #0066CC',
+          border: '2px solid #15803d',
           borderRadius: 6,
           fontSize: 14,
           fontFamily: 'Open Sans',
           backgroundColor: '#FFFFFF',
-          color: selectedOption ? '#003D82' : '#999999',
+          color: selectedOption ? '#0f5c2e' : '#999999',
           fontWeight: 700,
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           cursor: 'pointer',
@@ -77,7 +77,7 @@ export function CustomSelect({
             right: 0,
             marginTop: 4,
             backgroundColor: '#FFFFFF',
-            border: '2px solid #0066CC',
+            border: '2px solid #15803d',
             borderRadius: 6,
             boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
             zIndex: 1000,
@@ -118,7 +118,7 @@ export function CustomSelect({
                 padding: '12px 14px',
                 cursor: 'pointer',
                 backgroundColor: value === option.id ? '#E8F3FF' : '#FFFFFF',
-                color: '#003D82',
+                color: '#0f5c2e',
                 borderBottom: '1px solid #E0E0E0',
                 transition: 'background 0.2s',
                 fontWeight: value === option.id ? 700 : 600,

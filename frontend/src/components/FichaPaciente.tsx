@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+﻿import { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
 import type { Paciente } from '../services/patientsService';
 
@@ -39,7 +39,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
     }}>
       {/* Header */}
       <div style={{
-        background: '#003D82',
+        background: '#0f5c2e',
         padding: '16px 28px',
         display: 'flex',
         alignItems: 'center',
@@ -81,7 +81,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
             onClick={onClose}
             style={{
               background: '#FFFFFF',
-              color: '#003D82',
+              color: '#0f5c2e',
               border: 'none',
               padding: '8px 16px',
               borderRadius: '6px',
@@ -122,7 +122,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
           <div
             ref={fichaRef}
             style={{
-              background: 'linear-gradient(135deg, #003D82 0%, #0066CC 100%)',
+              background: 'linear-gradient(135deg, #0f5c2e 0%, #15803d 100%)',
               borderRadius: '12px',
               padding: '40px 30px',
               color: '#FFFFFF',

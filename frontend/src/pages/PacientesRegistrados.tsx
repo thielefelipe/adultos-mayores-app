@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { patientsService, type Paciente, type FiltrosPacientes } from '../services/patientsService';
 import { ModalAgregarPaciente } from '../components/ModalAgregarPaciente';
@@ -290,7 +290,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
     }}>
       {/* Header */}
       <header style={{
-        background: '#003D82',
+        background: '#0f5c2e',
         padding: '14px 28px',
         display: 'flex',
         alignItems: 'center',
@@ -302,7 +302,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
           title="Volver al Dashboard"
           style={{
             background: '#FFFFFF',
-            color: '#003D82',
+            color: '#0f5c2e',
             border: 'none',
             padding: '6px 12px',
             borderRadius: '6px',
@@ -367,7 +367,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
             Hola, <strong>{usuario?.nombre || usuario?.username}</strong>
           </span>
           <button onClick={onLogout} style={{
-            background: '#0066CC',
+            background: '#15803d',
             color: '#FFFFFF',
             border: 'none',
             padding: '7px 16px',
@@ -386,7 +386,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
             <h2 style={{
               fontSize: 32,
               fontWeight: 700,
-              color: '#003D82',
+              color: '#0f5c2e',
               marginBottom: 8,
               fontFamily: "'Montserrat', sans-serif"
             }}>Pacientes Registrados</h2>
@@ -397,7 +397,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
           <button
             onClick={() => setModalOpen(true)}
             style={{
-              background: '#0066CC',
+              background: '#15803d',
               color: '#FFFFFF',
               border: 'none',
               padding: '12px 24px',
@@ -413,7 +413,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
               (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = '#0066CC';
+              (e.currentTarget as HTMLElement).style.background = '#15803d';
               (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
             }}
           >
@@ -433,10 +433,10 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
           <h3 style={{
             fontSize: 18,
             fontWeight: 700,
-            color: '#003D82',
+            color: '#0f5c2e',
             marginBottom: 20,
             paddingBottom: 12,
-            borderBottom: '2px solid #0066CC'
+            borderBottom: '2px solid #15803d'
           }}>Filtros</h3>
 
           <div style={{
@@ -447,7 +447,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
           }}>
             {/* Región */}
             <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#0f5c2e' }}>
                 Región
               </label>
               <select
@@ -477,7 +477,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
             {/* Provincia */}
             <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#0f5c2e' }}>
                 Provincia
               </label>
               <select
@@ -503,7 +503,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
             {/* Comuna */}
             <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#0f5c2e' }}>
                 Comuna
               </label>
               <select
@@ -529,7 +529,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
             {/* Operador */}
             <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#0f5c2e' }}>
                 {usuario?.rol === 'admin' ? '👤 Operador (Vista Admin)' : 'Operador'}
               </label>
               {usuario?.rol === 'admin' ? (
@@ -558,7 +558,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
             {/* Año */}
             <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#0f5c2e' }}>
                 📅 Año
               </label>
               <select
@@ -584,7 +584,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
 
             {/* Semestre */}
             <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#003D82' }}>
+              <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, color: '#0f5c2e' }}>
                 📆 Semestre
               </label>
               <select
@@ -612,8 +612,8 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
             onClick={handleLimpiarFiltros}
             style={{
               background: '#FFFFFF',
-              color: '#0066CC',
-              border: '1px solid #0066CC',
+              color: '#15803d',
+              border: '1px solid #15803d',
               padding: '10px 20px',
               borderRadius: 6,
               cursor: 'pointer',
@@ -643,14 +643,14 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
             borderRadius: 14,
             overflow: 'hidden',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-            border: '2px solid #0066CC'
+            border: '2px solid #15803d'
           }}>
             <table style={{
               width: '100%',
               borderCollapse: 'collapse'
             }}>
               <thead>
-                <tr style={{ background: '#0066CC', borderBottom: '2px solid #0066CC' }}>
+                <tr style={{ background: '#15803d', borderBottom: '2px solid #15803d' }}>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Nombre</th>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>RUT</th>
                   <th style={{ padding: 15, textAlign: 'left', fontWeight: 600, color: 'white', fontSize: 14 }}>Comuna</th>
@@ -683,7 +683,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                         (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
                       }}
                     >
-                      <td style={{ padding: 15, color: '#003D82', fontWeight: 600, fontSize: 14 }}>
+                      <td style={{ padding: 15, color: '#0f5c2e', fontWeight: 600, fontSize: 14 }}>
                         {paciente.nombre}
                       </td>
                       <td style={{ padding: 15, color: '#666666', fontSize: 14 }}>
@@ -697,7 +697,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                           backgroundColor: paciente.creadoPor === 'SISTEMA' ? '#FFF3CD' : '#E3F2FD',
                           padding: '4px 8px',
                           borderRadius: 4,
-                          color: paciente.creadoPor === 'SISTEMA' ? '#856404' : '#003D82'
+                          color: paciente.creadoPor === 'SISTEMA' ? '#856404' : '#0f5c2e'
                         }}>
                           {paciente.creadoPor}
                         </span>
@@ -729,7 +729,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                             setFichaPacienteOpen(true);
                           }}
                           style={{
-                            background: '#0066CC',
+                            background: '#15803d',
                             color: '#FFFFFF',
                             border: 'none',
                             padding: '6px 12px',
@@ -745,7 +745,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
                             (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
                           }}
                           onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLElement).style.background = '#0066CC';
+                            (e.currentTarget as HTMLElement).style.background = '#15803d';
                             (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
                           }}
                         >

@@ -1,4 +1,4 @@
-import { useAuth } from '../contexts/AuthContext';
+﻿import { useAuth } from '../contexts/AuthContext';
 
 interface AnalystDashboardProps {
   onLogout: () => void;
@@ -22,7 +22,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
     }}>
       {/* Header */}
       <header style={{
-        background: '#003D82',
+        background: '#0f5c2e',
         padding: '14px 28px',
         display: 'flex',
         alignItems: 'center',
@@ -67,7 +67,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
             Hola, <strong>{usuario?.nombre || usuario?.username}</strong>
           </span>
           <button onClick={handleLogout} style={{
-            background: '#0066CC',
+            background: '#15803d',
             color: '#FFFFFF',
             border: 'none',
             padding: '7px 16px',
@@ -84,7 +84,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
         <h2 style={{
           fontSize: 32,
           fontWeight: 700,
-          color: '#003D82',
+          color: '#0f5c2e',
           marginBottom: 8,
           fontFamily: "'Montserrat', sans-serif"
         }}>Bienvenido, {usuario?.nombre}</h2>
@@ -97,10 +97,10 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
           <h3 style={{
             fontSize: 18,
             fontWeight: 700,
-            color: '#003D82',
+            color: '#0f5c2e',
             marginBottom: 20,
             paddingBottom: 12,
-            borderBottom: '2px solid #0066CC'
+            borderBottom: '2px solid #15803d'
           }}>
             Módulos Disponibles
           </h3>
@@ -112,7 +112,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
                 background: '#FFFFFF',
                 borderRadius: 8,
                 padding: '24px',
-                border: '2px solid #0066CC',
+                border: '2px solid #15803d',
                 boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
                 cursor: 'pointer',
                 transition: 'transform .18s, box-shadow .18s',
@@ -123,7 +123,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
               }}
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0, 102, 204, 0.15)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(21, 128, 61, 0.15)';
                 }}
                 onMouseLeave={e => {
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
@@ -131,7 +131,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
                 }}
               >
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                  <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                     Ingreso de Pacientes
                   </div>
                   <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
@@ -140,7 +140,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
                 </div>
                 <div style={{
                   marginTop: 16,
-                  color: '#0066CC',
+                  color: '#15803d',
                   fontSize: 13,
                   fontWeight: 600
                 }}>Abrir →</div>
@@ -171,7 +171,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
               }}
             >
               <div>
-                <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                   Descargar Reportes
                 </div>
                 <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
@@ -180,7 +180,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
               </div>
               <div style={{
                 marginTop: 16,
-                color: '#0066CC',
+                color: '#15803d',
                 fontSize: 13,
                 fontWeight: 600
               }}>Próximamente</div>
@@ -210,7 +210,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
               }}
             >
               <div>
-                <div style={{ fontWeight: 700, fontSize: 18, color: '#003D82', marginBottom: 16 }}>
+                <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
                   Análisis de Datos
                 </div>
                 <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
@@ -219,7 +219,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
               </div>
               <div style={{
                 marginTop: 16,
-                color: '#0066CC',
+                color: '#15803d',
                 fontSize: 13,
                 fontWeight: 600
               }}>Próximamente</div>

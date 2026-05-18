@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { usuariosService, type Usuario } from '../services/usuariosService';
 
@@ -62,7 +62,7 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
     }}>
       {/* Header */}
       <header style={{
-        background: '#003D82',
+        background: '#0f5c2e',
         padding: '14px 28px',
         display: 'flex',
         alignItems: 'center',
@@ -92,7 +92,7 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
             Hola, <strong>{usuario?.nombre || usuario?.username}</strong>
           </span>
           <button onClick={onLogout} style={{
-            background: '#0066CC',
+            background: '#15803d',
             color: '#FFFFFF',
             border: 'none',
             padding: '6px 14px',
@@ -109,7 +109,7 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
         <h2 style={{
           fontSize: 32,
           fontWeight: 700,
-          color: '#003D82',
+          color: '#0f5c2e',
           marginBottom: 8,
           fontFamily: "'Montserrat', sans-serif"
         }}>Operadores y Analistas Conectados</h2>
@@ -133,14 +133,14 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
               background: '#FFFFFF'
             }}>
               <thead>
-                <tr style={{ background: '#003D82' }}>
+                <tr style={{ background: '#0f5c2e' }}>
                   <th style={{
                     padding: '16px',
                     textAlign: 'left',
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Nombre</th>
                   <th style={{
                     padding: '16px',
@@ -148,7 +148,7 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Usuario</th>
                   <th style={{
                     padding: '16px',
@@ -156,7 +156,7 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Rol</th>
                   <th style={{
                     padding: '16px',
@@ -164,7 +164,7 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
                     color: '#FFFFFF',
                     fontWeight: 700,
                     fontSize: 14,
-                    borderBottom: '2px solid #0066CC'
+                    borderBottom: '2px solid #15803d'
                   }}>Último Acceso</th>
                 </tr>
               </thead>
@@ -184,7 +184,7 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
                   >
                     <td style={{
                       padding: '16px',
-                      color: '#003D82',
+                      color: '#0f5c2e',
                       fontWeight: 600,
                       fontSize: 14
                     }}>
