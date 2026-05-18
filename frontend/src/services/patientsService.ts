@@ -94,9 +94,18 @@ export const patientsService = {
     }
   },
 
-  async obtenerTotal(_token: string): Promise<number> {
-    // TODO: Reemplazar con llamada real a /api/pacientes/total
-    return MOCK_PACIENTES.length;
+  async obtenerTotal(token: string): Promise<number> {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const response = await fetch(`${apiUrl}/pacientes?limite=1`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!response.ok) return 0;
+      const data = await response.json();
+      return data.total ?? 0;
+    } catch {
+      return 0;
+    }
   },
 
   async obtenerOperadores(token: string) {
