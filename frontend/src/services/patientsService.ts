@@ -83,6 +83,7 @@ export const patientsService = {
         email: p.email || '',
         estado: p.estado === 'activo' ? 'activo' : 'inactivo',
         creadoPor: p.creadoPor || p.operador_nombre || 'No especificado',
+        creadoPorNombre: p.creadoPorNombre || p.creadoPor || 'No especificado',
         edad: p.edad,
         sexo: p.sexo,
         dependencia: p.dependencia
