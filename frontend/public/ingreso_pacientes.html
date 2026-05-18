@@ -3275,9 +3275,9 @@ function descargarFichaPaciente(id) {
 
   try {
     const fichaHTML = `
-      <div style="font-family: 'DM Sans', sans-serif; background: #F5F5F5; padding: 20px; color: #1A1208; max-width: 800px; margin: 0 auto;">
-        <!-- HEADER AZUL -->
-        <div style="background: #003D82; border-radius: 8px; padding: 20px; color: white; margin-bottom: 20px; page-break-inside: avoid;">
+      <div style="font-family: 'DM Sans', sans-serif; background: #f0fdf4; padding: 20px; color: #1A1208; max-width: 800px; margin: 0 auto;">
+        <!-- HEADER VERDE (Colores de credencial) -->
+        <div style="background: linear-gradient(135deg, #15803d 0%, #22c55e 100%); border-radius: 8px; padding: 20px; color: white; margin-bottom: 20px; page-break-inside: avoid;">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 2px solid rgba(255,255,255,0.2);">
             <span style="font-size: 16px;">🏥</span>
             <div>
@@ -3319,24 +3319,24 @@ function descargarFichaPaciente(id) {
 
         <!-- DATOS PERSONALES -->
         <div style="background: white; border-radius: 6px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); page-break-inside: avoid;">
-          <h2 style="font-size: 14px; font-weight: 700; color: #003D82; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #003D82; display: flex; align-items: center; gap: 6px;">
+          <h2 style="font-size: 14px; font-weight: 700; color: #15803d; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #22c55e; display: flex; align-items: center; gap: 6px;">
             <span>📋</span> Datos Personales
           </h2>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 12px;">
             <div>
-              <div style="font-size: 9px; color: #003D82; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">RUT</div>
+              <div style="font-size: 9px; color: #15803d; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">RUT</div>
               <div style="font-weight: 500;">${mostrarRUTFormateado(p.rut, p.dv)}</div>
             </div>
             <div>
-              <div style="font-size: 9px; color: #003D82; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Teléfono</div>
+              <div style="font-size: 9px; color: #15803d; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Teléfono</div>
               <div style="font-weight: 500;">${p.telefono || '—'}</div>
             </div>
             <div>
-              <div style="font-size: 9px; color: #003D82; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Sexo</div>
+              <div style="font-size: 9px; color: #15803d; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Sexo</div>
               <div style="font-weight: 500;">${p.sexo || '—'}</div>
             </div>
             <div>
-              <div style="font-size: 9px; color: #003D82; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Contacto</div>
+              <div style="font-size: 9px; color: #15803d; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Contacto</div>
               <div style="font-weight: 500;">${p.contacto_nombre || '—'}</div>
             </div>
           </div>
@@ -3344,20 +3344,20 @@ function descargarFichaPaciente(id) {
 
         <!-- DATOS DE ATENCIÓN -->
         <div style="background: white; border-radius: 6px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); page-break-inside: avoid;">
-          <h2 style="font-size: 14px; font-weight: 700; color: #003D82; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #003D82; display: flex; align-items: center; gap: 6px;">
+          <h2 style="font-size: 14px; font-weight: 700; color: #15803d; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #22c55e; display: flex; align-items: center; gap: 6px;">
             <span>📋</span> Datos de Atención
           </h2>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 12px;">
             <div>
-              <div style="font-size: 9px; color: #003D82; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Dependencia</div>
+              <div style="font-size: 9px; color: #15803d; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Dependencia</div>
               <div style="font-weight: 500;">${p.dependencia || '—'}</div>
             </div>
             <div>
-              <div style="font-size: 9px; color: #003D82; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Enfermedades</div>
+              <div style="font-size: 9px; color: #15803d; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">Enfermedades</div>
               <div style="font-weight: 500;">${p.enfermedades || '—'}</div>
             </div>
             <div style="grid-column: 1 / -1;">
-              <div style="font-size: 9px; color: #003D82; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">PAI</div>
+              <div style="font-size: 9px; color: #15803d; font-weight: 600; margin-bottom: 3px; text-transform: uppercase;">PAI</div>
               <div style="font-weight: 500;">${p.pai || '—'}</div>
             </div>
           </div>
@@ -3365,37 +3365,37 @@ function descargarFichaPaciente(id) {
 
         <!-- EVALUACIONES GERIÁTRICAS -->
         <div style="background: white; border-radius: 6px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); page-break-inside: avoid;">
-          <h2 style="font-size: 14px; font-weight: 700; color: #003D82; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #003D82; display: flex; align-items: center; gap: 6px;">
+          <h2 style="font-size: 14px; font-weight: 700; color: #15803d; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #22c55e; display: flex; align-items: center; gap: 6px;">
             <span>📊</span> Evaluaciones Geriátricas
           </h2>
 
           ${[1, 2, 3].map(n => `
             <div style="margin-bottom: 12px; ${n > 1 ? 'border-top: 1px solid #E8E8E8; padding-top: 12px;' : ''}">
-              <h3 style="font-size: 11px; font-weight: 600; color: #003D82; margin: 0 0 8px 0; text-transform: uppercase;">Evaluación ${n}</h3>
+              <h3 style="font-size: 11px; font-weight: 600; color: #15803d; margin: 0 0 8px 0; text-transform: uppercase;">Evaluación ${n}</h3>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px;">
                 <div>
                   <div style="font-size: 8px; color: #666; margin-bottom: 2px; font-weight: 500;">Barthel</div>
-                  <div style="font-weight: 600; color: #003D82;">${p['barthel' + n] || '—'}</div>
+                  <div style="font-weight: 600; color: #15803d;">${p['barthel' + n] || '—'}</div>
                 </div>
                 <div>
                   <div style="font-size: 8px; color: #666; margin-bottom: 2px; font-weight: 500;">Pfeiffer</div>
-                  <div style="font-weight: 600; color: #003D82;">${p['pfeiffer' + n] || '—'}</div>
+                  <div style="font-weight: 600; color: #15803d;">${p['pfeiffer' + n] || '—'}</div>
                 </div>
                 <div>
                   <div style="font-size: 8px; color: #666; margin-bottom: 2px; font-weight: 500;">Lawton</div>
-                  <div style="font-weight: 600; color: #003D82;">${p['lawton' + n] || '—'}</div>
+                  <div style="font-weight: 600; color: #15803d;">${p['lawton' + n] || '—'}</div>
                 </div>
                 <div>
                   <div style="font-size: 8px; color: #666; margin-bottom: 2px; font-weight: 500;">TUG</div>
-                  <div style="font-weight: 600; color: #003D82;">${p['tug' + n] || '—'}</div>
+                  <div style="font-weight: 600; color: #15803d;">${p['tug' + n] || '—'}</div>
                 </div>
                 <div>
                   <div style="font-size: 8px; color: #666; margin-bottom: 2px; font-weight: 500;">Mini Mental</div>
-                  <div style="font-weight: 600; color: #003D82;">${p['mini' + n] || '—'}</div>
+                  <div style="font-weight: 600; color: #15803d;">${p['mini' + n] || '—'}</div>
                 </div>
                 <div>
                   <div style="font-size: 8px; color: #666; margin-bottom: 2px; font-weight: 500;">YesAvage</div>
-                  <div style="font-weight: 600; color: #003D82;">${p['yesavage' + n] || '—'}</div>
+                  <div style="font-weight: 600; color: #15803d;">${p['yesavage' + n] || '—'}</div>
                 </div>
               </div>
             </div>
