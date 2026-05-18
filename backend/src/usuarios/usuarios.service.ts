@@ -245,7 +245,7 @@ export class UsuariosService {
       },
     );
 
-    await this.usuarioRepository.remove(usuario);
+    await this.usuarioRepository.delete(id);
 
     return { mensaje: 'Usuario eliminado definitivamente' };
   }
