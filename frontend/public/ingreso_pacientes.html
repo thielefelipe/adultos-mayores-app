@@ -1924,6 +1924,9 @@ async function guardarEnBackend(pacienteEspecifico = null) {
     const lista = pacienteEspecifico ? [pacienteEspecifico] : pacientes;
 
     for (const paciente of lista) {
+      // No intentar PATCH de pacientes eliminados o dados de alta — ya fueron procesados por su endpoint propio
+      if (paciente.estado === 'pendiente_eliminacion' || paciente.estado === 'dado_de_alta') continue;
+
       const datosBackend = construirDatosBackend(paciente);
       const esNuevo = !pacientesGuardadosEnBackend.has(paciente.id);
 
