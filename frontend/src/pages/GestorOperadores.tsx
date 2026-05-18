@@ -91,7 +91,7 @@ export function GestorOperadores({ onVolver, onLogout }: GestorOperadoresProps) 
           fontWeight: 600
         }}>← Volver</button>
 
-        <span style={{ fontSize: 28 }}>MC</span>
+        <img src="/images/logo_municipalidad.png" alt="Logo Municipalidad" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
         <div>
           <div style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 17 }}>
             Gestión de Operadores y Analistas

@@ -213,7 +213,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
           }}
         >
-          MC
+          <img src="/images/logo_municipalidad.png" alt="Logo Municipalidad" style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
         </button>
         <div>
           <div style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 17 }}>
