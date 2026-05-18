@@ -75,16 +75,16 @@
 <style>
   :root {
     --cream:    #FAF7F2;
-    --warm:     #F0F4F9;
-    --sand:     #E0E8F0;
-    --clay:     #0066CC;
-    --terra:    #0066CC;
-    --deep:     #003D82;
+    --warm:     #f0fdf4;
+    --sand:     #bbf7d0;
+    --clay:     #15803d;
+    --terra:    #15803d;
+    --deep:     #0f5c2e;
     --ink:      #1A1208;
 
-    --verde:    #2D7A4F;
-    --verde-bg: #EAF5EE;
-    --verde-bd: #A8D5B8;
+    --verde:    #15803d;
+    --verde-bg: #f0fdf4;
+    --verde-bd: #86efac;
 
     --ambar:    #9A6C00;
     --ambar-bg: #FFF8E6;
@@ -94,12 +94,12 @@
     --rojo-bg:  #FDEAEA;
     --rojo-bd:  #F0A0A0;
 
-    --azul:     #0066CC;
-    --azul-bg:  #EEF3FF;
+    --azul:     #15803d;
+    --azul-bg:  #f0fdf4;
 
     --radius:   14px;
-    --shadow:   0 2px 20px rgba(0,61,130,.08);
-    --shadow-lg: 0 8px 40px rgba(0,61,130,.14);
+    --shadow:   0 2px 20px rgba(21,128,61,.08);
+    --shadow-lg: 0 8px 40px rgba(21,128,61,.14);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -148,7 +148,7 @@
     cursor: pointer; transition: all .18s;
   }
   .btn-primary { background: var(--clay); color: white; }
-  .btn-primary:hover { background: #0052A3; transform: translateY(-1px); }
+  .btn-primary:hover { background: #0f5c2e; transform: translateY(-1px); }
   .btn-ghost { background: rgba(255,255,255,.08); color: var(--cream); border: 1px solid rgba(255,255,255,.15); }
   .btn-ghost:hover { background: rgba(255,255,255,.15); }
   .btn-sm { padding: .35rem .8rem; font-size: .8rem; }
@@ -275,7 +275,7 @@
   }
   input:focus, select:focus, textarea:focus {
     outline: none; border-color: var(--clay);
-    box-shadow: 0 0 0 3px rgba(0,102,204,.12);
+    box-shadow: 0 0 0 3px rgba(21,128,61,.12);
   }
   option { color: var(--ink); background: white; }
   textarea { resize: vertical; min-height: 72px; }
@@ -2520,7 +2520,7 @@ function renderSidebar(lista) {
     const sc = score(p);
     const sem = semaforo(sc);
     const initials = (p.nombre||'?').split(' ').slice(0,2).map(w=>w[0]).join('');
-    const colors = ['#0066CC','#003D82','#2D7A4F','#9A6C00','#B83232'];
+    const colors = ['#15803d','#0f5c2e','#22c55e','#9A6C00','#B83232'];
     const color = colors[(p.nombre||'').charCodeAt(0) % colors.length] || colors[0];
     return `<div class="patient-card" onclick="verPaciente('${p.id}')">
       <div class="patient-avatar" style="background:${color}">${initials}</div>
