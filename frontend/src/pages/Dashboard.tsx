@@ -269,9 +269,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
             {/* Card: Ingreso de Pacientes */}
-            <div
-              onClick={() => setVista('pacientes')}
-              style={{
+            <a href="/ingreso_pacientes.html" style={{ textDecoration: 'none' }}>
+              <div style={{
                 background: '#FFFFFF',
                 borderRadius: 8,
                 padding: '24px',
@@ -284,30 +283,31 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 flexDirection: 'column',
                 justifyContent: 'space-between'
               }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(21, 128, 61, 0.15)';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
-              }}
-            >
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
-                  Ingreso de Pacientes
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(21, 128, 61, 0.15)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0px 2px 8px rgba(0,0,0,0.05)';
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 18, color: '#0f5c2e', marginBottom: 16 }}>
+                    Ingreso de Pacientes
+                  </div>
+                  <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
+                    Registra nuevos pacientes con todos sus datos personales y de salud.
+                  </div>
                 </div>
-                <div style={{ color: '#666666', fontSize: 14, lineHeight: 1.5 }}>
-                  Registra nuevos pacientes con todos sus datos personales y de salud.
-                </div>
+                <div style={{
+                  marginTop: 16,
+                  color: '#15803d',
+                  fontSize: 13,
+                  fontWeight: 600
+                }}>Abrir →</div>
               </div>
-              <div style={{
-                marginTop: 16,
-                color: '#15803d',
-                fontSize: 13,
-                fontWeight: 600
-              }}>Abrir →</div>
-            </div>
+            </a>
           </div>
         </div>
 
