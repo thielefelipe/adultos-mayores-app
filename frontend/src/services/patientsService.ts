@@ -11,12 +11,53 @@ export interface Paciente {
   fecha_registro: string;
   telefono: string;
   email: string;
-  estado: 'activo' | 'inactivo';
+  estado: 'activo' | 'inactivo' | 'dado_de_alta' | 'pendiente_eliminacion';
   creadoPor: string;
   creadoPorNombre?: string;
   edad?: number;
   sexo?: string;
   dependencia?: string;
+  // Datos sociodemográficos
+  escolaridad?: string;
+  pueblo?: string;
+  rsh?: string;
+  rural?: string;
+  sector?: string;
+  // Período
+  anio?: number;
+  semestre?: number;
+  // Fechas
+  f_ingreso?: string;
+  f_egreso?: string;
+  // Instrumentos VGI 1ª evaluación
+  barthel1?: number;
+  pfeiffer1?: number;
+  lawton1?: number;
+  tug1?: number;
+  mini1?: number;
+  yesa1?: number;
+  eq1?: string;
+  // Instrumentos VGI 2ª evaluación
+  barthel2?: number;
+  pfeiffer2?: number;
+  lawton2?: number;
+  tug2?: number;
+  mini2?: number;
+  yesa2?: number;
+  eq2?: string;
+  // Seguimiento trimestral
+  t1_punt?: number;
+  t1_barthel?: number;
+  t1_mini?: number;
+  t2_punt?: number;
+  t2_barthel?: number;
+  t2_mini?: number;
+  t3_punt?: number;
+  t3_barthel?: number;
+  t3_mini?: number;
+  t4_punt?: number;
+  t4_barthel?: number;
+  t4_mini?: number;
 }
 
 export interface FiltrosPacientes {
@@ -78,12 +119,53 @@ export const patientsService = {
         fecha_registro: p.fechaRegistro || p.fecha_registro,
         telefono: p.telefono || '',
         email: p.email || '',
-        estado: p.estado === 'activo' ? 'activo' : 'inactivo',
+        estado: p.estado || 'activo',
         creadoPor: p.creadoPor || p.operador_nombre || 'No especificado',
         creadoPorNombre: p.creadoPorNombre || p.creadoPor || 'No especificado',
         edad: p.edad,
         sexo: p.sexo,
-        dependencia: p.dependencia
+        dependencia: p.dependencia,
+        // Datos sociodemográficos
+        escolaridad: p.escolaridad,
+        pueblo: p.pueblo,
+        rsh: p.rsh,
+        rural: p.rural,
+        sector: p.sector,
+        // Período
+        anio: p.anio,
+        semestre: p.semestre,
+        // Fechas
+        f_ingreso: p.f_ingreso,
+        f_egreso: p.f_egreso,
+        // Instrumentos VGI 1ª evaluación
+        barthel1: p.barthel1 != null ? Number(p.barthel1) : undefined,
+        pfeiffer1: p.pfeiffer1 != null ? Number(p.pfeiffer1) : undefined,
+        lawton1: p.lawton1 != null ? Number(p.lawton1) : undefined,
+        tug1: p.tug1 != null ? Number(p.tug1) : undefined,
+        mini1: p.mini1 != null ? Number(p.mini1) : undefined,
+        yesa1: p.yesa1 != null ? Number(p.yesa1) : undefined,
+        eq1: p.eq1,
+        // Instrumentos VGI 2ª evaluación
+        barthel2: p.barthel2 != null ? Number(p.barthel2) : undefined,
+        pfeiffer2: p.pfeiffer2 != null ? Number(p.pfeiffer2) : undefined,
+        lawton2: p.lawton2 != null ? Number(p.lawton2) : undefined,
+        tug2: p.tug2 != null ? Number(p.tug2) : undefined,
+        mini2: p.mini2 != null ? Number(p.mini2) : undefined,
+        yesa2: p.yesa2 != null ? Number(p.yesa2) : undefined,
+        eq2: p.eq2,
+        // Seguimiento trimestral
+        t1_punt: p.t1_punt != null ? Number(p.t1_punt) : undefined,
+        t1_barthel: p.t1_barthel != null ? Number(p.t1_barthel) : undefined,
+        t1_mini: p.t1_mini != null ? Number(p.t1_mini) : undefined,
+        t2_punt: p.t2_punt != null ? Number(p.t2_punt) : undefined,
+        t2_barthel: p.t2_barthel != null ? Number(p.t2_barthel) : undefined,
+        t2_mini: p.t2_mini != null ? Number(p.t2_mini) : undefined,
+        t3_punt: p.t3_punt != null ? Number(p.t3_punt) : undefined,
+        t3_barthel: p.t3_barthel != null ? Number(p.t3_barthel) : undefined,
+        t3_mini: p.t3_mini != null ? Number(p.t3_mini) : undefined,
+        t4_punt: p.t4_punt != null ? Number(p.t4_punt) : undefined,
+        t4_barthel: p.t4_barthel != null ? Number(p.t4_barthel) : undefined,
+        t4_mini: p.t4_mini != null ? Number(p.t4_mini) : undefined,
       }));
     } catch (error) {
       console.error('Error obteniendo pacientes:', error);

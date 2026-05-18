@@ -2,9 +2,10 @@
 
 interface AnalystDashboardProps {
   onLogout: () => void;
+  onNavigateToAnalisis: () => void;
 }
 
-export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
+export function AnalystDashboard({ onLogout, onNavigateToAnalisis }: AnalystDashboardProps) {
   const { usuario } = useAuth();
 
   const handleLogout = async () => {
@@ -193,7 +194,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
               background: '#FFFFFF',
               borderRadius: 8,
               padding: '24px',
-              border: '1px solid #E0E0E0',
+              border: '2px solid #15803d',
               boxShadow: '0px 2px 8px rgba(0,0,0,0.05)',
               cursor: 'pointer',
               transition: 'transform .18s, box-shadow .18s',
@@ -204,7 +205,7 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
             }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 12px rgba(21,128,61,0.15)';
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
@@ -219,12 +220,30 @@ export function AnalystDashboard({ onLogout }: AnalystDashboardProps) {
                   Visualiza gráficos, estadísticas y tendencias de pacientes.
                 </div>
               </div>
-              <div style={{
-                marginTop: 16,
-                color: '#15803d',
-                fontSize: 13,
-                fontWeight: 600
-              }}>Próximamente</div>
+              <button
+                onClick={onNavigateToAnalisis}
+                style={{
+                  marginTop: 16,
+                  background: '#15803d',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '10px 16px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  width: '100%',
+                  transition: 'background 0.2s'
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = '#0f5c2e';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = '#15803d';
+                }}
+              >
+                Ver Análisis →
+              </button>
             </div>
           </div>
         </div>

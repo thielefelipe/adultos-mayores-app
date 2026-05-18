@@ -8,9 +8,10 @@ import { patientsService } from '../services/patientsService';
 
 interface DashboardProps {
   onLogout: () => void;
+  onNavigateToAnalisis: () => void;
 }
 
-export function Dashboard({ onLogout }: DashboardProps) {
+export function Dashboard({ onLogout, onNavigateToAnalisis }: DashboardProps) {
   const { usuario, token } = useAuth();
 
   // Limpiar localStorage INMEDIATAMENTE al cargar el componente
@@ -539,6 +540,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
               </div>
             </div>
             <button
+              onClick={onNavigateToAnalisis}
               style={{
                 marginTop: 16,
                 background: '#15803d',
