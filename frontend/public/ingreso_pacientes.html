@@ -3277,7 +3277,22 @@ function descargarFichaPaciente(id) {
     const fotoData = localStorage.getItem('cdcReg8') ? JSON.parse(localStorage.getItem('cdcReg8')).find(r => r.id === id)?.foto : null;
 
     const fichaHTML = `
-      <div style="font-family: 'DM Sans', sans-serif; background: white; width: 210mm; height: 297mm; padding: 6mm; box-sizing: border-box; display: flex; flex-direction: column; gap: 4mm; overflow: hidden; color: #1A1208;">
+      <div style="font-family: 'DM Sans', sans-serif; background: white; width: 210mm; height: 297mm; padding: 0; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; color: #1A1208;">
+
+        <!-- HEADER: LOGOS + NOMBRE INSTITUCIÓN -->
+        <div style="background: linear-gradient(135deg, #15803d 0%, #22c55e 60%, #4ade80 100%); padding: 3.5mm 5mm; display: flex; align-items: center; gap: 4mm; flex-shrink: 0;">
+          <img src="/images/logo.png" style="height: 12mm; width: 12mm; object-fit: contain; flex-shrink: 0;">
+          <div style="width: 0.3mm; height: 10mm; background: rgba(255,255,255,0.35); flex-shrink: 0;"></div>
+          <img src="/images/logo_municipalidad.png" style="height: 12mm; width: auto; object-fit: contain; flex-shrink: 0;">
+          <div style="width: 0.3mm; height: 10mm; background: rgba(255,255,255,0.35); flex-shrink: 0;"></div>
+          <div style="color: white; flex: 1;">
+            <div style="font-size: 4.5mm; font-weight: 700; line-height: 1.2; font-family: 'Playfair Display', serif;">Centro Diurno Comunitario para el Adulto Mayor</div>
+            <div style="font-size: 3mm; opacity: 0.8; margin-top: 1mm;">Coelemu, Ñuble &nbsp;•&nbsp; Ficha de Paciente</div>
+          </div>
+        </div>
+
+        <!-- CONTENIDO: 4 SECCIONES -->
+        <div style="flex: 1; padding: 5mm; display: flex; flex-direction: column; gap: 3.5mm; overflow: hidden;">
 
         <!-- SECCIÓN 1: FOTO + DATOS DEL PACIENTE (aprox 35%) -->
         <div style="flex: 2.2; display: grid; grid-template-columns: auto 1fr; gap: 5mm; overflow: hidden;">
@@ -3335,6 +3350,7 @@ function descargarFichaPaciente(id) {
           <div style="font-size: 4mm; line-height: 1.5; overflow: hidden; white-space: pre-wrap; word-break: break-word;">${p.notas || ''}</div>
         </div>
 
+        </div><!-- fin contenido -->
       </div>
     `;
 
