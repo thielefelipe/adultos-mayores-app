@@ -1692,7 +1692,8 @@ async function cargarPacientesDelBackend() {
 
     if (response.ok) {
       const data = await response.json();
-      if (data.data && Array.isArray(data.data)) {
+      const listaPacientes = data.datos || data.data;
+      if (listaPacientes && Array.isArray(listaPacientes)) {
         // Obtener datos locales primero para preservarlos
         const datosLocales = {};
         try {
@@ -1703,7 +1704,7 @@ async function cargarPacientesDelBackend() {
         } catch (e) {}
 
         // Mapear datos del backend, pero preservar campos locales que no estén en el backend
-        pacientes = data.data.map(p => {
+        pacientes = listaPacientes.map(p => {
           const datosLocal = datosLocales[p.id] || {};
           return {
             id: p.id,
