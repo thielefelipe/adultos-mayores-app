@@ -2,9 +2,17 @@ import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { patientsService, type Paciente } from '../services/patientsService';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line
 } from 'recharts';
+
+const pieLabel = ({ name, percent }: { name?: string; percent?: number }) =>
+  `${name ?? ''} ${Math.round((percent ?? 0) * 100)}%`;
+
+const pieLabelShort = ({ name, percent }: { name?: string; percent?: number }) => {
+  const n = name ?? '';
+  return `${n.length > 14 ? n.slice(0, 14) + '…' : n} ${Math.round((percent ?? 0) * 100)}%`;
+};
 
 interface AnalisisDatosProps {
   onBack: () => void;
@@ -163,7 +171,7 @@ function SeccionKPIs({ pacientes }: { pacientes: Paciente[] }) {
           {sexoData.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie data={sexoData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ name, percent }) => `${name} ${Math.round(percent * 100)}%`}>
+                <Pie data={sexoData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={pieLabel}>
                   {sexoData.map((_, i) => <Cell key={i} fill={VERDE_COLORS[i % VERDE_COLORS.length]} />)}
                 </Pie>
                 <Tooltip />
@@ -442,7 +450,7 @@ function SeccionSociodemo({ pacientes }: { pacientes: Paciente[] }) {
           {escolaridadData.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie data={escolaridadData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }) => `${name.length > 14 ? name.slice(0, 14) + '…' : name} ${Math.round(percent * 100)}%`} labelLine={false}>
+                <Pie data={escolaridadData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={pieLabelShort} labelLine={false}>
                   {escolaridadData.map((_, i) => <Cell key={i} fill={VERDE_COLORS[i % VERDE_COLORS.length]} />)}
                 </Pie>
                 <Tooltip />
@@ -456,7 +464,7 @@ function SeccionSociodemo({ pacientes }: { pacientes: Paciente[] }) {
           {puebloPie.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie data={puebloPie} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }) => `${name} ${Math.round(percent * 100)}%`} labelLine={false}>
+                <Pie data={puebloPie} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={pieLabel} labelLine={false}>
                   {puebloPie.map((_, i) => <Cell key={i} fill={VERDE_COLORS[i % VERDE_COLORS.length]} />)}
                 </Pie>
                 <Tooltip />
@@ -470,7 +478,7 @@ function SeccionSociodemo({ pacientes }: { pacientes: Paciente[] }) {
           {ruralData.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie data={ruralData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }) => `${name} ${Math.round(percent * 100)}%`} labelLine={false}>
+                <Pie data={ruralData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={pieLabel} labelLine={false}>
                   {ruralData.map((_, i) => <Cell key={i} fill={VERDE_COLORS[i % VERDE_COLORS.length]} />)}
                 </Pie>
                 <Tooltip />
