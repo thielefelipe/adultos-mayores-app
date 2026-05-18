@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Param,
   Body,
@@ -78,6 +79,15 @@ export class PacientesController {
 
   @Put(':id')
   async actualizar(
+    @Param('id') id: string,
+    @Body() actualizarDto: Partial<CrearPacienteDto>,
+    @Req() req,
+  ) {
+    return this.pacientesService.actualizar(id, actualizarDto, req.user.username);
+  }
+
+  @Patch(':id')
+  async actualizarParcial(
     @Param('id') id: string,
     @Body() actualizarDto: Partial<CrearPacienteDto>,
     @Req() req,
