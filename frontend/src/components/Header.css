@@ -1,6 +1,6 @@
 .header {
   background: var(--deep);
-  color: var(--cream);
+  color: #FFFFFF;
   padding: 15px 0;
   box-shadow: var(--shadow);
   position: sticky;
@@ -23,7 +23,7 @@
   margin: 0;
   font-size: 24px;
   font-weight: 600;
-  color: var(--cream);
+  color: #FFFFFF;
   font-family: var(--heading);
 }
 
@@ -37,7 +37,7 @@
 .welcome {
   font-size: 14px;
   opacity: 0.95;
-  color: var(--cream);
+  color: #FFFFFF;
 }
 
 .welcome strong {
@@ -52,7 +52,7 @@
   font-weight: 600;
   text-transform: uppercase;
   background-color: rgba(255, 255, 255, 0.15);
-  color: var(--cream);
+  color: #FFFFFF;
 }
 
 .btn-logout {
