@@ -112,6 +112,7 @@ export class PacientesController {
   }
 
   @Post('restaurar/todos')
+  @HttpCode(200)
   async restaurarTodos(@Req() req) {
     return this.pacientesService.restaurarTodos(req.user.username);
   }
