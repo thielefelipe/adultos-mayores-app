@@ -251,18 +251,25 @@ export class PacientesService {
       where: { eliminado: true },
     });
 
+    console.log(`[RESTAURAR] Encontrados ${eliminados.length} pacientes para restaurar`);
+
     for (const paciente of eliminados) {
       paciente.eliminado = false;
       paciente.estado = 'activo';
-      paciente.fechaEliminacion = undefined;
+      paciente.fechaEliminacion = null;
+      paciente.motivoEliminacion = null;
       paciente.modificadoPor = username;
       paciente.modificadoEn = new Date();
-      await this.pacienteRepository.save(paciente);
+
+      const resultado = await this.pacienteRepository.save(paciente);
+      console.log(`[RESTAURAR] Paciente ${paciente.id} restaurado:`, { eliminado: resultado.eliminado, estado: resultado.estado });
+
       await this.auditService.registrar(username, 'RESTAURAR', 'paciente', paciente.id, {
         razon: 'Restauración masiva de pacientes eliminados',
       });
     }
 
+    console.log(`[RESTAURAR] Proceso completado: ${eliminados.length} pacientes restaurados`);
     return { restaurados: eliminados.length };
   }
 
