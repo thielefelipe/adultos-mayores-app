@@ -256,13 +256,21 @@ export class PacientesService {
     for (const paciente of eliminados) {
       paciente.eliminado = false;
       paciente.estado = 'activo';
-      paciente.fechaEliminacion = null;
-      paciente.motivoEliminacion = null;
       paciente.modificadoPor = username;
       paciente.modificadoEn = new Date();
 
-      const resultado = await this.pacienteRepository.save(paciente);
-      console.log(`[RESTAURAR] Paciente ${paciente.id} restaurado:`, { eliminado: resultado.eliminado, estado: resultado.estado });
+      // Limpiar campos de eliminación usando update directo para evitar problemas de tipo
+      await this.pacienteRepository.update(
+        { id: paciente.id },
+        {
+          eliminado: false,
+          estado: 'activo',
+          modificadoPor: username,
+          modificadoEn: new Date(),
+        }
+      );
+
+      console.log(`[RESTAURAR] Paciente ${paciente.id} restaurado`);
 
       await this.auditService.registrar(username, 'RESTAURAR', 'paciente', paciente.id, {
         razon: 'Restauración masiva de pacientes eliminados',
