@@ -246,6 +246,26 @@ export class PacientesService {
     return resultado;
   }
 
+  async restaurarTodos(username: string): Promise<{ restaurados: number }> {
+    const eliminados = await this.pacienteRepository.find({
+      where: { eliminado: true },
+    });
+
+    for (const paciente of eliminados) {
+      paciente.eliminado = false;
+      paciente.estado = 'activo';
+      paciente.fechaEliminacion = undefined;
+      paciente.modificadoPor = username;
+      paciente.modificadoEn = new Date();
+      await this.pacienteRepository.save(paciente);
+      await this.auditService.registrar(username, 'RESTAURAR', 'paciente', paciente.id, {
+        razon: 'Restauración masiva de pacientes eliminados',
+      });
+    }
+
+    return { restaurados: eliminados.length };
+  }
+
   async exportarCSV(): Promise<string> {
     const pacientes = await this.pacienteRepository.find({
       where: { eliminado: false },

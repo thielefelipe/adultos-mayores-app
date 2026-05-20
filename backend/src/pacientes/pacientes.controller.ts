@@ -110,4 +110,9 @@ export class PacientesController {
   async darDeAlta(@Param('id') id: string, @Req() req) {
     return this.pacientesService.darDeAlta(id, req.user.username);
   }
+
+  @Post('restaurar/todos')
+  async restaurarTodos(@Req() req) {
+    return this.pacientesService.restaurarTodos(req.user.username);
+  }
 }
