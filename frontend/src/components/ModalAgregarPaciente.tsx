@@ -124,9 +124,22 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
     e.preventDefault();
     setLoading(true);
     try {
-      // Transform empty strings to undefined to avoid sending unnecessary fields
+      // Transform empty strings to undefined and convert types correctly
       const dataToSave = Object.entries(formData).reduce((acc, [key, value]) => {
-        if (value !== '') {
+        if (value === '') return acc;
+
+        // Convertir números
+        if (['anio', 'semestre', 'edad'].includes(key) && value) {
+          acc[key] = Number(value);
+        }
+        // Convertir fechas a ISO string
+        else if (['fecha_nacimiento', 'f_ingreso'].includes(key) && value) {
+          const date = new Date(value);
+          if (!isNaN(date.getTime())) {
+            acc[key] = date.toISOString();
+          }
+        }
+        else {
           acc[key] = value;
         }
         return acc;
