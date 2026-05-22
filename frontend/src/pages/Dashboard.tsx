@@ -218,7 +218,7 @@ export function Dashboard({ onLogout, onNavigateToAnalisis }: DashboardProps) {
         </button>
         <div>
           <div style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 17 }}>
-            Dashboard RRHH
+            DASHBOARD CENTRO DIURNO
           </div>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12 }}>
