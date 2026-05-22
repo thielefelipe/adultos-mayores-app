@@ -490,6 +490,7 @@
       <!-- Para OPERADOR: Nombre bloqueado -->
       <span id="operadorNombre" style="background: rgba(255,255,255,0.15); padding: .4rem .8rem; border-radius: 6px; font-weight: 500; display: none;"></span>
     </div>
+    <span id="backendStatus" title="Verificando servidor..." style="font-size:.8rem;color:#f59e0b;cursor:default;user-select:none;" title="Estado del servidor">● Servidor</span>
     <button class="btn btn-ghost btn-sm" onclick="exportarExcel()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)">📊 Exportar Excel</button>
     <button class="btn btn-ghost btn-sm" onclick="descargarPlantilla()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3)">📥 Plantilla</button>
     <label class="btn btn-ghost btn-sm" style="cursor:pointer;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3)">
@@ -1257,6 +1258,27 @@ const API_URL = window.location.hostname === 'localhost'
 let pacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
 let editandoId = null;
 let pacientesGuardadosEnBackend = new Set(); // Rastrear qué pacientes ya fueron enviados
+
+// Keep-alive: mantiene el backend despierto mientras la app está abierta
+// Render free duerme tras 15 min; pinguear cada 10 min evita eso
+const BACKEND_BASE = API_URL.replace('/api', '');
+async function pingBackend() {
+  try {
+    const res = await fetch(`${BACKEND_BASE}/health`, { method: 'GET' });
+    if (res.ok) {
+      console.log('🟢 Backend activo', new Date().toLocaleTimeString());
+      document.getElementById('backendStatus')?.setAttribute('title', 'Servidor activo');
+      document.getElementById('backendStatus')?.style.setProperty('color', '#22c55e');
+    }
+  } catch {
+    console.warn('🔴 Backend no responde, reintentando en 30s...');
+    document.getElementById('backendStatus')?.setAttribute('title', 'Servidor reconectando...');
+    document.getElementById('backendStatus')?.style.setProperty('color', '#f59e0b');
+    setTimeout(pingBackend, 30000);
+  }
+}
+pingBackend();
+setInterval(pingBackend, 10 * 60 * 1000); // cada 10 minutos
 
 // Cargar operadores reales desde la API
 async function cargarOperadores() {

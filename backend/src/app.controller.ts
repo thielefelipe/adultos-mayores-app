@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, HttpCode } from '@nestjs/common';
 import { AppService } from './app.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +12,12 @@ export class AppController {
     @InjectRepository(UsuarioEntity)
     private usuarioRepository: Repository<UsuarioEntity>,
   ) {}
+
+  @Get('health')
+  @HttpCode(200)
+  getHealth() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
+  }
 
   @Get()
   async getHello() {
