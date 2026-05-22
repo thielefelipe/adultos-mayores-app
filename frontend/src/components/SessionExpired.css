@@ -30,11 +30,14 @@
 
 .expired-icon {
   font-size: 80px;
+  line-height: 1;
   margin-bottom: 20px;
   animation: pulse 2s infinite;
   user-select: none;
   cursor: default;
   pointer-events: none;
+  outline: none;
+  caret-color: transparent;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
