@@ -345,7 +345,10 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            userSelect: 'none'
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none'
           }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.2)';

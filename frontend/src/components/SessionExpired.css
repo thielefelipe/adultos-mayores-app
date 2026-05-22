@@ -34,6 +34,10 @@
   animation: pulse 2s infinite;
   user-select: none;
   cursor: default;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 @keyframes pulse {
