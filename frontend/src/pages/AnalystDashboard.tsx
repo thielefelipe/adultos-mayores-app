@@ -45,7 +45,8 @@ export function AnalystDashboard({ onLogout, onNavigateToAnalisis }: AnalystDash
             transition: 'all 0.3s',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            userSelect: 'none'
           }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.2)';
