@@ -22,7 +22,7 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   const [fichaPacienteOpen, setFichaPacienteOpen] = useState(false);
   const [pacienteSeleccionado, setPacienteSeleccionado] = useState<Paciente | null>(null);
 
-  const [filtros, setFiltros] = useState<FiltrosPacientes>({});
+  const [filtros, setFiltros] = useState<FiltrosPacientes>({ anio: new Date().getFullYear() });
   const [regionSeleccionada, setRegionSeleccionada] = useState('');
   const [provinciaSeleccionada, setProvinciaSeleccionada] = useState('');
   const [anioSeleccionado, setAnioSeleccionado] = useState<number>(new Date().getFullYear());
@@ -207,12 +207,13 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
   };
 
   const handleLimpiarFiltros = () => {
-    setFiltros({});
+    const currentYear = new Date().getFullYear();
+    setFiltros({ anio: currentYear });
     setRegionSeleccionada('');
     setProvinciaSeleccionada('');
     setProvincias([]);
     setComunas([]);
-    setAnioSeleccionado(new Date().getFullYear());
+    setAnioSeleccionado(currentYear);
     setSemestreSeleccionado('');
   };
 

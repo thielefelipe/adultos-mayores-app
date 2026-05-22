@@ -1683,6 +1683,16 @@ async function cargarPacientesDelBackend() {
       return;
     }
 
+    // Capturar pacientes locales no sincronizados (ID numérico = nunca llegaron al backend)
+    let noSincronizados = [];
+    try {
+      const localPacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
+      noSincronizados = localPacientes.filter(p => typeof p.id === 'number');
+      if (noSincronizados.length > 0) {
+        console.log(`⚠️ Hay ${noSincronizados.length} pacientes locales sin sincronizar`);
+      }
+    } catch (e) {}
+
     const response = await fetch(`${API_URL}/pacientes?pagina=1&limite=1000`, {
       method: 'GET',
       headers: {
@@ -1769,6 +1779,22 @@ async function cargarPacientesDelBackend() {
         });
 
         pacientes.forEach(p => pacientesGuardadosEnBackend.add(p.id));
+
+        // Recuperar pacientes locales que nunca llegaron al backend y agregarlos
+        if (noSincronizados.length > 0) {
+          const idsBackend = new Set(pacientes.map(p => p.id));
+          const pendientes = noSincronizados.filter(p => !idsBackend.has(p.id));
+          if (pendientes.length > 0) {
+            console.log(`🔄 Recuperando ${pendientes.length} pacientes no sincronizados...`);
+            pacientes = [...pacientes, ...pendientes];
+            // Intentar subirlos ahora que el backend está activo
+            setTimeout(() => {
+              pendientes.forEach(p => guardarEnBackend(p));
+            }, 500);
+            toast(`🔄 Recuperando ${pendientes.length} paciente(s) guardado(s) localmente...`);
+          }
+        }
+
         localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
         renderAll();
         console.log('✅ Pacientes cargados del backend:', pacientes.length);
