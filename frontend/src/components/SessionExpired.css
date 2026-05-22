@@ -32,6 +32,8 @@
   font-size: 80px;
   margin-bottom: 20px;
   animation: pulse 2s infinite;
+  user-select: none;
+  cursor: default;
 }
 
 @keyframes pulse {
