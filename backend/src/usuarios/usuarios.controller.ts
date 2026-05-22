@@ -95,18 +95,21 @@ export class UsuariosController {
   }
 
   @Post()
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async crear(@Body() crearDto: CrearUsuarioDto, @Request() req) {
     return this.usuariosService.crear(crearDto, req.user.username);
   }
 
   @Get(':id')
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async obtenerPorId(@Param('id') id: string) {
     return this.usuariosService.obtenerPorId(id);
   }
 
   @Put(':id')
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async actualizar(
     @Param('id') id: string,
@@ -117,6 +120,7 @@ export class UsuariosController {
   }
 
   @Post(':id/restablecer-contrasena')
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async restablecerContrasena(
     @Param('id') id: string,
@@ -127,6 +131,7 @@ export class UsuariosController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async eliminar(
     @Param('id') id: string,
@@ -143,6 +148,7 @@ export class UsuariosController {
   }
 
   @Delete(':id/definitivo')
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async eliminarDefinitivamente(
     @Param('id') id: string,
@@ -159,6 +165,7 @@ export class UsuariosController {
   }
 
   @Post(':id/reactivar')
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles('admin')
   async reactivar(
     @Param('id') id: string,
