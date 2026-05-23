@@ -28,7 +28,9 @@ export function AnalystDashboard({ onLogout, onNavigateToAnalisis }: AnalystDash
         display: 'flex',
         alignItems: 'center',
         gap: '14px',
-        boxShadow: '0px 2px 8px rgba(0,0,0,0.1)'
+        boxShadow: '0px 2px 8px rgba(0,0,0,0.1)',
+        userSelect: 'none',
+        caretColor: 'transparent'
       }}>
         <button
           onClick={() => window.location.reload()}

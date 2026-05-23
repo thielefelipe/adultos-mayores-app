@@ -67,7 +67,9 @@ export function UsuariosConectados({ onVolver, onLogout }: UsuariosConectadosPro
         display: 'flex',
         alignItems: 'center',
         gap: '14px',
-        boxShadow: '0px 2px 8px rgba(0,0,0,0.1)'
+        boxShadow: '0px 2px 8px rgba(0,0,0,0.1)',
+        userSelect: 'none',
+        caretColor: 'transparent'
       }}>
         <button onClick={onVolver} style={{
           background: 'rgba(255,255,255,.15)',
