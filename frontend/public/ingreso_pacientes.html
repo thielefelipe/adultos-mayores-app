@@ -70,6 +70,7 @@
   resetInactivityTimer();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
@@ -2751,83 +2752,159 @@ function recalcularSeg() {
   }
 }
 
-function exportarExcel() {
+async function exportarExcel() {
   if (!pacientes.length) { toast('No hay datos para exportar'); return; }
 
-  const wb = XLSX.utils.book_new();
-  const fecha = new Date().toISOString().slice(0,10);
+  const workbook = new ExcelJS.Workbook();
+  const ws = workbook.addWorksheet('Planilla SENAMA');
+  const fechaDisplay = new Date().toLocaleDateString('es-CL');
+  const fechaFile = new Date().toISOString().slice(0,10);
+  const TOTAL_COLS = 43;
 
-  // ── Hoja principal: Planilla completa (formato oficial) ───────────────────
-  const headers = [
-    'Nombre','RUT','DV','Año','Semestre','Edad','Sexo','Fecha Nacimiento','Teléfono',
-    'Contacto Nombre','Contacto Teléfono','Contacto Relación',
-    'Región','Provincia','Comuna','Sector','Dirección','Rural','Escolaridad','Pueblo','RSH',
-    'F. Ingreso','F. Consentimiento','F. Egreso','Naturaleza','Dependencia',
-    'Enfermedades','PAI','Obj_PAI','Obj_Alc','Talleres',
-    'Barthel1','Pfeiffer1','Lawton1','TUG1','Minimental1','Yesavage1','EQ5D_1',
-    'Barthel2','Pfeiffer2','Lawton2','TUG2','Minimental2','Yesavage2','EQ5D_2',
-    'Puntaje_Base','Estado_Base',
-    'Notas','Plan de Cuidados','Fecha Registro',
+  // ── Anchos de columna (A→AQ) ──────────────────────────────────────────────
+  [14,6,30,8,14,7,14,16,16,22,14,14,22,18,18,12,16,14,10,10,28,30,10,14,16,20,
+   10,10,10,10,12,10,14,10,10,10,10,12,10,14,28,28,14]
+  .forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+
+  // ── Fila 1: Título ────────────────────────────────────────────────────────
+  ws.mergeCells(1, 1, 1, TOTAL_COLS);
+  const r1 = ws.getCell(1, 1);
+  r1.value = `PLANILLA SENAMA — ADULTOS MAYORES   |   ${fechaDisplay}   |   Total: ${pacientes.length} registros`;
+  r1.font = { name: 'Arial', bold: true, size: 14, color: { argb: 'FFFFFFFF' } };
+  r1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0F5C2E' } };
+  r1.alignment = { horizontal: 'center', vertical: 'middle' };
+  ws.getRow(1).height = 32;
+
+  // ── Fila 2: Instrucciones ─────────────────────────────────────────────────
+  ws.mergeCells(2, 1, 2, TOTAL_COLS);
+  const r2 = ws.getCell(2, 1);
+  r2.value = `Exportado el ${fechaDisplay} desde el Sistema de Adultos Mayores. No modificar la estructura de columnas.`;
+  r2.font = { name: 'Arial', size: 10, color: { argb: 'FF7A4A00' } };
+  r2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF3CD' } };
+  r2.alignment = { horizontal: 'center', vertical: 'middle' };
+  ws.getRow(2).height = 22;
+
+  // ── Fila 3: Secciones ─────────────────────────────────────────────────────
+  const secciones = [
+    { label: 'IDENTIFICACIÓN',       from: 1,  to: 2,  bg: 'FF1B7A40' },
+    { label: 'DATOS PERSONALES',     from: 3,  to: 9,  bg: 'FF2E7D52' },
+    { label: 'CONTACTO Y UBICACIÓN', from: 10, to: 15, bg: 'FF388E60' },
+    { label: 'DATOS DE ATENCIÓN',    from: 16, to: 21, bg: 'FF43A06E' },
+    { label: 'CONDICIÓN CLÍNICA',    from: 22, to: 26, bg: 'FF4CAF7A' },
+    { label: 'VGI 1ª EVALUACIÓN',    from: 27, to: 33, bg: 'FF16A34A' },
+    { label: 'VGI 2ª EVALUACIÓN',    from: 34, to: 40, bg: 'FF0D8A3B' },
+    { label: 'NOTAS',                from: 41, to: 43, bg: 'FF476B57' },
   ];
+  ws.getRow(3).height = 24;
+  secciones.forEach(s => {
+    if (s.from !== s.to) ws.mergeCells(3, s.from, 3, s.to);
+    const cell = ws.getCell(3, s.from);
+    cell.value = s.label;
+    cell.font = { name: 'Arial', bold: true, size: 10, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: s.bg } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+  });
 
-  const rows = pacientes.map(p => {
+  // ── Fila 4: Encabezados de columna ────────────────────────────────────────
+  const colHeaders = [
+    { label: 'RUT\n(sin puntos)',          bg: 'FF1B7A40' },
+    { label: 'DV\n(1-9 o K)',             bg: 'FF1B7A40' },
+    { label: 'Nombre Completo',            bg: 'FF2E7D52' },
+    { label: 'Sexo',                       bg: 'FF2E7D52' },
+    { label: 'Fecha Nac.\n(DD/MM/AAAA)',   bg: 'FF2E7D52' },
+    { label: 'Edad',                       bg: 'FF2E7D52' },
+    { label: 'Teléfono',                   bg: 'FF2E7D52' },
+    { label: 'Escolaridad',                bg: 'FF2E7D52' },
+    { label: 'Pueblo Originario',          bg: 'FF2E7D52' },
+    { label: 'Nombre Contacto',            bg: 'FF388E60' },
+    { label: 'Tel. Contacto',              bg: 'FF388E60' },
+    { label: 'Relación Contacto',          bg: 'FF388E60' },
+    { label: 'Región',                     bg: 'FF388E60' },
+    { label: 'Provincia',                  bg: 'FF388E60' },
+    { label: 'Comuna',                     bg: 'FF388E60' },
+    { label: 'F. Ingreso',                 bg: 'FF43A06E' },
+    { label: 'Naturaleza',                 bg: 'FF43A06E' },
+    { label: 'Dependencia',                bg: 'FF43A06E' },
+    { label: 'Rural\n(Sí/No)',             bg: 'FF43A06E' },
+    { label: 'RSH\n(Sí/No)',               bg: 'FF43A06E' },
+    { label: 'Dirección',                  bg: 'FF43A06E' },
+    { label: 'Enfermedades /\nDiagnósticos', bg: 'FF4CAF7A' },
+    { label: 'PAI\n(Sí/No)',               bg: 'FF4CAF7A' },
+    { label: 'Objetivo PAI %',             bg: 'FF4CAF7A' },
+    { label: 'Obj. Alcanzado %',           bg: 'FF4CAF7A' },
+    { label: 'Talleres',                   bg: 'FF4CAF7A' },
+    { label: 'Barthel\n(1ª)',              bg: 'FF16A34A' },
+    { label: 'Pfeiffer\n(1ª)',             bg: 'FF16A34A' },
+    { label: 'Lawton\n(1ª)',               bg: 'FF16A34A' },
+    { label: 'TUG\n(1ª)',                  bg: 'FF16A34A' },
+    { label: 'MiniMental\n(1ª)',           bg: 'FF16A34A' },
+    { label: 'Yesavage\n(1ª)',             bg: 'FF16A34A' },
+    { label: 'EQ-5D\n(1ª)',               bg: 'FF16A34A' },
+    { label: 'Barthel\n(2ª)',              bg: 'FF0D8A3B' },
+    { label: 'Pfeiffer\n(2ª)',             bg: 'FF0D8A3B' },
+    { label: 'Lawton\n(2ª)',               bg: 'FF0D8A3B' },
+    { label: 'TUG\n(2ª)',                  bg: 'FF0D8A3B' },
+    { label: 'MiniMental\n(2ª)',           bg: 'FF0D8A3B' },
+    { label: 'Yesavage\n(2ª)',             bg: 'FF0D8A3B' },
+    { label: 'EQ-5D\n(2ª)',               bg: 'FF0D8A3B' },
+    { label: 'Notas',                      bg: 'FF476B57' },
+    { label: 'Plan de Cuidados',           bg: 'FF476B57' },
+    { label: 'Estado / Puntaje',           bg: 'FF476B57' },
+  ];
+  ws.getRow(4).height = 42;
+  colHeaders.forEach((h, i) => {
+    const cell = ws.getCell(4, i + 1);
+    cell.value = h.label;
+    cell.font = { name: 'Arial', bold: true, size: 9, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: h.bg } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+    cell.border = {
+      top:    { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      left:   { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      bottom: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      right:  { style: 'thin', color: { argb: 'FFFFFFFF' } },
+    };
+  });
+
+  // ── Filas 5+: Datos de pacientes ──────────────────────────────────────────
+  pacientes.forEach((p, idx) => {
     const sc = score(p);
     const sem = semaforo(sc);
-    return [
-      p.nombre||'', p.rut||'', p.dv||'',
-      p.anio||'', p.semestre||'',
-      p.edad||'', p.sexo||'', p.fecha_nacimiento||'', p.telefono||'',
+    const bgArgb = idx % 2 === 0 ? 'FFE8F5E9' : 'FFFFFFFF';
+    const dataRow = ws.addRow([
+      p.rut||'', p.dv||'',
+      p.nombre||'', p.sexo||'', p.fecha_nacimiento||'', p.edad||'',
+      p.telefono||'', p.escolaridad||'', p.pueblo||'',
       p.contacto_nombre||'', p.contacto_telefono||'', p.contacto_relacion||'',
       p.region||'', p.provincia||'', p.comuna_personal||p.comuna||'',
-      p.sector||'', p.direccion||'', p.rural||'', p.escolaridad||'', p.pueblo||'', p.rsh||'',
-      p.f_ingreso||'', p.f_consentimiento||'', p.f_egreso||'',
-      p.naturaleza||'', p.dependencia||'',
+      p.f_ingreso||'', p.naturaleza||'', p.dependencia||'',
+      p.rural||'', p.rsh||'', p.direccion||'',
       p.enfermedades||'', p.pai||'', p.obj_pai||'', p.obj_alc||'', p.talleres||'',
       p.barthel1||'', p.pfeiffer1||'', p.lawton1||'', p.tug1||'', p.mini1||'', p.yesa1||'', p.eq1||'',
       p.barthel2||'', p.pfeiffer2||'', p.lawton2||'', p.tug2||'', p.mini2||'', p.yesa2||'', p.eq2||'',
-      sc !== null ? sc : '', sem.label,
       p.notas||'', p.plan||'',
-      p.fechaRegistro ? new Date(p.fechaRegistro).toLocaleDateString('es-CL') : '',
-    ];
-  });
-
-  const wsPlanilla = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-  wsPlanilla['!cols'] = [
-    {wch:30},{wch:12},{wch:5},{wch:7},{wch:10},{wch:7},{wch:8},{wch:14},{wch:14},
-    {wch:24},{wch:14},{wch:14},
-    {wch:22},{wch:18},{wch:18},{wch:14},{wch:28},{wch:8},{wch:18},{wch:18},{wch:10},
-    {wch:12},{wch:14},{wch:12},{wch:16},{wch:14},
-    {wch:30},{wch:8},{wch:10},{wch:10},{wch:22},
-    {wch:10},{wch:10},{wch:10},{wch:10},{wch:12},{wch:10},{wch:14},
-    {wch:10},{wch:10},{wch:10},{wch:10},{wch:12},{wch:10},{wch:14},
-    {wch:12},{wch:12},
-    {wch:28},{wch:28},{wch:14},
-  ];
-  XLSX.utils.book_append_sheet(wb, wsPlanilla, 'Planilla SENAMA');
-
-  // ── Hoja 2: Resumen ejecutivo ─────────────────────────────────────────────
-  const resumenData = [
-    ['PLANILLA SENAMA — ADULTOS MAYORES', '', '', '', '', '', '', ''],
-    ['Generado:', new Date().toLocaleDateString('es-CL'), '', 'Total registros:', pacientes.length],
-    [],
-    ['NOMBRE', 'RUT', 'EDAD', 'SEXO', 'COMUNA', 'DEPENDENCIA', 'PUNTAJE', 'ESTADO'],
-  ];
-  pacientes.forEach(p => {
-    const sc = score(p);
-    const sem = semaforo(sc);
-    resumenData.push([
-      p.nombre||'', mostrarRUTFormateado(p.rut, p.dv),
-      p.edad||'', p.sexo||'',
-      p.comuna_personal||p.comuna||'', p.dependencia||'',
-      sc !== null ? sc : '', sem.label,
+      sc !== null ? `${sem.label} (${sc} pts)` : '',
     ]);
+    dataRow.height = 18;
+    dataRow.eachCell({ includeEmpty: true }, cell => {
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgArgb } };
+      cell.font = { name: 'Arial', size: 9, color: { argb: 'FF1A1A1A' } };
+      cell.alignment = { vertical: 'middle' };
+    });
   });
-  const wsResumen = XLSX.utils.aoa_to_sheet(resumenData);
-  wsResumen['!cols'] = [{wch:30},{wch:14},{wch:7},{wch:8},{wch:18},{wch:14},{wch:10},{wch:12}];
-  wsResumen['!merges'] = [{ s:{r:0,c:0}, e:{r:0,c:7} }];
-  XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen');
 
-  XLSX.writeFile(wb, `planilla_senama_${fecha}.xlsx`);
+  // ── Congelar primeras 4 filas ─────────────────────────────────────────────
+  ws.views = [{ state: 'frozen', ySplit: 4 }];
+
+  // ── Descargar ─────────────────────────────────────────────────────────────
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `planilla_senama_${fechaFile}.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
   toast('📊 Planilla descargada correctamente');
 }
 
