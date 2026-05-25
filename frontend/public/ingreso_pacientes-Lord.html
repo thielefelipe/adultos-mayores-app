@@ -1250,8 +1250,7 @@ const API_URL = window.location.hostname === 'localhost'
   : 'https://adultos-mayores-backend.onrender.com/api';
 
 // Limpiar datos importados y empezar desde cero
-localStorage.removeItem('linea_base_2025');
-let pacientes = [];
+let pacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
 let editandoId = null;
 let pacientesGuardadosEnBackend = new Set(); // Rastrear qué pacientes ya fueron enviados
 
