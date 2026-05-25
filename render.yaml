@@ -12,16 +12,8 @@ services:
         value: production
       - key: PORT
         value: 3000
-      - key: DB_HOST
-        value: dpg-d7ltnllckfvc739crllg-a.oregon-postgres.render.com
-      - key: DB_PORT
-        value: 5432
-      - key: DB_USERNAME
-        value: admin
-      - key: DB_PASSWORD
-        value: 5ZR21MkYYQN1ad8gqtqPJvVmpQAHydLa
-      - key: DB_NAME
-        value: centros_diurnos_db
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_Rk7hrmiHY8DU@ep-wispy-lake-aps48rn1.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require
       - key: JWT_SECRET
         value: demo-secret-key-change-in-production
       - key: JWT_EXPIRE
