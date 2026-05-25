@@ -11,27 +11,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create Backup with Docker
+      - name: Create Backup from Neon
         env:
-          DB_URL: ${{ secrets.RENDER_DB_URL }}
+          DB_URL: ${{ secrets.NEON_DB_URL }}
         run: |
           mkdir -p backups
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          docker run --rm postgres:18 pg_dump "$DB_URL" > backups/backup_prod_${TIMESTAMP}.sql
-          echo "✅ Backup created: backup_prod_${TIMESTAMP}.sql"
-          ls -lh backups/
+          docker run --rm postgres:16 pg_dump "$DB_URL" --no-owner --no-acl \
+            -t usuarios -t pacientes -t migrations \
+            > backups/backup_neon_${TIMESTAMP}.sql
+          echo "Backup created: backup_neon_${TIMESTAMP}.sql"
+          wc -l backups/backup_neon_${TIMESTAMP}.sql
 
       - name: Push Backup to GitHub
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add backups/
-          git commit -m "🔄 Backup automático $(date +%Y-%m-%d)" || true
+          git commit -m "Backup automatico Neon $(date +%Y-%m-%d)" || true
           git push https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
 
       - name: Keep only last 30 backups
         run: |
           cd backups
-          ls -t backup_prod_*.sql 2>/dev/null | tail -n +31 | xargs -r rm
-          git add backups/ && git commit -m "🗑️ Cleanup old backups" || true
+          ls -t backup_neon_*.sql 2>/dev/null | tail -n +31 | xargs -r rm
+          git add backups/ && git commit -m "Cleanup old backups" || true
           git push || true
