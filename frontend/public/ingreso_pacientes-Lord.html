@@ -346,7 +346,7 @@
   .table-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--sand); }
   table { width: 100%; border-collapse: collapse; }
   thead { background: var(--deep); }
-  thead th { padding: .75rem 1rem; font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: white; text-align: left; white-space: nowrap; }
+  thead th { padding: .75rem 1rem; font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--clay); text-align: left; white-space: nowrap; }
   tbody tr { background: white; border-bottom: 1px solid var(--sand); transition: background .12s; cursor: pointer; }
   tbody tr:hover { background: var(--warm); }
   tbody td { padding: .75rem 1rem; font-size: .83rem; color: var(--ink); }
@@ -490,7 +490,6 @@
       <!-- Para OPERADOR: Nombre bloqueado -->
       <span id="operadorNombre" style="background: rgba(255,255,255,0.15); padding: .4rem .8rem; border-radius: 6px; font-weight: 500; display: none;"></span>
     </div>
-    <span id="backendStatus" title="Verificando servidor..." style="font-size:.8rem;color:#f59e0b;cursor:default;user-select:none;" title="Estado del servidor">● Servidor</span>
     <button class="btn btn-ghost btn-sm" onclick="exportarExcel()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)">📊 Exportar Excel</button>
     <button class="btn btn-primary" onclick="abrirModal()">+ Nuevo Adulto Mayor</button>
     <button class="btn btn-ghost btn-sm" onclick="window.location.href='/';">← Volver</button>
@@ -1256,27 +1255,6 @@ let pacientes = [];
 let editandoId = null;
 let pacientesGuardadosEnBackend = new Set(); // Rastrear qué pacientes ya fueron enviados
 
-// Keep-alive: mantiene el backend despierto mientras la app está abierta
-// Render free duerme tras 15 min; pinguear cada 10 min evita eso
-const BACKEND_BASE = API_URL.replace('/api', '');
-async function pingBackend() {
-  try {
-    const res = await fetch(`${BACKEND_BASE}/health`, { method: 'GET' });
-    if (res.ok) {
-      console.log('🟢 Backend activo', new Date().toLocaleTimeString());
-      document.getElementById('backendStatus')?.setAttribute('title', 'Servidor activo');
-      document.getElementById('backendStatus')?.style.setProperty('color', '#22c55e');
-    }
-  } catch {
-    console.warn('🔴 Backend no responde, reintentando en 30s...');
-    document.getElementById('backendStatus')?.setAttribute('title', 'Servidor reconectando...');
-    document.getElementById('backendStatus')?.style.setProperty('color', '#f59e0b');
-    setTimeout(pingBackend, 30000);
-  }
-}
-pingBackend();
-setInterval(pingBackend, 10 * 60 * 1000); // cada 10 minutos
-
 // Cargar operadores reales desde la API
 async function cargarOperadores() {
   try {
@@ -1702,16 +1680,6 @@ async function cargarPacientesDelBackend() {
       return;
     }
 
-    // Capturar pacientes locales no sincronizados (ID numérico = nunca llegaron al backend)
-    let noSincronizados = [];
-    try {
-      const localPacientes = JSON.parse(localStorage.getItem('linea_base_2025') || '[]');
-      noSincronizados = localPacientes.filter(p => typeof p.id === 'number');
-      if (noSincronizados.length > 0) {
-        console.log(`⚠️ Hay ${noSincronizados.length} pacientes locales sin sincronizar`);
-      }
-    } catch (e) {}
-
     const response = await fetch(`${API_URL}/pacientes?pagina=1&limite=1000`, {
       method: 'GET',
       headers: {
@@ -1798,22 +1766,6 @@ async function cargarPacientesDelBackend() {
         });
 
         pacientes.forEach(p => pacientesGuardadosEnBackend.add(p.id));
-
-        // Recuperar pacientes locales que nunca llegaron al backend y agregarlos
-        if (noSincronizados.length > 0) {
-          const idsBackend = new Set(pacientes.map(p => p.id));
-          const pendientes = noSincronizados.filter(p => !idsBackend.has(p.id));
-          if (pendientes.length > 0) {
-            console.log(`🔄 Recuperando ${pendientes.length} pacientes no sincronizados...`);
-            pacientes = [...pacientes, ...pendientes];
-            // Intentar subirlos ahora que el backend está activo
-            setTimeout(() => {
-              pendientes.forEach(p => guardarEnBackend(p));
-            }, 500);
-            toast(`🔄 Recuperando ${pendientes.length} paciente(s) guardado(s) localmente...`);
-          }
-        }
-
         localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
         renderAll();
         console.log('✅ Pacientes cargados del backend:', pacientes.length);
