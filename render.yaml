@@ -29,7 +29,7 @@ services:
       - key: ENCRYPTION_KEY
         value: your_32_character_encryption_key_here
       - key: CORS_ORIGIN
-        value: https://adultos-mayores-frontend.onrender.com
+        value: https://adultos-mayores-frontend.onrender.com,https://adultos-mayores-app.vercel.app
 
   - type: static_site
     name: adultos-mayores-frontend

@@ -8,8 +8,21 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
+  // Acepta múltiples orígenes separados por coma en CORS_ORIGIN
+  const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+    .split(',')
+    .map(o => o.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Permitir sin origin (peticiones server-to-server, curl, etc.)
+      if (!origin) return callback(null, true);
+      if (corsOrigins.includes(origin)) return callback(null, true);
+      // Permitir cualquier subdominio de vercel.app en desarrollo
+      if (origin.endsWith('.vercel.app')) return callback(null, true);
+      callback(new Error(`CORS no permitido para: ${origin}`));
+    },
     credentials: true,
   });
 
