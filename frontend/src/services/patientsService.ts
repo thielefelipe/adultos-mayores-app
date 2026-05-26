@@ -58,6 +58,9 @@ export interface Paciente {
   t4_punt?: number;
   t4_barthel?: number;
   t4_mini?: number;
+  // Notas clínicas y plan
+  notas?: string;
+  plan?: string;
 }
 
 export interface FiltrosPacientes {
@@ -166,6 +169,9 @@ export const patientsService = {
         t4_punt: p.t4_punt != null ? Number(p.t4_punt) : undefined,
         t4_barthel: p.t4_barthel != null ? Number(p.t4_barthel) : undefined,
         t4_mini: p.t4_mini != null ? Number(p.t4_mini) : undefined,
+        // Notas clínicas y plan
+        notas: p.notas || undefined,
+        plan: p.plan || undefined,
       }));
     } catch (error) {
       console.error('Error obteniendo pacientes:', error);

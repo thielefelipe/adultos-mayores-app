@@ -250,7 +250,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
             </div>
           </div>
 
-          {/* Precauciones */}
+          {/* Precauciones automáticas basadas en VGI */}
           {(() => {
             const precauciones = calcularPrecauciones(paciente);
             if (precauciones.length === 0) return (
@@ -273,7 +273,7 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
             );
           })()}
 
-          {/* Recomendaciones */}
+          {/* Recomendaciones automáticas basadas en VGI */}
           {(() => {
             const recomendaciones = calcularRecomendaciones(paciente);
             if (recomendaciones.length === 0) return null;
@@ -290,6 +290,26 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
               </div>
             );
           })()}
+
+          {/* Plan de seguimiento ingresado por el operador */}
+          {paciente.plan && (
+            <div style={{ marginTop: '16px' }}>
+              <div style={{ fontWeight: 700, fontSize: '13px', color: '#0369a1', marginBottom: '8px' }}>📋 Plan de seguimiento</div>
+              <div style={{ background: '#e0f2fe', borderLeft: '4px solid #0284c7', borderRadius: '6px', padding: '10px 14px', fontSize: '12px', color: '#0c4a6e', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                {paciente.plan}
+              </div>
+            </div>
+          )}
+
+          {/* Observaciones clínicas del operador */}
+          {paciente.notas && (
+            <div style={{ marginTop: '16px' }}>
+              <div style={{ fontWeight: 700, fontSize: '13px', color: '#6b21a8', marginBottom: '8px' }}>📝 Observaciones clínicas</div>
+              <div style={{ background: '#f3e8ff', borderLeft: '4px solid #9333ea', borderRadius: '6px', padding: '10px 14px', fontSize: '12px', color: '#3b0764', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                {paciente.notas}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
