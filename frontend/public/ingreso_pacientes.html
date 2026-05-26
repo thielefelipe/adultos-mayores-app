@@ -3293,27 +3293,37 @@ function generarGraficosInstrumentos(e1, e2, e3) {
   ];
 
   return instrumentos.map(inst => {
-    const vals = inst.vals.map(v => v ? parseFloat(v) : 0);
-    const tieneData = vals.some(v => v > 0);
+    // Distinguir null/vacío (sin dato) de 0 real
+    const vals = inst.vals.map(v => (v !== null && v !== undefined && v !== '') ? parseFloat(v) : null);
+    const tieneData = vals.some(v => v !== null);
     if (!tieneData) return '';
 
-    // Para instrumentos donde menor es mejor, mejoría es cuando baja
-    const cambio = vals[2] - vals[0];
-    const pctCambio = vals[0] > 0 ? Math.round((cambio / vals[0]) * 100) : 0;
+    // Calcular tendencia solo cuando hay al menos 2 evaluaciones con datos
+    const v0 = vals[0], v2 = vals[2] ?? vals[1];
+    const puedeMostrarTendencia = v0 !== null && v2 !== null;
+    const cambio = puedeMostrarTendencia ? v2 - v0 : 0;
+    const pctCambio = puedeMostrarTendencia && v0 !== 0 ? Math.round((cambio / v0) * 100) : 0;
     const mejoria = inst.invertido ? cambio < 0 : cambio > 0;
-    const tendencia = mejoria ? '⬆' : cambio === 0 ? '→' : '⬇';
+    const tendencia = !puedeMostrarTendencia ? '' : mejoria ? '⬆' : cambio === 0 ? '→' : '⬇';
     const colorTend = mejoria ? '#16a34a' : cambio === 0 ? '#999' : '#dc2626';
 
+    const colors = ['#0284c7', '#ea8c55', '#16a34a'];
     const barras = vals.map((v, i) => {
-      // Para instrumentos invertidos (menor es mejor), invertir la altura de la barra
+      // Sin dato: mostrar barra vacía
+      if (v === null) {
+        return `<div style="display:flex;flex-direction:column;align-items:center;gap:.3rem">
+          <div style="width:30px;height:80px;background:#e5e7eb;border-radius:4px;opacity:.4"></div>
+          <span style="font-size:.75rem;color:#bbb">—</span>
+        </div>`;
+      }
+      // Con dato: barra proporcional (invertida si aplica)
       const hRaw = inst.max > 0 ? (inst.invertido ? (inst.max - v) / inst.max : v / inst.max) * 80 : 0;
       const h = Math.max(0, hRaw);
-      const colors = ['#0284c7', '#ea8c55', '#16a34a'];
       return `<div style="display:flex;flex-direction:column;align-items:center;gap:.3rem">
         <div style="width:30px;height:80px;background:#e5e7eb;border-radius:4px;overflow:hidden;display:flex;align-items:flex-end">
           <div style="width:100%;height:${h}px;background:${colors[i]}"></div>
         </div>
-        <span style="font-size:.75rem;font-weight:600">${v || '—'}</span>
+        <span style="font-size:.75rem;font-weight:600">${v}</span>
       </div>`;
     }).join('');
 
@@ -3321,7 +3331,7 @@ function generarGraficosInstrumentos(e1, e2, e3) {
       <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:1rem">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
           <span style="font-weight:700;color:#333">${inst.nombre}</span>
-          <span style="font-size:.85rem;font-weight:600;color:${colorTend}">${tendencia} ${pctCambio > 0 ? '+' : ''}${pctCambio}%</span>
+          ${puedeMostrarTendencia ? `<span style="font-size:.85rem;font-weight:600;color:${colorTend}">${tendencia} ${pctCambio > 0 ? '+' : ''}${pctCambio}%</span>` : '<span style="font-size:.75rem;color:#bbb">Sin comparación</span>'}
         </div>
         <div style="display:flex;justify-content:space-around;align-items:flex-end">${barras}</div>
       </div>
