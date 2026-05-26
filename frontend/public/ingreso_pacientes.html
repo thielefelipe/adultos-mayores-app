@@ -3247,11 +3247,11 @@ function generarTarjetasInstrumentos(p) {
   const eqMap = {'muy buena':10,'buena':8,'más o menos':6,'mala':4,'muy mala':0};
   const instrumentos = [
     { nombre: 'Barthel', val1: p.barthel1, val2: p.barthel2, val3: p.barthel3, max: 100 },
-    { nombre: 'Pfeiffer', val1: p.pfeiffer1, val2: p.pfeiffer2, val3: p.pfeiffer3, max: 30 },
+    { nombre: 'Pfeiffer', val1: p.pfeiffer1, val2: p.pfeiffer2, val3: p.pfeiffer3, max: 10, invertido: true },
     { nombre: 'Lawton', val1: p.lawton1, val2: p.lawton2, val3: p.lawton3, max: 8 },
-    { nombre: 'TUG (s)', val1: p.tug1, val2: p.tug2, val3: p.tug3, max: 60 },
+    { nombre: 'TUG (s)', val1: p.tug1, val2: p.tug2, val3: p.tug3, max: 60, invertido: true },
     { nombre: 'Mini Mental', val1: p.mini1, val2: p.mini2, val3: p.mini3, max: 30 },
-    { nombre: 'Yesavage', val1: p.yesa1, val2: p.yesa2, val3: p.yesa3, max: 15 },
+    { nombre: 'Yesavage', val1: p.yesa1, val2: p.yesa2, val3: p.yesa3, max: 15, invertido: true },
     { nombre: 'EQ5D', val1: p.eq1, val2: p.eq2, val3: p.eq3, max: 10, isEQ: true }
   ];
 
@@ -3261,7 +3261,10 @@ function generarTarjetasInstrumentos(p) {
     if (inst.isEQ && typeof val === 'string') {
       val = eqMap[val.toLowerCase()] || 0;
     }
-    const pct = Math.round((val / inst.max) * 100);
+    // Para instrumentos donde menor es mejor (Pfeiffer, TUG, Yesavage) invertir el porcentaje
+    const pct = inst.invertido
+      ? Math.round(((inst.max - val) / inst.max) * 100)
+      : Math.round((val / inst.max) * 100);
     const color = pct >= 70 ? '#16a34a' : pct >= 50 ? '#ea8c55' : '#dc2626';
     const display = inst.isEQ ? (inst.val3 || inst.val2 || inst.val1 || '—') : val;
     return `
@@ -3281,11 +3284,11 @@ function generarTarjetasInstrumentos(p) {
 function generarGraficosInstrumentos(e1, e2, e3) {
   const instrumentos = [
     { nombre: 'Barthel', vals: [e1.barthel, e2.barthel, e3.barthel], max: 100 },
-    { nombre: 'Pfeiffer', vals: [e1.pfeiffer, e2.pfeiffer, e3.pfeiffer], max: 30 },
+    { nombre: 'Pfeiffer', vals: [e1.pfeiffer, e2.pfeiffer, e3.pfeiffer], max: 10, invertido: true },
     { nombre: 'Lawton', vals: [e1.lawton, e2.lawton, e3.lawton], max: 8 },
-    { nombre: 'TUG', vals: [e1.tug, e2.tug, e3.tug], max: 60 },
+    { nombre: 'TUG', vals: [e1.tug, e2.tug, e3.tug], max: 60, invertido: true },
     { nombre: 'Mini Mental', vals: [e1.mini, e2.mini, e3.mini], max: 30 },
-    { nombre: 'Yesavage', vals: [e1.yesa, e2.yesa, e3.yesa], max: 15 },
+    { nombre: 'Yesavage', vals: [e1.yesa, e2.yesa, e3.yesa], max: 15, invertido: true },
     { nombre: 'EQ5D', vals: [e1.eq, e2.eq, e3.eq], max: 1 }
   ];
 
@@ -3294,13 +3297,17 @@ function generarGraficosInstrumentos(e1, e2, e3) {
     const tieneData = vals.some(v => v > 0);
     if (!tieneData) return '';
 
+    // Para instrumentos donde menor es mejor, mejoría es cuando baja
     const cambio = vals[2] - vals[0];
     const pctCambio = vals[0] > 0 ? Math.round((cambio / vals[0]) * 100) : 0;
-    const tendencia = cambio > 0 ? '⬆' : cambio < 0 ? '⬇' : '→';
-    const colorTend = cambio > 0 ? '#16a34a' : cambio < 0 ? '#dc2626' : '#999';
+    const mejoria = inst.invertido ? cambio < 0 : cambio > 0;
+    const tendencia = mejoria ? '⬆' : cambio === 0 ? '→' : '⬇';
+    const colorTend = mejoria ? '#16a34a' : cambio === 0 ? '#999' : '#dc2626';
 
     const barras = vals.map((v, i) => {
-      const h = inst.max > 0 ? (v / inst.max) * 80 : 0;
+      // Para instrumentos invertidos (menor es mejor), invertir la altura de la barra
+      const hRaw = inst.max > 0 ? (inst.invertido ? (inst.max - v) / inst.max : v / inst.max) * 80 : 0;
+      const h = Math.max(0, hRaw);
       const colors = ['#0284c7', '#ea8c55', '#16a34a'];
       return `<div style="display:flex;flex-direction:column;align-items:center;gap:.3rem">
         <div style="width:30px;height:80px;background:#e5e7eb;border-radius:4px;overflow:hidden;display:flex;align-items:flex-end">

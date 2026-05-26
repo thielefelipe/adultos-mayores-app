@@ -19,7 +19,7 @@ function calcularPuntaje(p: Paciente): number | null {
   if (b == null && pf == null && l == null) return null;
   let score = 0, total = 0;
   if (b != null)   { score += (b / 100) * 30;  total += 30; }
-  if (pf != null)  { score += ((30 - pf) / 30) * 25; total += 25; }
+  if (pf != null)  { score += ((10 - pf) / 10) * 25; total += 25; }
   if (l != null)   { score += (l / 8) * 20;    total += 20; }
   if (tug != null) { score += Math.max(0, (60 - tug) / 60) * 10; total += 10; }
   if (m != null)   { score += (m / 30) * 10;   total += 10; }
@@ -206,7 +206,7 @@ export function FichaPaciente({ paciente: p, onClose }: FichaPacienteProps) {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <FilaInstrumento nombre="Barthel"     v1={p.barthel1}  v2={p.barthel2}  max={100} />
-                <FilaInstrumento nombre="Pfeiffer"    v1={p.pfeiffer1} v2={p.pfeiffer2} max={30}  invertido />
+                <FilaInstrumento nombre="Pfeiffer"    v1={p.pfeiffer1} v2={p.pfeiffer2} max={10}  invertido />
                 <FilaInstrumento nombre="Lawton"      v1={p.lawton1}   v2={p.lawton2}   max={8} />
                 <FilaInstrumento nombre="TUG (seg)"   v1={p.tug1}      v2={p.tug2}      max={60}  invertido />
                 <FilaInstrumento nombre="Mini Mental" v1={p.mini1}     v2={p.mini2}     max={30} />
