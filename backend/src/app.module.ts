@@ -54,8 +54,8 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
               ssl: { rejectUnauthorized: false },
               extra: { ssl: { rejectUnauthorized: false } },
             };
-          } catch (e) {
-            console.error('❌ Error parseando DATABASE_URL:', e.message);
+          } catch (e: any) {
+            console.error('❌ Error parseando DATABASE_URL:', (e as Error).message);
           }
         }
 
@@ -78,7 +78,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
               synchronize: !isProduction,
               logging: !isProduction,
             };
-          } catch(e) { console.error('Error parseando DB_HOST:', e.message); }
+          } catch(e: any) { console.error('Error parseando DB_HOST:', (e as Error).message); }
         }
         console.log('⚠️  Usando variables DB_* individuales');
         return {
