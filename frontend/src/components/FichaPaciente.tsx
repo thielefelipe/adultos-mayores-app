@@ -2,6 +2,57 @@
 import html2pdf from 'html2pdf.js';
 import type { Paciente } from '../services/patientsService';
 
+// Usa la evaluación más reciente disponible (eval2 si existe, si no eval1)
+function getUltimaEval(p: Paciente) {
+  return {
+    barthel:  p.barthel2  ?? p.barthel1,
+    pfeiffer: p.pfeiffer2 ?? p.pfeiffer1,
+    lawton:   p.lawton2   ?? p.lawton1,
+    tug:      p.tug2      ?? p.tug1,
+    mini:     p.mini2     ?? p.mini1,
+    yesa:     p.yesa2     ?? p.yesa1,
+    eq:       p.eq2       ?? p.eq1,
+  };
+}
+
+function calcularPrecauciones(p: Paciente) {
+  const ev = getUltimaEval(p);
+  const lista: string[] = [];
+  if (ev.barthel != null && ev.barthel < 40)
+    lista.push('🔴 Dependencia total (Barthel < 40). Requiere asistencia completa.');
+  if (ev.barthel != null && ev.barthel >= 40 && ev.barthel < 60)
+    lista.push('🟡 Dependencia moderada (Barthel 40–60). Requiere supervisión.');
+  if (ev.tug != null && ev.tug > 15)
+    lista.push('🔴 Alto riesgo de caídas (TUG > 15 s). Implementar medidas de seguridad.');
+  if (ev.pfeiffer != null && ev.pfeiffer > 8)
+    lista.push('🟡 Posible deterioro cognitivo (Pfeiffer > 8). Monitorear atención.');
+  if (ev.yesa != null && ev.yesa > 5)
+    lista.push('🔴 Síntomas depresivos moderados a severos (Yesavage > 5). Derivar a salud mental.');
+  if (ev.lawton != null && ev.lawton < 3)
+    lista.push('🟡 Limitación en actividades instrumentales (Lawton < 3). Aumentar apoyo.');
+  return lista;
+}
+
+function calcularRecomendaciones(p: Paciente) {
+  const ev = getUltimaEval(p);
+  const lista: string[] = [];
+  if (ev.barthel != null && ev.barthel >= 60)
+    lista.push('✓ Mantener autonomía actual con ejercicios de fortalecimiento.');
+  if (ev.tug != null && ev.tug > 12)
+    lista.push('→ Iniciar programa de equilibrio y prevención de caídas.');
+  if (ev.pfeiffer != null && ev.pfeiffer <= 8)
+    lista.push('✓ Función cognitiva preservada. Mantener actividades de estimulación.');
+  if (ev.lawton != null && ev.lawton >= 6)
+    lista.push('✓ Independencia en AIVD. Fomentar independencia.');
+  if (ev.yesa != null && ev.yesa <= 5)
+    lista.push('✓ Estado anímico favorable. Mantener actividades sociales.');
+  if (ev.barthel != null && ev.barthel < 60)
+    lista.push('→ Fisioterapia para mejorar movilidad y autonomía.');
+  if (ev.lawton != null && ev.lawton < 5)
+    lista.push('→ Entrenamiento en AIVD o apoyo comunitario.');
+  return lista;
+}
+
 interface FichaPacienteProps {
   paciente: Paciente;
   onClose: () => void;
@@ -198,6 +249,47 @@ export function FichaPaciente({ paciente, onClose }: FichaPacienteProps) {
               <div style={{ marginTop: '8px' }}>ID: {paciente.id}</div>
             </div>
           </div>
+
+          {/* Precauciones */}
+          {(() => {
+            const precauciones = calcularPrecauciones(paciente);
+            if (precauciones.length === 0) return (
+              <div style={{ marginTop: '16px', background: '#dcfce7', borderLeft: '4px solid #16a34a', borderRadius: '8px', padding: '12px 16px' }}>
+                <strong style={{ color: '#16a34a', fontSize: '13px' }}>✓ Sin precauciones críticas</strong>
+                <p style={{ margin: '4px 0 0 0', color: '#555', fontSize: '12px' }}>Paciente presenta buena evolución.</p>
+              </div>
+            );
+            return (
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontWeight: 700, fontSize: '13px', color: '#dc2626', marginBottom: '8px' }}>⚠️ Precauciones</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {precauciones.map((p, i) => (
+                    <div key={i} style={{ background: '#fef2f2', borderLeft: '4px solid #dc2626', borderRadius: '6px', padding: '8px 12px', fontSize: '12px', color: '#7f1d1d' }}>
+                      {p}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Recomendaciones */}
+          {(() => {
+            const recomendaciones = calcularRecomendaciones(paciente);
+            if (recomendaciones.length === 0) return null;
+            return (
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontWeight: 700, fontSize: '13px', color: '#15803d', marginBottom: '8px' }}>💡 Recomendaciones</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {recomendaciones.map((r, i) => (
+                    <div key={i} style={{ background: '#dcfce7', borderLeft: '4px solid #16a34a', borderRadius: '6px', padding: '8px 12px', fontSize: '12px', color: '#15803d' }}>
+                      {r}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>
