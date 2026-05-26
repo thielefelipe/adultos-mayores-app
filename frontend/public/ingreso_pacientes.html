@@ -3282,19 +3282,29 @@ function generarTarjetasInstrumentos(p) {
 }
 
 function generarGraficosInstrumentos(e1, e2, e3) {
+  // EQ5D: texto nominal → número (mayor = mejor calidad de vida)
+  const eqMap = {'muy buena':10,'buena':8,'más o menos':6,'mala':4,'muy mala':2};
+  const eqLabel = {10:'Muy buena',8:'Buena',6:'Más o menos',4:'Mala',2:'Muy mala'};
+  const toNum = (v, isEQ) => {
+    if (v === null || v === undefined || v === '') return null;
+    if (isEQ) { const n = eqMap[String(v).toLowerCase().trim()]; return n !== undefined ? n : null; }
+    const n = parseFloat(v);
+    return isNaN(n) ? null : n;
+  };
+
   const instrumentos = [
-    { nombre: 'Barthel', vals: [e1.barthel, e2.barthel, e3.barthel], max: 100 },
-    { nombre: 'Pfeiffer', vals: [e1.pfeiffer, e2.pfeiffer, e3.pfeiffer], max: 10, invertido: true },
-    { nombre: 'Lawton', vals: [e1.lawton, e2.lawton, e3.lawton], max: 8 },
-    { nombre: 'TUG', vals: [e1.tug, e2.tug, e3.tug], max: 60, invertido: true },
-    { nombre: 'Mini Mental', vals: [e1.mini, e2.mini, e3.mini], max: 30 },
-    { nombre: 'Yesavage', vals: [e1.yesa, e2.yesa, e3.yesa], max: 15, invertido: true },
-    { nombre: 'EQ5D', vals: [e1.eq, e2.eq, e3.eq], max: 1 }
+    { nombre: 'Barthel',     vals: [e1.barthel,  e2.barthel,  e3.barthel],  max: 100 },
+    { nombre: 'Pfeiffer',    vals: [e1.pfeiffer, e2.pfeiffer, e3.pfeiffer], max: 10,  invertido: true },
+    { nombre: 'Lawton',      vals: [e1.lawton,   e2.lawton,   e3.lawton],   max: 8 },
+    { nombre: 'TUG',         vals: [e1.tug,      e2.tug,      e3.tug],      max: 60,  invertido: true },
+    { nombre: 'Mini Mental', vals: [e1.mini,     e2.mini,     e3.mini],     max: 30 },
+    { nombre: 'Yesavage',    vals: [e1.yesa,     e2.yesa,     e3.yesa],     max: 15,  invertido: true },
+    { nombre: 'EQ-5D',       vals: [e1.eq,       e2.eq,       e3.eq],       max: 10,  isEQ: true },
   ];
 
   return instrumentos.map(inst => {
-    // Distinguir null/vacío (sin dato) de 0 real
-    const vals = inst.vals.map(v => (v !== null && v !== undefined && v !== '') ? parseFloat(v) : null);
+    // Distinguir null/vacío (sin dato) de 0 real; convertir EQ5D de texto a número
+    const vals = inst.vals.map(v => toNum(v, inst.isEQ));
     const tieneData = vals.some(v => v !== null);
     if (!tieneData) return '';
 
@@ -3319,11 +3329,13 @@ function generarGraficosInstrumentos(e1, e2, e3) {
       // Con dato: barra proporcional (invertida si aplica)
       const hRaw = inst.max > 0 ? (inst.invertido ? (inst.max - v) / inst.max : v / inst.max) * 80 : 0;
       const h = Math.max(0, hRaw);
+      // EQ5D: mostrar etiqueta de texto en lugar del número
+      const label = inst.isEQ ? (eqLabel[v] || v) : v;
       return `<div style="display:flex;flex-direction:column;align-items:center;gap:.3rem">
         <div style="width:30px;height:80px;background:#e5e7eb;border-radius:4px;overflow:hidden;display:flex;align-items:flex-end">
           <div style="width:100%;height:${h}px;background:${colors[i]}"></div>
         </div>
-        <span style="font-size:.75rem;font-weight:600">${v}</span>
+        <span style="font-size:.65rem;font-weight:600;text-align:center;max-width:60px">${label}</span>
       </div>`;
     }).join('');
 
