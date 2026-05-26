@@ -35,27 +35,61 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
         };
 
         if (databaseUrl) {
-          // Pasar la URL directamente a TypeORM (soporta postgres:// y postgresql://)
-          const normalizedUrl = databaseUrl.replace(/^postgresql:\/\//, 'postgres://');
-          console.log('✅ Usando DATABASE_URL');
-          return {
-            ...base,
-            url: normalizedUrl,
-            ssl: { rejectUnauthorized: false },
-            extra: { ssl: { rejectUnauthorized: false } },
-          };
+          // Parsear manualmente la URL para máxima compatibilidad con TypeORM
+          try {
+            const u = new URL(databaseUrl);
+            const host = u.hostname;
+            const port = parseInt(u.port || '5432', 10);
+            const username = decodeURIComponent(u.username);
+            const password = decodeURIComponent(u.password);
+            const database = u.pathname.replace(/^\//, '').split('?')[0];
+            console.log(`✅ DATABASE_URL → ${host}/${database}`);
+            return {
+              ...base,
+              host,
+              port,
+              username,
+              password,
+              database,
+              ssl: { rejectUnauthorized: false },
+              extra: { ssl: { rejectUnauthorized: false } },
+            };
+          } catch (e) {
+            console.error('❌ Error parseando DATABASE_URL:', e.message);
+          }
         }
 
         // Fallback: variables individuales (desarrollo local)
+        const dbHost = process.env.DB_HOST || 'localhost';
+        // Si DB_HOST es una URL completa, parsearla también
+        if (dbHost.startsWith('postgresql://') || dbHost.startsWith('postgres://')) {
+          try {
+            const u = new URL(dbHost);
+            console.log(`⚠️  Usando DB_HOST como URL → ${u.hostname}`);
+            return {
+              ...base,
+              host: u.hostname,
+              port: parseInt(u.port || '5432', 10),
+              username: decodeURIComponent(u.username),
+              password: decodeURIComponent(u.password),
+              database: u.pathname.replace(/^\//, '').split('?')[0],
+              ssl: isProduction ? { rejectUnauthorized: false } : false,
+              extra: isProduction ? { ssl: { rejectUnauthorized: false } } : {},
+              synchronize: !isProduction,
+              logging: !isProduction,
+            };
+          } catch(e) { console.error('Error parseando DB_HOST:', e.message); }
+        }
         console.log('⚠️  Usando variables DB_* individuales');
         return {
           ...base,
-          host: process.env.DB_HOST || 'localhost',
+          host: dbHost,
           port: parseInt(process.env.DB_PORT || '5432', 10),
           username: process.env.DB_USERNAME || 'admin',
           password: process.env.DB_PASSWORD || 'admin',
           database: process.env.DB_NAME || 'centros_diurnos_db',
           ssl: isProduction ? { rejectUnauthorized: false } : false,
+          extra: isProduction ? { ssl: { rejectUnauthorized: false } } : {},
           synchronize: !isProduction,
           logging: !isProduction,
         };
