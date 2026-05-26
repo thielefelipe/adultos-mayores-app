@@ -31,7 +31,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
           migrations: ['dist/migrations/*.js'],
           migrationsRun: false,
           synchronize: false,
-          logging: false,
+          logging: ['error', 'warn'],
         };
 
         if (databaseUrl) {
