@@ -1817,6 +1817,25 @@ async function cargarPacientesDelBackend() {
         localStorage.setItem('linea_base_2025', JSON.stringify(pacientes));
         renderAll();
         console.log('✅ Pacientes cargados del backend:', pacientes.length);
+
+        // Sincronizar VGI local al backend: si el backend tiene null pero local tiene datos
+        const pacientesConVGIPendiente = pacientes.filter(p => {
+          const backendP = listaPacientes.find(bp => bp.id === p.id);
+          if (!backendP) return false;
+          return (p.barthel1 && !backendP.barthel1) ||
+                 (p.barthel2 && !backendP.barthel2) ||
+                 (p.barthel3 && !backendP.barthel3) ||
+                 (p.pfeiffer1 && !backendP.pfeiffer1) ||
+                 (p.lawton1 && !backendP.lawton1) ||
+                 (p.yesa1 && !backendP.yesa1);
+        });
+        if (pacientesConVGIPendiente.length > 0) {
+          console.log(`🔄 Sincronizando VGI de ${pacientesConVGIPendiente.length} paciente(s) al servidor...`);
+          toast(`🔄 Sincronizando datos de ${pacientesConVGIPendiente.length} paciente(s)...`);
+          setTimeout(() => {
+            pacientesConVGIPendiente.forEach(p => guardarEnBackend(p));
+          }, 800);
+        }
       }
     } else {
       console.warn('Backend no respondió correctamente, cargando desde localStorage');
@@ -1953,6 +1972,13 @@ function construirDatosBackend(paciente) {
     mini2: toNum(paciente.mini2),
     yesa2: toNum(paciente.yesa2),
     eq2: paciente.eq2 || undefined,
+    barthel3: toNum(paciente.barthel3),
+    pfeiffer3: toNum(paciente.pfeiffer3),
+    lawton3: toNum(paciente.lawton3),
+    tug3: toNum(paciente.tug3),
+    mini3: toNum(paciente.mini3),
+    yesa3: toNum(paciente.yesa3),
+    eq3: paciente.eq3 || undefined,
     notas: paciente.notas || undefined,
     plan: paciente.plan || undefined,
   };
