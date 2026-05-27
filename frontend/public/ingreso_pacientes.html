@@ -3233,6 +3233,18 @@ function generarSeguimientoVisual(p) {
   const eval2 = { barthel: p.barthel2, pfeiffer: p.pfeiffer2, lawton: p.lawton2, tug: p.tug2, mini: p.mini2, yesa: p.yesa2, eq: p.eq2 };
   const eval3 = { barthel: p.barthel3, pfeiffer: p.pfeiffer3, lawton: p.lawton3, tug: p.tug3, mini: p.mini3, yesa: p.yesa3, eq: p.eq3 };
 
+  // Usar la evaluación más reciente disponible para precauciones y recomendaciones
+  const n = v => v !== '' && v !== null && v !== undefined;
+  const evalReciente = {
+    barthel:  n(p.barthel3)  ? p.barthel3  : n(p.barthel2)  ? p.barthel2  : p.barthel1,
+    pfeiffer: n(p.pfeiffer3) ? p.pfeiffer3 : n(p.pfeiffer2) ? p.pfeiffer2 : p.pfeiffer1,
+    lawton:   n(p.lawton3)   ? p.lawton3   : n(p.lawton2)   ? p.lawton2   : p.lawton1,
+    tug:      n(p.tug3)      ? p.tug3      : n(p.tug2)      ? p.tug2      : p.tug1,
+    mini:     n(p.mini3)     ? p.mini3     : n(p.mini2)     ? p.mini2     : p.mini1,
+    yesa:     n(p.yesa3)     ? p.yesa3     : n(p.yesa2)     ? p.yesa2     : p.yesa1,
+    eq:       n(p.eq3)       ? p.eq3       : n(p.eq2)       ? p.eq2       : p.eq1,
+  };
+
   return `
     <div style="margin-top:2rem;padding-top:2rem;border-top:2px solid var(--sand)">
       <h3 style="color:var(--azul);font-size:1.1rem;margin:0 0 1.5rem 0">📊 Seguimiento VGI</h3>
@@ -3260,11 +3272,9 @@ function generarSeguimientoVisual(p) {
         ${generarGraficosInstrumentos(eval1, eval2, eval3)}
       </div>
 
-      <!-- Precauciones -->
-      ${generarPrecauciones(p, eval3)}
-
-      <!-- Consejos -->
-      ${generarConsejos(p, eval3)}
+      <!-- Precauciones y Recomendaciones usando la evaluación más reciente -->
+      ${generarPrecauciones(p, evalReciente)}
+      ${generarConsejos(p, evalReciente)}
     </div>
   `;
 }
