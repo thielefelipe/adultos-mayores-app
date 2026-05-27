@@ -1,10 +1,12 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import html2pdf from 'html2pdf.js';
+import { useAuth } from '../contexts/AuthContext';
 import type { Paciente } from '../services/patientsService';
 
 interface FichaPacienteProps {
   paciente: Paciente;
   onClose: () => void;
+  onActualizar?: (pacienteActualizado: Paciente) => void;
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -106,8 +108,20 @@ function FilaInstrumento({ nombre, v1, v2, v3, max, invertido }: {
 
 // ── Componente principal ─────────────────────────────────────────────────────
 
-export function FichaPaciente({ paciente: p, onClose }: FichaPacienteProps) {
+export function FichaPaciente({ paciente: p, onClose, onActualizar }: FichaPacienteProps) {
   const fichaRef = useRef<HTMLDivElement>(null);
+  const { token } = useAuth();
+  const [editandoVGI, setEditandoVGI] = useState(false);
+  const [guardandoVGI, setGuardandoVGI] = useState(false);
+  const [vgiForm, setVgiForm] = useState({
+    barthel1: p.barthel1 ?? '', pfeiffer1: p.pfeiffer1 ?? '', lawton1: p.lawton1 ?? '',
+    tug1: p.tug1 ?? '', mini1: p.mini1 ?? '', yesa1: p.yesa1 ?? '',
+    barthel2: p.barthel2 ?? '', pfeiffer2: p.pfeiffer2 ?? '', lawton2: p.lawton2 ?? '',
+    tug2: p.tug2 ?? '', mini2: p.mini2 ?? '', yesa2: p.yesa2 ?? '',
+    barthel3: p.barthel3 ?? '', pfeiffer3: p.pfeiffer3 ?? '', lawton3: p.lawton3 ?? '',
+    tug3: p.tug3 ?? '', mini3: p.mini3 ?? '', yesa3: p.yesa3 ?? '',
+  });
+
   const sc = calcularPuntaje(p);
   const sem = semaforo(sc);
   const precauciones = calcularPrecauciones(p);
@@ -115,6 +129,38 @@ export function FichaPaciente({ paciente: p, onClose }: FichaPacienteProps) {
   const tieneVGI = p.barthel1 || p.pfeiffer1 || p.lawton1 || p.tug1 || p.mini1 || p.yesa1
                 || p.barthel2 || p.pfeiffer2 || p.lawton2 || p.tug2 || p.mini2 || p.yesa2
                 || p.barthel3 || p.pfeiffer3 || p.lawton3 || p.tug3 || p.mini3 || p.yesa3;
+
+  const toN = (v: any) => v === '' || v === null || v === undefined ? undefined : Number(v);
+
+  const guardarVGI = async () => {
+    if (!token) return;
+    setGuardandoVGI(true);
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const payload: any = {};
+      Object.entries(vgiForm).forEach(([k, v]) => {
+        const n = toN(v);
+        if (n !== undefined) payload[k] = n;
+      });
+      const res = await fetch(`${apiUrl}/pacientes/${p.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        const actualizado = { ...p, ...payload };
+        if (onActualizar) onActualizar(actualizado as Paciente);
+        alert('✅ Datos VGI guardados correctamente. Cierra y vuelve a abrir la ficha para ver las recomendaciones actualizadas.');
+        setEditandoVGI(false);
+      } else {
+        alert('Error al guardar los datos VGI');
+      }
+    } catch {
+      alert('Error de conexión al guardar');
+    } finally {
+      setGuardandoVGI(false);
+    }
+  };
 
   const descargarPDF = () => {
     if (!fichaRef.current) return;
@@ -145,10 +191,59 @@ export function FichaPaciente({ paciente: p, onClose }: FichaPacienteProps) {
           📋 Ficha de Paciente — <span style={{ fontWeight: 400 }}>{p.nombre}</span>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => setEditandoVGI(true)} style={btnStyle('#0f4c81')}>✏️ Editar VGI</button>
           <button onClick={descargarPDF} style={btnStyle('#28A745')}>⬇️ Descargar PDF</button>
           <button onClick={onClose} style={btnStyle('rgba(255,255,255,0.2)')}>← Volver</button>
         </div>
       </div>
+
+      {/* ── Modal edición VGI ── */}
+      {editandoVGI && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', borderRadius: 12, padding: 28, width: 600, maxHeight: '90vh', overflowY: 'auto' }}>
+            <h3 style={{ margin: '0 0 6px 0', color: '#0f5c2e' }}>✏️ Editar datos VGI — {p.nombre}</h3>
+            <p style={{ margin: '0 0 20px 0', fontSize: 12, color: '#666' }}>Ingresa los valores de las evaluaciones. Deja vacío lo que no aplique.</p>
+
+            {[
+              { label: '1ª Evaluación (Inicial)', prefix: '1' },
+              { label: '2ª Evaluación (6 meses)', prefix: '2' },
+              { label: '3ª Evaluación (12 meses)', prefix: '3' },
+            ].map(({ label, prefix }) => (
+              <div key={prefix} style={{ marginBottom: 18 }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: '#0f5c2e', marginBottom: 10, borderBottom: '1px solid #e5e7eb', paddingBottom: 6 }}>{label}</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                  {[
+                    { campo: `barthel${prefix}`,  label: 'Barthel (0-100)' },
+                    { campo: `pfeiffer${prefix}`, label: 'Pfeiffer (0-10)' },
+                    { campo: `lawton${prefix}`,   label: 'Lawton (0-8)' },
+                    { campo: `tug${prefix}`,      label: 'TUG (segundos)' },
+                    { campo: `mini${prefix}`,     label: 'Mini Mental (0-30)' },
+                    { campo: `yesa${prefix}`,     label: 'Yesavage (0-15)' },
+                  ].map(({ campo, label: lbl }) => (
+                    <div key={campo}>
+                      <div style={{ fontSize: 11, color: '#666', marginBottom: 3 }}>{lbl}</div>
+                      <input
+                        type="number"
+                        value={(vgiForm as any)[campo]}
+                        onChange={e => setVgiForm(f => ({ ...f, [campo]: e.target.value }))}
+                        placeholder="—"
+                        style={{ width: '100%', padding: '6px 8px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 13, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 8 }}>
+              <button onClick={() => setEditandoVGI(false)} style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid #d1d5db', background: '#f9fafb', cursor: 'pointer', fontWeight: 600 }}>Cancelar</button>
+              <button onClick={guardarVGI} disabled={guardandoVGI} style={{ padding: '8px 18px', borderRadius: 6, border: 'none', background: '#0f5c2e', color: '#fff', cursor: 'pointer', fontWeight: 600 }}>
+                {guardandoVGI ? 'Guardando...' : '💾 Guardar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Contenido scrolleable ── */}
       <div ref={fichaRef} style={{ flex: 1, overflowY: 'auto', padding: 24, background: '#f3f4f6' }}>
