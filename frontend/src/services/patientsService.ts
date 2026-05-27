@@ -69,6 +69,9 @@ export interface Paciente {
   // Notas clínicas y plan
   notas?: string;
   plan?: string;
+  // Profesional y documentos
+  profesional_test?: string;
+  documentos?: string; // JSON serializado
 }
 
 export interface FiltrosPacientes {
@@ -188,6 +191,9 @@ export const patientsService = {
         // Notas clínicas y plan
         notas: p.notas || undefined,
         plan: p.plan || undefined,
+        // Profesional y documentos
+        profesional_test: p.profesional_test || undefined,
+        documentos: p.documentos || undefined,
       }));
     } catch (error) {
       console.error('Error obteniendo pacientes:', error);

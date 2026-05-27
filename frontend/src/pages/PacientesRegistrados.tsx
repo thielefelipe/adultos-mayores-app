@@ -272,8 +272,10 @@ export function PacientesRegistrados({ onVolver, onLogout }: PacientesRegistrado
         return;
       }
 
+      const pacienteCreado = await response.json();
       alert('Paciente guardado exitosamente');
       cargarPacientes();
+      return pacienteCreado; // necesario para la subida de documentos en el modal
     } catch (error) {
       console.error('Error al guardar paciente:', error);
       alert('Error al guardar paciente: ' + (error instanceof Error ? error.message : 'desconocido'));

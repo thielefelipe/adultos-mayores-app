@@ -258,4 +258,11 @@ export class PacienteEntity {
 
   @Column({ type: 'timestamp', nullable: true })
   fechaAlta?: Date;
+
+  // ── Evaluación y Documentos ──
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  profesional_test?: string;
+
+  @Column({ type: 'text', nullable: true })
+  documentos?: string; // JSON: [{ nombre, ruta, tipo, fecha }]
 }

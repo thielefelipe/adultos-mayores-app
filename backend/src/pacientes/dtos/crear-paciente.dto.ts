@@ -349,4 +349,12 @@ export class CrearPacienteDto {
   @IsNumber()
   @IsOptional()
   t4_mini?: number;
+
+  @IsString()
+  @IsOptional()
+  profesional_test?: string;
+
+  @IsString()
+  @IsOptional()
+  documentos?: string; // JSON serializado: [{ nombre, ruta, tipo, fecha }]
 }

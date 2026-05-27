@@ -4,6 +4,8 @@ import { Repository, Like, In } from 'typeorm';
 import { PacienteEntity, UsuarioEntity } from '../entities';
 import { CrearPacienteDto } from './dtos/crear-paciente.dto';
 import { AuditService } from '../audit/audit.service';
+import { unlinkSync, existsSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class PacientesService {
@@ -279,6 +281,82 @@ export class PacientesService {
 
     console.log(`[RESTAURAR] Proceso completado: ${eliminados.length} pacientes restaurados`);
     return { restaurados: eliminados.length };
+  }
+
+  async agregarDocumentos(
+    id: string,
+    files: Express.Multer.File[],
+    username: string,
+  ): Promise<PacienteEntity> {
+    const paciente = await this.obtenerPorId(id);
+
+    const documentosActuales: any[] = paciente.documentos
+      ? JSON.parse(paciente.documentos)
+      : [];
+
+    const nuevosDocumentos = files.map((f) => ({
+      nombre: f.filename,
+      nombreOriginal: f.originalname,
+      ruta: `/uploads/${f.filename}`,
+      tipo: f.mimetype,
+      tamaño: f.size,
+      fecha: new Date().toISOString(),
+      subidoPor: username,
+    }));
+
+    paciente.documentos = JSON.stringify([...documentosActuales, ...nuevosDocumentos]);
+    paciente.modificadoPor = username;
+    paciente.modificadoEn = new Date();
+
+    const resultado = await this.pacienteRepository.save(paciente);
+
+    await this.auditService.registrar(username, 'UPDATE', 'paciente', id, {
+      accion: 'subida_documentos',
+      archivos: files.map((f) => f.originalname),
+    });
+
+    return resultado;
+  }
+
+  async eliminarDocumento(
+    id: string,
+    nombreArchivo: string,
+    username: string,
+  ): Promise<PacienteEntity> {
+    const paciente = await this.obtenerPorId(id);
+
+    const documentos: any[] = paciente.documentos
+      ? JSON.parse(paciente.documentos)
+      : [];
+
+    const docIndex = documentos.findIndex((d) => d.nombre === nombreArchivo);
+    if (docIndex === -1) {
+      throw new NotFoundException('Documento no encontrado');
+    }
+
+    // Eliminar archivo físico
+    const rutaArchivo = join(process.cwd(), 'uploads', nombreArchivo);
+    if (existsSync(rutaArchivo)) {
+      try {
+        unlinkSync(rutaArchivo);
+      } catch {
+        // Ignorar error si el archivo ya no existe
+      }
+    }
+
+    documentos.splice(docIndex, 1);
+    paciente.documentos = JSON.stringify(documentos);
+    paciente.modificadoPor = username;
+    paciente.modificadoEn = new Date();
+
+    const resultado = await this.pacienteRepository.save(paciente);
+
+    await this.auditService.registrar(username, 'UPDATE', 'paciente', id, {
+      accion: 'eliminacion_documento',
+      archivo: nombreArchivo,
+    });
+
+    return resultado;
   }
 
   async exportarCSV(): Promise<string> {

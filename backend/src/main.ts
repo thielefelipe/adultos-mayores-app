@@ -1,10 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { TokenRevocadoInterceptor } from './auth/interceptors/token-revocado.interceptor';
+import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Carpeta uploads para documentos adjuntos
+  const uploadsPath = join(process.cwd(), 'uploads');
+  if (!existsSync(uploadsPath)) mkdirSync(uploadsPath, { recursive: true });
+  app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
 
   app.setGlobalPrefix('api');
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import html2pdf from 'html2pdf.js';
 import { useAuth } from '../contexts/AuthContext';
 import type { Paciente } from '../services/patientsService';
@@ -113,6 +113,12 @@ export function FichaPaciente({ paciente: p, onClose, onActualizar }: FichaPacie
   const { token } = useAuth();
   const [editandoVGI, setEditandoVGI] = useState(false);
   const [guardandoVGI, setGuardandoVGI] = useState(false);
+  const [subiendoDoc, setSubiendoDoc] = useState(false);
+  const [pacienteLocal, setPacienteLocal] = useState(p);
+  const documentos: any[] = (() => {
+    try { return pacienteLocal.documentos ? JSON.parse(pacienteLocal.documentos as any) : []; }
+    catch { return []; }
+  })();
   const [vgiForm, setVgiForm] = useState({
     barthel1: p.barthel1 ?? '', pfeiffer1: p.pfeiffer1 ?? '', lawton1: p.lawton1 ?? '',
     tug1: p.tug1 ?? '', mini1: p.mini1 ?? '', yesa1: p.yesa1 ?? '',
@@ -161,6 +167,56 @@ export function FichaPaciente({ paciente: p, onClose, onActualizar }: FichaPacie
       setGuardandoVGI(false);
     }
   };
+
+  const handleSubirDocumentos = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !token) return;
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    setSubiendoDoc(true);
+    try {
+      const formData = new FormData();
+      files.forEach(f => formData.append('files', f));
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const res = await fetch(`${apiUrl}/pacientes/${pacienteLocal.id}/documentos`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      if (res.ok) {
+        const actualizado = await res.json();
+        setPacienteLocal(actualizado);
+        if (onActualizar) onActualizar(actualizado as Paciente);
+      } else {
+        alert('Error al subir los documentos');
+      }
+    } catch {
+      alert('Error de conexión al subir documentos');
+    } finally {
+      setSubiendoDoc(false);
+      e.target.value = '';
+    }
+  }, [token, pacienteLocal.id, onActualizar]);
+
+  const handleEliminarDocumento = useCallback(async (nombreArchivo: string) => {
+    if (!token) return;
+    if (!window.confirm('¿Eliminar este documento?')) return;
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const res = await fetch(`${apiUrl}/pacientes/${pacienteLocal.id}/documentos/${encodeURIComponent(nombreArchivo)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const actualizado = await res.json();
+        setPacienteLocal(actualizado);
+        if (onActualizar) onActualizar(actualizado as Paciente);
+      } else {
+        alert('Error al eliminar el documento');
+      }
+    } catch {
+      alert('Error de conexión');
+    }
+  }, [token, pacienteLocal.id, onActualizar]);
 
   const descargarPDF = () => {
     if (!fichaRef.current) return;
@@ -369,22 +425,117 @@ export function FichaPaciente({ paciente: p, onClose, onActualizar }: FichaPacie
             </div>
           </div>
 
-          {/* ── Plan de seguimiento y Observaciones ── */}
-          {(p.plan || p.notas) && (
-            <div style={{ display: 'grid', gridTemplateColumns: p.plan && p.notas ? '1fr 1fr' : '1fr', gap: 16 }}>
-              {p.plan && (
-                <div style={card}>
-                  <h3 style={cardTitle}>📋 Plan de seguimiento</h3>
-                  <div style={{ background: '#e0f2fe', borderLeft: '4px solid #0284c7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#0c4a6e', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
-                    {p.plan}
+          {/* ── Profesional y Documentos ── */}
+          {(pacienteLocal.profesional_test || documentos.length > 0 || true) && (
+            <div style={card}>
+              <h3 style={cardTitle}>👨‍⚕️ Profesional y Documentos adjuntos</h3>
+
+              {/* Profesional que realizó los test */}
+              {pacienteLocal.profesional_test && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, color: '#6b7280', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>
+                    Profesional que realizó los test
+                  </div>
+                  <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 6, padding: '8px 12px', fontSize: 14, color: '#0f5c2e', fontWeight: 600 }}>
+                    👨‍⚕️ {pacienteLocal.profesional_test}
                   </div>
                 </div>
               )}
-              {p.notas && (
+
+              {/* Lista de documentos */}
+              {documentos.length > 0 ? (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 11, color: '#6b7280', fontWeight: 600, textTransform: 'uppercase', marginBottom: 8 }}>
+                    Documentos ({documentos.length})
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {documentos.map((doc: any, i: number) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 6, padding: '8px 12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
+                          <span style={{ fontSize: 18 }}>
+                            {doc.tipo?.includes('pdf') ? '📄' :
+                             doc.tipo?.includes('word') || doc.tipo?.includes('doc') ? '📝' :
+                             doc.tipo?.includes('sheet') || doc.tipo?.includes('excel') || doc.tipo?.includes('csv') ? '📊' :
+                             doc.tipo?.includes('image') ? '🖼️' : '📎'}
+                          </span>
+                          <div style={{ overflow: 'hidden' }}>
+                            <div style={{ fontSize: 13, color: '#374151', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {doc.nombreOriginal || doc.nombre}
+                            </div>
+                            <div style={{ fontSize: 11, color: '#9ca3af' }}>
+                              {doc.fecha ? new Date(doc.fecha).toLocaleDateString('es-CL') : ''}{doc.subidoPor ? ` · ${doc.subidoPor}` : ''}
+                              {doc.tamaño ? ` · ${(doc.tamaño / 1024).toFixed(0)} KB` : ''}
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                          <a
+                            href={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000'}${doc.ruta}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ padding: '4px 10px', background: '#0f5c2e', color: '#fff', borderRadius: 4, fontSize: 12, textDecoration: 'none', fontWeight: 600 }}>
+                            ⬇️ Ver
+                          </a>
+                          <button
+                            onClick={() => handleEliminarDocumento(doc.nombre)}
+                            style={{ padding: '4px 8px', background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', borderRadius: 4, fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ color: '#9ca3af', fontSize: 13, fontStyle: 'italic', marginBottom: 12 }}>
+                  No hay documentos adjuntos aún.
+                </div>
+              )}
+
+              {/* Botón para agregar más documentos */}
+              <label style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '8px 16px',
+                background: '#f0fdf4',
+                border: '1px dashed #16a34a',
+                borderRadius: 6,
+                cursor: subiendoDoc ? 'not-allowed' : 'pointer',
+                fontSize: 13,
+                color: '#15803d',
+                fontWeight: 600,
+                opacity: subiendoDoc ? 0.7 : 1
+              }}>
+                {subiendoDoc ? '⏳ Subiendo...' : '📎 Adjuntar documentos'}
+                <input
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.csv,.txt"
+                  onChange={handleSubirDocumentos}
+                  disabled={subiendoDoc}
+                  style={{ display: 'none' }}
+                />
+              </label>
+            </div>
+          )}
+
+          {/* ── Plan de seguimiento y Observaciones ── */}
+          {(pacienteLocal.plan || pacienteLocal.notas) && (
+            <div style={{ display: 'grid', gridTemplateColumns: pacienteLocal.plan && pacienteLocal.notas ? '1fr 1fr' : '1fr', gap: 16 }}>
+              {pacienteLocal.plan && (
+                <div style={card}>
+                  <h3 style={cardTitle}>📋 Plan de seguimiento</h3>
+                  <div style={{ background: '#e0f2fe', borderLeft: '4px solid #0284c7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#0c4a6e', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
+                    {pacienteLocal.plan}
+                  </div>
+                </div>
+              )}
+              {pacienteLocal.notas && (
                 <div style={card}>
                   <h3 style={cardTitle}>📝 Observaciones clínicas</h3>
                   <div style={{ background: '#f3e8ff', borderLeft: '4px solid #9333ea', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#3b0764', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
-                    {p.notas}
+                    {pacienteLocal.notas}
                   </div>
                 </div>
               )}

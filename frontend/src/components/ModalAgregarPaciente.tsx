@@ -35,8 +35,11 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
     rural: '',
     dependencia: '',
     enfermedades: '',
-    operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : ''
+    operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : '',
+    profesional_test: '',
   });
+
+  const [archivosSeleccionados, setArchivosSeleccionados] = useState<File[]>([]);
 
   useEffect(() => {
     cargarRegiones();
@@ -120,6 +123,18 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
     }
   };
 
+  const handleArchivoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const nuevos = Array.from(e.target.files);
+      setArchivosSeleccionados(prev => [...prev, ...nuevos]);
+      e.target.value = '';
+    }
+  };
+
+  const quitarArchivo = (index: number) => {
+    setArchivosSeleccionados(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
@@ -145,15 +160,37 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
         return acc;
       }, {} as any);
 
-      await onSave(dataToSave);
+      const pacienteCreado = await onSave(dataToSave);
+
+      // Subir documentos si hay archivos seleccionados
+      if (archivosSeleccionados.length > 0 && pacienteCreado?.id) {
+        const formDataArchivos = new FormData();
+        archivosSeleccionados.forEach(file => formDataArchivos.append('files', file));
+        try {
+          const token = localStorage.getItem('token');
+          await fetch(
+            `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/pacientes/${pacienteCreado.id}/documentos`,
+            {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${token}` },
+              body: formDataArchivos,
+            }
+          );
+        } catch (err) {
+          console.error('Error al subir documentos:', err);
+        }
+      }
+
       setFormData({
         rut: '', dv: '', nombre: '', sexo: '', fecha_nacimiento: '', edad: '', telefono: '',
         escolaridad: '', pueblo: '', rsh: '',
         anio: new Date().getFullYear().toString(), semestre: '1',
         f_ingreso: '',
         region: '', provincia: '', comuna: '', rural: '', dependencia: '', enfermedades: '',
-        operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : ''
+        operador_id: usuario?.rol === 'admin' ? 'SISTEMA' : '',
+        profesional_test: '',
       });
+      setArchivosSeleccionados([]);
       onClose();
     } catch (error) {
       console.error('Error al guardar:', error);
@@ -718,6 +755,118 @@ export function ModalAgregarPaciente({ isOpen, onClose, onSave, usuario, operado
                 <option>Otro</option>
               </select>
             </div>
+          </div>
+
+          {/* Profesional y Documentos */}
+          <h3 style={{ color: '#0f5c2e', marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
+            👨‍⚕️ Profesional y Documentos
+          </h3>
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
+              Profesional que realizó los test
+            </label>
+            <input
+              type="text"
+              name="profesional_test"
+              value={formData.profesional_test}
+              onChange={handleChange}
+              placeholder="Ej: Dr. Juan Pérez / Kinesióloga María González"
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #E0E0E0',
+                borderRadius: 6,
+                fontSize: 14,
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: 24 }}>
+            <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13, color: '#0f5c2e' }}>
+              Documentos adjuntos{' '}
+              <span style={{ fontWeight: 400, color: '#6b7280', fontSize: 12 }}>
+                (opcional — exámenes, informes, etc.)
+              </span>
+            </label>
+
+            {/* Zona de carga */}
+            <label style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px dashed #bbf7d0',
+              borderRadius: 8,
+              padding: '20px 16px',
+              cursor: 'pointer',
+              background: '#f0fdf4',
+              transition: 'border-color 0.2s',
+              marginBottom: 12
+            }}>
+              <span style={{ fontSize: 28 }}>📎</span>
+              <span style={{ color: '#15803d', fontWeight: 600, fontSize: 13, marginTop: 6 }}>
+                Seleccionar archivos
+              </span>
+              <span style={{ color: '#9ca3af', fontSize: 11, marginTop: 4 }}>
+                PDF, Word, Excel, imágenes · Máx. 10 MB por archivo
+              </span>
+              <input
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.csv,.txt"
+                onChange={handleArchivoChange}
+                style={{ display: 'none' }}
+              />
+            </label>
+
+            {/* Lista de archivos seleccionados */}
+            {archivosSeleccionados.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {archivosSeleccionados.map((file, index) => (
+                  <div key={index} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: '#f9fafb',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: 6,
+                    padding: '6px 12px',
+                    fontSize: 13
+                  }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#374151', overflow: 'hidden' }}>
+                      <span style={{ fontSize: 16 }}>
+                        {file.name.match(/\.(pdf)$/i) ? '📄' :
+                         file.name.match(/\.(doc|docx)$/i) ? '📝' :
+                         file.name.match(/\.(xls|xlsx|csv)$/i) ? '📊' :
+                         file.name.match(/\.(jpg|jpeg|png|gif)$/i) ? '🖼️' : '📎'}
+                      </span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {file.name}
+                      </span>
+                      <span style={{ color: '#9ca3af', flexShrink: 0 }}>
+                        ({(file.size / 1024).toFixed(0)} KB)
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => quitarArchivo(index)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        fontSize: 16,
+                        padding: '0 4px',
+                        flexShrink: 0
+                      }}>
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Botones */}
