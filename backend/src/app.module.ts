@@ -29,7 +29,7 @@ import { CrearAdminSeeder } from './seeders/crear-admin.seeder';
           type: 'postgres',
           entities: [PacienteEntity, UsuarioEntity, AuditLogEntity, TokenRevocadoEntity],
           migrations: ['dist/migrations/*.js'],
-          migrationsRun: false,
+          migrationsRun: true,
           synchronize: false,
           logging: ['error', 'warn'],
         };
