@@ -123,7 +123,7 @@ export class PacienteEntity {
   @Column({ type: 'varchar', length: 50, nullable: true })
   eq1?: string;
 
-  // ── Instrumentos VGI (2ª evaluación) ──
+  // ── Instrumentos VGI (2ª evaluación — 6 meses) ──
   @Column({ type: 'integer', nullable: true })
   barthel2?: number;
 
@@ -144,6 +144,28 @@ export class PacienteEntity {
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   eq2?: string;
+
+  // ── Instrumentos VGI (3ª evaluación — 12 meses) ──
+  @Column({ type: 'integer', nullable: true })
+  barthel3?: number;
+
+  @Column({ type: 'integer', nullable: true })
+  pfeiffer3?: number;
+
+  @Column({ type: 'integer', nullable: true })
+  lawton3?: number;
+
+  @Column({ type: 'decimal', precision: 5, scale: 2, nullable: true })
+  tug3?: number;
+
+  @Column({ type: 'integer', nullable: true })
+  mini3?: number;
+
+  @Column({ type: 'integer', nullable: true })
+  yesa3?: number;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  eq3?: string;
 
   // ── Seguimiento Trimestral ──
   @Column({ type: 'date', nullable: true })

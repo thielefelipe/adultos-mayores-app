@@ -154,6 +154,12 @@ export class CrearPacienteDto {
   @IsNumber()
   @IsOptional()
   @Min(0)
+  @Max(100)
+  barthel3?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
   @Max(10)
   pfeiffer1?: number;
 
@@ -162,6 +168,12 @@ export class CrearPacienteDto {
   @Min(0)
   @Max(10)
   pfeiffer2?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  @Max(10)
+  pfeiffer3?: number;
 
   @IsNumber()
   @IsOptional()
@@ -178,12 +190,23 @@ export class CrearPacienteDto {
   @IsNumber()
   @IsOptional()
   @Min(0)
+  @Max(8)
+  lawton3?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
   tug1?: number;
 
   @IsNumber()
   @IsOptional()
   @Min(0)
   tug2?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  tug3?: number;
 
   @IsNumber()
   @IsOptional()
@@ -200,6 +223,12 @@ export class CrearPacienteDto {
   @IsNumber()
   @IsOptional()
   @Min(0)
+  @Max(30)
+  mini3?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
   @Max(15)
   yesa1?: number;
 
@@ -209,6 +238,12 @@ export class CrearPacienteDto {
   @Max(15)
   yesa2?: number;
 
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  @Max(15)
+  yesa3?: number;
+
   @IsString()
   @IsOptional()
   eq1?: string;
@@ -216,6 +251,10 @@ export class CrearPacienteDto {
   @IsString()
   @IsOptional()
   eq2?: string;
+
+  @IsString()
+  @IsOptional()
+  eq3?: string;
 
   @IsString()
   @IsOptional()

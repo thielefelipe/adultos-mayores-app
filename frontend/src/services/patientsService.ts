@@ -37,7 +37,7 @@ export interface Paciente {
   mini1?: number;
   yesa1?: number;
   eq1?: string;
-  // Instrumentos VGI 2ª evaluación
+  // Instrumentos VGI 2ª evaluación (6 meses)
   barthel2?: number;
   pfeiffer2?: number;
   lawton2?: number;
@@ -45,6 +45,14 @@ export interface Paciente {
   mini2?: number;
   yesa2?: number;
   eq2?: string;
+  // Instrumentos VGI 3ª evaluación (12 meses)
+  barthel3?: number;
+  pfeiffer3?: number;
+  lawton3?: number;
+  tug3?: number;
+  mini3?: number;
+  yesa3?: number;
+  eq3?: string;
   // Seguimiento trimestral
   t1_punt?: number;
   t1_barthel?: number;
@@ -148,7 +156,7 @@ export const patientsService = {
         mini1: p.mini1 != null ? Number(p.mini1) : undefined,
         yesa1: p.yesa1 != null ? Number(p.yesa1) : undefined,
         eq1: p.eq1,
-        // Instrumentos VGI 2ª evaluación
+        // Instrumentos VGI 2ª evaluación (6 meses)
         barthel2: p.barthel2 != null ? Number(p.barthel2) : undefined,
         pfeiffer2: p.pfeiffer2 != null ? Number(p.pfeiffer2) : undefined,
         lawton2: p.lawton2 != null ? Number(p.lawton2) : undefined,
@@ -156,6 +164,14 @@ export const patientsService = {
         mini2: p.mini2 != null ? Number(p.mini2) : undefined,
         yesa2: p.yesa2 != null ? Number(p.yesa2) : undefined,
         eq2: p.eq2,
+        // Instrumentos VGI 3ª evaluación (12 meses)
+        barthel3: p.barthel3 != null ? Number(p.barthel3) : undefined,
+        pfeiffer3: p.pfeiffer3 != null ? Number(p.pfeiffer3) : undefined,
+        lawton3: p.lawton3 != null ? Number(p.lawton3) : undefined,
+        tug3: p.tug3 != null ? Number(p.tug3) : undefined,
+        mini3: p.mini3 != null ? Number(p.mini3) : undefined,
+        yesa3: p.yesa3 != null ? Number(p.yesa3) : undefined,
+        eq3: p.eq3,
         // Seguimiento trimestral
         t1_punt: p.t1_punt != null ? Number(p.t1_punt) : undefined,
         t1_barthel: p.t1_barthel != null ? Number(p.t1_barthel) : undefined,

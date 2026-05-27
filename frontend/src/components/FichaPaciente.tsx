@@ -10,12 +10,12 @@ interface FichaPacienteProps {
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 function calcularPuntaje(p: Paciente): number | null {
-  const b = p.barthel2 ?? p.barthel1;
-  const pf = p.pfeiffer2 ?? p.pfeiffer1;
-  const l = p.lawton2 ?? p.lawton1;
-  const tug = p.tug2 ?? p.tug1;
-  const m = p.mini2 ?? p.mini1;
-  const y = p.yesa2 ?? p.yesa1;
+  const b = p.barthel3 ?? p.barthel2 ?? p.barthel1;
+  const pf = p.pfeiffer3 ?? p.pfeiffer2 ?? p.pfeiffer1;
+  const l = p.lawton3 ?? p.lawton2 ?? p.lawton1;
+  const tug = p.tug3 ?? p.tug2 ?? p.tug1;
+  const m = p.mini3 ?? p.mini2 ?? p.mini1;
+  const y = p.yesa3 ?? p.yesa2 ?? p.yesa1;
   if (b == null && pf == null && l == null) return null;
   let score = 0, total = 0;
   if (b != null)   { score += (b / 100) * 30;  total += 30; }
@@ -36,12 +36,12 @@ function semaforo(sc: number | null) {
 
 function getUltimaEval(p: Paciente) {
   return {
-    barthel:  p.barthel2  ?? p.barthel1,
-    pfeiffer: p.pfeiffer2 ?? p.pfeiffer1,
-    lawton:   p.lawton2   ?? p.lawton1,
-    tug:      p.tug2      ?? p.tug1,
-    mini:     p.mini2     ?? p.mini1,
-    yesa:     p.yesa2     ?? p.yesa1,
+    barthel:  p.barthel3  ?? p.barthel2  ?? p.barthel1,
+    pfeiffer: p.pfeiffer3 ?? p.pfeiffer2 ?? p.pfeiffer1,
+    lawton:   p.lawton3   ?? p.lawton2   ?? p.lawton1,
+    tug:      p.tug3      ?? p.tug2      ?? p.tug1,
+    mini:     p.mini3     ?? p.mini2     ?? p.mini1,
+    yesa:     p.yesa3     ?? p.yesa2     ?? p.yesa1,
   };
 }
 
@@ -81,19 +81,20 @@ function Campo({ label, valor }: { label: string; valor?: string | number | null
   );
 }
 
-function FilaInstrumento({ nombre, v1, v2, max, invertido }: {
-  nombre: string; v1?: number; v2?: number; max: number; invertido?: boolean;
+function FilaInstrumento({ nombre, v1, v2, v3, max, invertido }: {
+  nombre: string; v1?: number; v2?: number; v3?: number; max: number; invertido?: boolean;
 }) {
-  const val = v2 ?? v1;
+  const val = v3 ?? v2 ?? v1;
   if (val == null) return null;
   const pct = Math.min(100, Math.round((invertido ? (max - val) / max : val / max) * 100));
   const color = pct >= 70 ? '#16a34a' : pct >= 40 ? '#ea8c55' : '#dc2626';
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13 }}>
       <span style={{ width: 90, fontWeight: 600, color: '#444', flexShrink: 0 }}>{nombre}</span>
-      {v1 != null && <span style={{ width: 32, textAlign: 'right', color: '#aaa' }}>{v1}</span>}
-      {v1 == null && <span style={{ width: 32 }} />}
+      {v1 != null ? <span style={{ width: 32, textAlign: 'right', color: '#aaa' }}>{v1}</span> : <span style={{ width: 32 }} />}
       <span style={{ color: '#ccc', fontSize: 11 }}>→</span>
+      {v2 != null ? <span style={{ width: 32, textAlign: 'right', color: '#aaa' }}>{v2}</span> : <span style={{ width: 32 }} />}
+      {(v2 != null || v3 != null) && <span style={{ color: '#ccc', fontSize: 11 }}>→</span>}
       <span style={{ width: 32, textAlign: 'right', fontWeight: 700, color }}>{val}</span>
       <div style={{ flex: 1, background: '#e5e7eb', borderRadius: 4, height: 8, overflow: 'hidden' }}>
         <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 4 }} />
@@ -111,7 +112,9 @@ export function FichaPaciente({ paciente: p, onClose }: FichaPacienteProps) {
   const sem = semaforo(sc);
   const precauciones = calcularPrecauciones(p);
   const recomendaciones = calcularRecomendaciones(p);
-  const tieneVGI = p.barthel1 || p.pfeiffer1 || p.lawton1 || p.tug1 || p.mini1 || p.yesa1;
+  const tieneVGI = p.barthel1 || p.pfeiffer1 || p.lawton1 || p.tug1 || p.mini1 || p.yesa1
+                || p.barthel2 || p.pfeiffer2 || p.lawton2 || p.tug2 || p.mini2 || p.yesa2
+                || p.barthel3 || p.pfeiffer3 || p.lawton3 || p.tug3 || p.mini3 || p.yesa3;
 
   const descargarPDF = () => {
     if (!fichaRef.current) return;
@@ -202,15 +205,15 @@ export function FichaPaciente({ paciente: p, onClose }: FichaPacienteProps) {
             <div style={card}>
               <h3 style={cardTitle}>📊 Instrumentos VGI</h3>
               <div style={{ fontSize: 11, color: '#aaa', marginBottom: 12 }}>
-                Eval. inicial → más reciente &nbsp;|&nbsp; Barra = % respecto al máximo (mayor es mejor, excepto Pfeiffer/TUG/Yesavage)
+                Eval. inicial → 6 meses → 12 meses &nbsp;|&nbsp; Barra = % respecto al máximo (mayor es mejor, excepto Pfeiffer/TUG/Yesavage)
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <FilaInstrumento nombre="Barthel"     v1={p.barthel1}  v2={p.barthel2}  max={100} />
-                <FilaInstrumento nombre="Pfeiffer"    v1={p.pfeiffer1} v2={p.pfeiffer2} max={10}  invertido />
-                <FilaInstrumento nombre="Lawton"      v1={p.lawton1}   v2={p.lawton2}   max={8} />
-                <FilaInstrumento nombre="TUG (seg)"   v1={p.tug1}      v2={p.tug2}      max={60}  invertido />
-                <FilaInstrumento nombre="Mini Mental" v1={p.mini1}     v2={p.mini2}     max={30} />
-                <FilaInstrumento nombre="Yesavage"    v1={p.yesa1}     v2={p.yesa2}     max={15}  invertido />
+                <FilaInstrumento nombre="Barthel"     v1={p.barthel1}  v2={p.barthel2}  v3={p.barthel3}  max={100} />
+                <FilaInstrumento nombre="Pfeiffer"    v1={p.pfeiffer1} v2={p.pfeiffer2} v3={p.pfeiffer3} max={10}  invertido />
+                <FilaInstrumento nombre="Lawton"      v1={p.lawton1}   v2={p.lawton2}   v3={p.lawton3}   max={8} />
+                <FilaInstrumento nombre="TUG (seg)"   v1={p.tug1}      v2={p.tug2}      v3={p.tug3}      max={60}  invertido />
+                <FilaInstrumento nombre="Mini Mental" v1={p.mini1}     v2={p.mini2}     v3={p.mini3}     max={30} />
+                <FilaInstrumento nombre="Yesavage"    v1={p.yesa1}     v2={p.yesa2}     v3={p.yesa3}     max={15}  invertido />
               </div>
             </div>
           )}
@@ -257,7 +260,10 @@ export function FichaPaciente({ paciente: p, onClose }: FichaPacienteProps) {
             <div style={card}>
               <h3 style={cardTitle}>💡 Recomendaciones</h3>
               {recomendaciones.length === 0 ? (
-                <div style={{ color: '#aaa', fontSize: 13 }}>Sin datos suficientes para generar recomendaciones.</div>
+                <div style={{ background: '#e0f2fe', borderLeft: '4px solid #0284c7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#0c4a6e' }}>
+                  <strong>💡 Continuar monitoreo regular</strong>
+                  <div style={{ marginTop: 4, fontSize: 12 }}>Complete los instrumentos VGI para obtener recomendaciones personalizadas.</div>
+                </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {recomendaciones.map((txt, i) => (
